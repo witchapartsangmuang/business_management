@@ -23,7 +23,7 @@ export default function Piechart() {
         bottom: '0%',
         right: '0%',
         transform: 'translate(0, -50%)',
-        lineHeight: '24px',
+        lineHeight: '24px'
     };
     return (
         <ResponsiveContainer width="100%" height="100%" className="bg-[#ffffff] rounded-lg">

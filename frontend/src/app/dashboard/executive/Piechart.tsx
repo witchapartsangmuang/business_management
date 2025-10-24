@@ -1,5 +1,5 @@
 "use client";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 export default function Piechart() {
     const mdPolicyCount = [
         { name: "Sales Revenue", value: 20 },
@@ -19,6 +19,12 @@ export default function Piechart() {
             </text>
         );
     };
+    const style = {
+        bottom: '0%',
+        right: '0%',
+        transform: 'translate(0, -50%)',
+        lineHeight: '24px',
+    };
     return (
         <ResponsiveContainer width="100%" height="100%" className="bg-[#ffffff] rounded-lg">
             <PieChart>
@@ -36,6 +42,7 @@ export default function Piechart() {
                         <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
+                <Legend iconSize={10} layout="horizontal" verticalAlign="bottom" wrapperStyle={style} />
             </PieChart>
         </ResponsiveContainer>
     )

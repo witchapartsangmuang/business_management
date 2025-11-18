@@ -2,6 +2,7 @@
 import Barchart from "./barchart"
 import BarchartACC from "./barchart-acc"
 import Piechart from "./Piechart"
+import GaugeChart from "./test"
 export default function DashboardPage() {
     return (
         <>
@@ -52,18 +53,29 @@ export default function DashboardPage() {
             </div>
             <div className="grid grid-cols-12">
                 <div className="col-span-6 mt-3 px-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        <Barchart />
+                    <div className="border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                        <h2 className="text-lg font-semibold text-gray-700 px-2 mb-2">Bar Chart</h2>
+                        <div className="h-[450px] mt-3">
+                            <Barchart />
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-6 h-[450px] mt-3 px-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        <Piechart />
+                    <div className="border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                        <h2 className="text-lg font-semibold text-gray-700 px-2 mb-2">Pie Chart</h2>
+                        <div className="h-[450px] mt-3">
+                            <Piechart />
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-12 mt-3 px-3">
                     <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
                         <BarchartACC />
+                    </div>
+                </div>
+                <div className="col-span-12 mt-3 px-3">
+                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                        <GaugeChart value={50}/>
                     </div>
                 </div>
             </div>

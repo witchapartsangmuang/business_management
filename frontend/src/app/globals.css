@@ -24,3 +24,5 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.recharts-layer:focus, .recharts-surface:focus, .recharts-sector:focus { outline: none; }

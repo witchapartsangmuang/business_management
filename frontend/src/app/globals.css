@@ -25,4 +25,116 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.recharts-layer:focus, .recharts-surface:focus, .recharts-sector:focus { outline: none; }
+.recharts-layer:focus,
+.recharts-surface:focus,
+.recharts-sector:focus {
+  outline: none;
+}
+
+/*  Form */
+@layer components {
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+
+  .form-input {
+    @apply block rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm;
+  }
+
+  .form-select {
+    @apply block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:14px] bg-[url(data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2016%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23343a40%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M2%205l6%206%206-6%27/%3E%3C/svg%3E)];
+  }
+}
+
+/* Table */
+@layer components {
+
+  /* --- Table Wrapper --- */
+  .table-wrapper {
+    @apply w-full overflow-x-auto rounded-xl border border-gray-200 bg-white;
+  }
+
+  /* --- Main Table --- */
+  .tbl {
+    @apply w-full text-left border-collapse;
+  }
+
+  /* --- Table Header --- */
+  .tbl thead {
+    @apply bg-gray-50;
+  }
+
+  .tbl th {
+    @apply px-4 py-3 text-sm font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap;
+  }
+
+  /* --- Table Body --- */
+  .tbl td {
+    @apply px-4 py-2 text-sm text-gray-800 border-b border-gray-100;
+  }
+
+  /* --- Hover Row --- */
+  .tbl tbody tr:hover {
+    @apply bg-gray-50;
+  }
+
+  /* --- Active / Selected Row --- */
+  .tbl-row-selected {
+    @apply bg-blue-50 hover:bg-blue-50;
+  }
+
+  /* --- Zebra Stripes --- */
+  .tbl-zebra tbody tr:nth-child(even) {
+    @apply bg-gray-50;
+  }
+
+  /* --- Table Footer --- */
+  .tbl tfoot td {
+    @apply px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 border-t border-gray-200;
+  }
+
+  /* --- Sorting Icons Placeholder --- */
+  .tbl-sortable th {
+    @apply cursor-pointer select-none relative;
+  }
+
+  .tbl-sortable th::after {
+    content: "⇅";
+    @apply absolute right-3 text-xs text-gray-400;
+  }
+
+  /* --- Empty State --- */
+  .tbl-empty {
+    @apply text-center py-10 text-gray-500;
+  }
+
+  /* --- Badge / Status Indicator --- */
+  .tbl-badge {
+    @apply px-2 py-1 text-xs rounded-lg font-medium inline-block;
+  }
+
+  .tbl-badge-success {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .tbl-badge-warning {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+
+  .tbl-badge-danger {
+    @apply bg-red-100 text-red-700;
+  }
+
+  /* --- Pagination --- */
+  .tbl-pagination {
+    @apply flex items-center justify-end gap-2 px-4 py-3;
+  }
+
+  .tbl-page-btn {
+    @apply px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-100;
+  }
+
+  .tbl-page-btn-active {
+    @apply bg-blue-600 text-white border-blue-600 hover:bg-blue-700;
+  }
+}

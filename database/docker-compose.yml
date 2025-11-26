@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: business_management_postgres
+    environment:
+      POSTGRES_DB: business_management_database
+      POSTGRES_USER: SuperAdminBM
+      POSTGRES_PASSWORD: 12345678
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: bm_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bm.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+volumes:
+  pgdata:

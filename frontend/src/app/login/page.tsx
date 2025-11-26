@@ -17,12 +17,13 @@ export default function LoginPage() {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    const res = await fetch("/api/login", {
+    const res = await fetch("http://localhost:4000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-
+    console.log("res", res);
+    
     setLoading(false);
 
     if (!res.ok) {
@@ -33,7 +34,7 @@ export default function LoginPage() {
 
     // ถ้า login สำเร็จ JWT จะถูกเก็บใน HttpOnly cookie อัตโนมัติ
     // เราแค่ redirect ไปหน้าหลัก หรือหน้าที่ต้องการ
-    router.push("/dashboard");
+    // router.push("/dashboard");
   }
 
   return (

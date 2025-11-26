@@ -15,6 +15,8 @@ const fakeUser = {
 };
 
 router.post("/login", async (req: Request, res: Response) => {
+  console.log("logining");
+  
   try {
     const { email, password } = req.body as { email: string; password: string };
 

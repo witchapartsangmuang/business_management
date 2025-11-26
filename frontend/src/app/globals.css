@@ -44,6 +44,13 @@ body {
   .form-select {
     @apply block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:14px] bg-[url(data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2016%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23343a40%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M2%205l6%206%206-6%27/%3E%3C/svg%3E)];
   }
+
+  .form-input:disabled,
+  .form-select:disabled {
+    background-color: #f3f3f3;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 /* Table */
@@ -98,10 +105,10 @@ body {
     @apply cursor-pointer select-none relative;
   }
 
-  .tbl-sortable th::after {
+  /* .tbl-sortable th::after {
     content: "⇅";
     @apply absolute right-3 text-xs text-gray-400;
-  }
+  } */
 
   /* --- Empty State --- */
   .tbl-empty {

@@ -1,7 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+// route
 import authRouter from "./routes/auth.route";
+import dashboardRouter from "./routes/dashboard.route";
+// middleware
 import { authMiddleware } from "./middleware/auth.middleware";
 dotenv.config();
 
@@ -22,7 +25,7 @@ app.get("/me", authMiddleware, (req, res) => {
 });
 // Routes
 app.use("/auth", authRouter);
-
+app.use("/dashboard", dashboardRouter);
 app.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });

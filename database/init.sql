@@ -31,9 +31,11 @@ CREATE TABLE IF NOT EXISTS capability (
 		knowledge_management_read BOOLEAN,
 		admin_page BOOLEAN
 
-
 );
--- ตัวอย่าง Super Admin เริ่มต้น (คุณไปเปลี่ยน hash ทีหลังได้)
+INSERT INTO capability (user, strategy_read, strategy_create, strategy_update, strategy_delete, kpi_read, kpi_create, kpi_update, kpi_delete, 
+	executive_dashboard_read, manager_dashboard_read, user_dashboard_read, project_report_read, idea_report_read, inspiration, knowledge_management_read, admin_page)
+	VALUES ('SuperAdminBM', TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
+
 INSERT INTO users (username, email, password_hash, role)
 VALUES (
   'SuperAdminBM',

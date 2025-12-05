@@ -19,6 +19,13 @@ export class AuthController {
   static async login(req: Request, res: Response) {
     try {
       const result = await AuthService.login(req.body);
+      res.cookie("auth_token", result.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // true บน https
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000, // 1 ชั่วโมง
+        path: "/",
+      })
       return res.json({
         message: "Login successful",
         ...result,

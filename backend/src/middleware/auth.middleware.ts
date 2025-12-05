@@ -9,6 +9,7 @@ export interface AuthRequest extends Request {
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
+    // const token = req.cookies.auth_token; 
     // ดึง token จาก Header
     const authHeader = req.headers.authorization;
 

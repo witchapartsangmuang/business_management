@@ -7,54 +7,56 @@ const JWT_SECRET = process.env.JWT_SECRET || "DEV_SECRET_CHANGE_ME";
 
 export class AuthService {
   static async register(data: {
-    username: string;
     email: string;
     password: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    role: string;
   }) {
-    const { username, email, password } = data;
-
-    if (!username || !email || !password) {
+    const { email, password, confirmPassword, firstName, lastName, phone, role } = data;
+    console.log("data: ", data);
+    if (!email || !password || !confirmPassword) {
       throw new Error("Username, email and password are required.");
     }
-
     // ตรวจ user ซ้ำ
     const existing = await db.query(
-      "SELECT id FROM users WHERE username = $1 OR email = $2",
-      [username, email]
+      "SELECT id FROM users WHERE email = $1",
+      [email]
     );
-
     if (existing.rows.length > 0) {
-      throw new Error("Username or email already exists.");
+      throw new Error("Email already exists.");
     }
-
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // insert user
     const result = await db.query(
-      `INSERT INTO users (username, email, password_hash, role)
-       VALUES ($1, $2, $3, 'user')
-       RETURNING id, username, email, role, created_at`,
-      [username, email, hashedPassword]
+      `INSERT INTO users (email, password_hash, first_name, last_name, phone, role)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, email, first_name, last_name, phone, role, created_at`,
+      [email, hashedPassword, firstName, lastName, phone, role]
     );
-
     return result.rows[0];
   }
 
-  static async login(data: { identifier: string; password: string }) {
-    const { identifier, password } = data;
+  static async login(data: { email: string; password: string }) {
+    console.log("data: ", data);
 
-    if (!identifier || !password) {
-      throw new Error("Identifier and password are required.");
+    const { email, password } = data;
+
+    if (!email || !password) {
+      throw new Error("email and password are required.");
     }
 
-    // identifier = username หรือ email ก็ได้
+    // email = username หรือ email ก็ได้
     const userResult = await db.query(
-      `SELECT id, username, email, password_hash, role
+      `SELECT id, email, password_hash, role
        FROM users
-       WHERE username = $1 OR email = $1
+       WHERE  email = $1
        LIMIT 1`,
-      [identifier]
+      [email]
     );
 
     if (userResult.rows.length === 0) {

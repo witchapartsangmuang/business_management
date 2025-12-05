@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 // route
 import authRouter from "./routes/auth.route";
 import dashboardRouter from "./routes/dashboard.route";
 // middleware
 import { authMiddleware } from "./middleware/auth.middleware";
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 4000;

@@ -38,7 +38,13 @@ export class AuthService {
        RETURNING id, email, first_name, last_name, phone, role, created_at`,
       [email, hashedPassword, firstName, lastName, phone, role]
     );
+    // const createCapability = await db.query(
+    //   `INSERT INTO capability (group_name,strategy_read,strategy_create,strategy_update,strategy_delete,kpi_read,kpi_create,kpi_update,kpi_delete,executive_dashboard_read,manager_dashboard_read,user_dashboard_read,project_report_read,idea_report_read,inspiration,knowledge_management_read,admin_page)
+    //     VALUES ($1,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE)`,
+    //   [result.rows[0].id]
+    // );
     return result.rows[0];
+
   }
 
   static async login(data: { email: string; password: string }) {

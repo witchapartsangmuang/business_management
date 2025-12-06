@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS capability (
     id SERIAL PRIMARY KEY,
-	user VARCHAR(50),
+	group_name VARCHAR(50),
 	strategy_read BOOLEAN,
 	strategy_create BOOLEAN,
 	strategy_update BOOLEAN,
@@ -34,15 +34,4 @@ CREATE TABLE IF NOT EXISTS capability (
 	admin_page BOOLEAN
 
 );
--- INSERT INTO capability (user, strategy_read, strategy_create, strategy_update, strategy_delete, kpi_read, kpi_create, kpi_update, kpi_delete, 
--- 	executive_dashboard_read, manager_dashboard_read, user_dashboard_read, project_report_read, idea_report_read, inspiration, knowledge_management_read, admin_page)
--- 	VALUES ('SuperAdminBM', TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
 
--- INSERT INTO users (username, email, password_hash, role)
--- VALUES (
---   'SuperAdminBM',
---   'superadmin@example.com',
---   'CHANGE_ME_TO_REAL_HASH',
---   'super_admin'
--- )
--- ON CONFLICT (username) DO NOTHING;

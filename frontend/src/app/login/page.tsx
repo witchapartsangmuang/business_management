@@ -33,20 +33,17 @@ export default function LoginPage() {
       setError(data.message || "Login ไม่สำเร็จ");
       return;
     }
-    
+
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 space-y-8">
-
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-semibold text-slate-800">เข้าสู่ระบบ</h1>
           <p className="text-sm text-slate-500">กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ</p>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* Email */}
           <div className="space-y-1">
             <label htmlFor="email" className="form-label">อีเมล</label>
@@ -104,10 +101,8 @@ export default function LoginPage() {
               )}
             </button>
           </div>
-
           {/* Error */}
           {error && <p className="text-xs text-red-600">{error}</p>}
-
           {/* Submit Button */}
           <button
             type="submit"
@@ -116,7 +111,6 @@ export default function LoginPage() {
           >
             {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
-
         </form>
       </div>
     </div>

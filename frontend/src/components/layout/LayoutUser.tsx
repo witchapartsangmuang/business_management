@@ -62,7 +62,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                 <div>Header</div>
             </div>
             <div className="flex min-h-[calc(100vh-4rem)]">
-                <div className={`h-[calc(100vh-4rem)] sticky top-16  text-white transition-all duration-300 overflow-y-auto ${open ? "w-66 p-1" : "w-0 p-0"}`}>
+                <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1" : "w-0 p-0"}`}>
                     <ul>
                         {
                             menus.map((menu) => (
@@ -94,7 +94,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                         }
                     </ul>
                 </div>
-                <div className="flex-1 bg-slate-100 p-2">
+                <div className="flex-1 bg-slate-100 p-2 overflow-auto">
                     {children}
                 </div>
             </div>

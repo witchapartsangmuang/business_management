@@ -42,7 +42,7 @@ body {
   }
 
   .form-select {
-    @apply block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-[right_0.75rem_center] bg-[length:14px] bg-[url(data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2016%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23343a40%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M2%205l6%206%206-6%27/%3E%3C/svg%3E)];
+    @apply block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-position-[right_0.75rem_center] bg-size-[14px] bg-[url(data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2016%27%3E%3Cpath%20fill%3D%27none%27%20stroke%3D%27%23343a40%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M2%205l6%206%206-6%27/%3E%3C/svg%3E)];
   }
 
   .form-input:disabled,
@@ -147,7 +147,18 @@ body {
 }
 
 @layer components {
-  .login-button {
-    @apply w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed;
+  .primary-button {
+    @apply bg-blue-600 hover:bg-blue-700 text-white shadow w-full rounded-lg px-4 py-2.5 text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+ .secondary-button {
+    @apply bg-neutral-600 hover:bg-neutral-700 text-black shadow w-full rounded-lg px-4 py-2.5 text-sm font-medium  disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .danger-button {
+    @apply bg-red-600 hover:bg-red-700 text-white shadow w-full rounded-lg px-4 py-2.5 text-sm font-medium  disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .success-button {
+    @apply bg-green-600 hover:bg-green-700 text-white shadow w-full rounded-lg px-4 py-2.5 text-sm font-medium  disabled:opacity-60 disabled:cursor-not-allowed;
   }
 }

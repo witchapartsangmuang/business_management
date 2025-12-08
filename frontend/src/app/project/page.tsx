@@ -10,12 +10,13 @@ export default function ProjectWorkList() {
                     <li className="p-3">Project Sponsor</li>
                 </ul>
             </div>
-            <div className="border w-full">
-                <div>
-                    <input type="text" />
-                    <button>columns</button>
+            <div className="flex w-[24rem]">
+                    <button className="border">columns</button>
+                    <input className="form-input" type="text" />
                 </div>
-                <table className="border w-full">
+            <div className="table-wrapper">
+                
+                <table className="tbl">
                     <thead>
                         <tr>
                             <th><input type="checkbox" /></th>

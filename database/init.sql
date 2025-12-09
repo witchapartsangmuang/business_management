@@ -10,6 +10,10 @@ CREATE TABLE IF NOT EXISTS users (
 	last_name VARCHAR(100),
 	phone VARCHAR(10),
     role VARCHAR(50) NOT NULL,
+	is_project_leader BOOLEAN,
+	is_approver BOOLEAN,
+	is_team_member BOOLEAN,
+	is_project_sponsor BOOLEAN,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 

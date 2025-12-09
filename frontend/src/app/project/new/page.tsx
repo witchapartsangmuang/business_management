@@ -63,6 +63,11 @@ export default function Page() {
             actual: []
         }
     ])
+
+    const [teamMember, setteamMember] = useState([
+        { sequence: 1, empNo: "", empName: "", weight: 0, startDate: "", endDate: "", }
+    ])
+
     function onClickInsertProjectKpi(row: number) {
         setprojectKpiList([...projectKpiList, {
             sequence: row,
@@ -327,7 +332,7 @@ export default function Page() {
                                                         <div className="w-[5rem] text-center p-1">Jan 25</div>
                                                         <div className="w-[5rem] text-center p-1">Jan 25</div>
                                                         <div className="w-[5rem] text-center p-1">Jan 25</div>
-                                                      
+
                                                     </div>
                                                 </th>
                                                 <th className="w-[5rem] text-center">Total</th>
@@ -420,7 +425,7 @@ export default function Page() {
                                                     </div>
                                                 </td>
                                             </tr>
-                                             <tr>
+                                            <tr>
                                                 <td>Investment</td>
                                                 <td>
                                                     <div className="flex h-[3rem] items-center">P</div>
@@ -604,7 +609,7 @@ export default function Page() {
                                 </div>
                                 <div className="rounded bg-white my-2">
                                     <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>
-                                    </div>
+                                </div>
                             </div>
                         </>
                     }

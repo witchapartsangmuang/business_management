@@ -13,7 +13,7 @@ export default function Sidebar() {
     <aside className="w-64 h-screen bg-gray-900 text-gray-200 p-4">
       <h1 className="text-xl font-semibold px-2 mb-6">Wisdom Platform</h1>
 
-      <nav className="space-y-1 overflow-y-scroll h-full  ">
+      <nav className="space-y-1 overflow-y-scroll h-full">
 
         {/* Single menus */}
         <MenuItem label="MD Policy" />

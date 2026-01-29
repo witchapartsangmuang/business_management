@@ -59,11 +59,15 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                         {open ? "⏴" : "⏵"}
                     </button>
                 </div>
-                <div>Header</div>
+                <div className="w-full flex justify-end items-center">
+                    <Link href={"/profile"}>
+                        <img className="w-[24px] h-[24px] object-cover rounded-full" src="/default-profile-avatar.webp" alt="avatar" />
+                    </Link>
+                </div>
             </div>
             <div className="flex min-h-[calc(100vh-4rem)]">
-                <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1" : "w-0 p-0"}`}>
-                    <ul>
+                <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1" : "w-0 p-0"} bg-[#F8FAFD]`}>
+                    <ul className="">
                         {
                             menus.map((menu) => (
                                 menu.children ? (

@@ -1,34 +1,91 @@
-"use client";
+"use client"
 
-import IconList from "@/components/icons/icon-list";
-import IconPlus from "@/components/icons/icon-plus";
+import IconArchive from "@/components/icons/icon-archive";
+import IconShare from "@/components/icons/icon-share";
 import { useState } from "react";
-import Link from "next/link";
-export default function ProjectWorkList() {
-    const [category, setCategory] = useState<string>("Project Leader");
+
+export default function PolicyPage() {
+    const [policyList, setPolicyList] = useState([
+        {
+            id: 1,
+            code: "SD&SG",
+            name: "Strategic Direction & Sustainable Growth Policy",
+            description: "นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน",
+            isActive: true,
+        },
+        {
+            id: 2,
+            code: "PRM",
+            name: "Performance & Result-Oriented Management Policy",
+            description: "นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน",
+            isActive: true,
+        },
+        {
+            id: 3,
+            code: "PLS",
+            name: "People, Leadership & Successor Development Policy",
+            description: "นโยบายบุคลากรและผู้นำ",
+            isActive: true,
+        },
+        {
+            id: 4,
+            code: "PE&CE",
+            name: "Process Excellence & Cost Efficiency Policy",
+            description: "นโยบายการพัฒนากระบวนการและต้นทุน",
+            isActive: true,
+        },
+        {
+            id: 5,
+            code: "DT&TE",
+            name: "Digital Transformation & Technology Enablement Policy",
+            description: "นโยบายดิจิทัลและเทคโนโลยี",
+            isActive: true,
+        },
+        {
+            id: 6,
+            code: "GRC",
+            name: "Governance, Risk & Compliance Policy",
+            description: "นโยบายธรรมาภิบาลและการกำกับดูแล",
+            isActive: true,
+        },
+        {
+            id: 7,
+            code: "CSV",
+            name: "Customer & Stakeholder Value Policy",
+            description: "นโยบายคุณค่าลูกค้าและผู้มีส่วนได้ส่วนเสีย",
+            isActive: false,
+        },
+        {
+            id: 8,
+            code: "EDA",
+            name: "Execution Discipline & Accountability Policy",
+            description: "นโยบายวินัยการปฏิบัติและความรับผิดชอบ",
+            isActive: false,
+        },
+    ]);
     return (
         <div className="bg-white rounded p-2 min-h-[calc(100vh-5rem)]">
-            <ul className="flex">
+            {/* <ul className="flex">
                 <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Leader" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Leader")}>Project Leader</button></li>
                 <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Approver" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Approver")}>Project Approver</button></li>
                 <li className="p-0.5"><button className={`rounded p-3 ${category === "Team Member" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Team Member")}>Team Member</button></li>
                 <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Sponsor" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Sponsor")}>Project Sponsor</button></li>
-            </ul>
+            </ul> */}
             <div className="flex w-full justify-between my-2">
-                {/* <ul className="flex ">
-                    <li className="p-0.5"><button className="border p-3 text-nowrap">Registered</button></li>
-                    <li className="p-0.5"><button className="border p-3 text-nowrap">On Going</button></li>
-                    <li className="p-0.5"><button className="border p-3 text-nowrap">Completed</button></li>
-                </ul> */}
+                <ul className="flex ">
+                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">All</button></li>
+                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">Active</button></li>
+                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">Inactive</button></li>
+                </ul>
                 <div className="flex w-full justify-between">
                     <div className="flex items-center">
-                        <Link href="/project/new">
+                        {/* <Link href="/project/new">
                             <button className="flex items-center rounded px-[0.5rem] py-[0.25rem] bg-gray-200 hover:bg-gray-300"><IconPlus className="h-6 w-6" size={24} /><span className="ml-1">New</span></button>
-                        </Link>
+                        </Link> */}
                     </div>
                     <div className="flex">
                         <div className="flex items-center mr-0.5 p-1">
-                            <button className="bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded"><IconList className="h-6 w-6" size={24} /></button>
+                            {/* <button className="bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded"><IconList className="h-6 w-6" size={24} /></button> */}
                         </div>
                         <input className="form-input" type="text" />
                     </div>
@@ -38,50 +95,33 @@ export default function ProjectWorkList() {
                 <table className="tbl">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" /></th>
-                            <th>Project No.</th>
-                            <th>Project Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Estimate Investment</th>
-                            <th>Actual Investment</th>
-                            <th>Estimate Cost Saving</th>
-                            <th>Actual Cost Saving</th>
-                            <th>Status</th>
+                            <th>No.</th>
+                            <th>Policy Code</th>
+                            <th>Policy Name</th>
+                            <th>Description</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><input type="checkbox" /></td>
-                            <td>PM-XXXXX</td>
-                            <td>Project Name XXXXX</td>
-                            <th>xx/xx/xxxx</th>
-                            <th>xx/xx/xxxx</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>xxxxxxx</th>
-                            <td>
-                                <button>Edit</button><button>DEL</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" /></td>
-                            <td>PM-XXXXX</td>
-                            <td>Project Name XXXXX</td>
-                            <th>xx/xx/xxxx</th>
-                            <th>xx/xx/xxxx</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>-</th>
-                            <th>xxxxxxx</th>
-                            <td>
-                                <button>Edit</button><button>DEL</button>
-                            </td>
-                        </tr>
+                        {
+                            policyList.map((policy, index) => (
+                                <tr key={policy.id}>
+                                    <td>{index + 1}.</td>
+                                    <td>{policy.code}</td>
+                                    <td>{policy.name}</td>
+                                    <td>{policy.description}</td>
+                                    <td>
+                                        {
+                                            policy.isActive ? (
+                                                <button className="danger-button w-auto"><IconArchive className="text-red-200" size={24} /></button>
+                                            ) : (
+                                                <button className="danger-button w-auto"><IconShare className="text-red-200" size={24} /></button>
+                                            )
+                                        }
+                                        
+                                    </td>
+                                </tr>
+                            ))}
                         {/* <tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr> */}
                     </tbody>
                 </table>

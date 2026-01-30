@@ -2,12 +2,12 @@
 \c business_management_database;
 
 -- แนะนำใช้ชื่อ table ว่า users (เพราะ user เป็น keyword)
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS employee (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
 	first_name VARCHAR(100),
 	last_name VARCHAR(100),
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
 	phone VARCHAR(10),
     role VARCHAR(50) NOT NULL,
 	is_project_leader BOOLEAN,

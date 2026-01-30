@@ -9,17 +9,13 @@ export class AuthService {
   static async register(data: {
     email: string;
     password: string;
-    confirmPassword: string;
     firstName: string;
     lastName: string;
     phone: string;
     role: string;
   }) {
-    const { email, password, confirmPassword, firstName, lastName, phone, role } = data;
+    const { email, password, firstName, lastName, phone, role } = data;
     console.log("data: ", data);
-    if (!email || !password || !confirmPassword) {
-      throw new Error("Username, email and password are required.");
-    }
     // ตรวจ user ซ้ำ
     const existing = await db.query(
       "SELECT id FROM users WHERE email = $1",
@@ -33,7 +29,7 @@ export class AuthService {
 
     // insert user
     const result = await db.query(
-      `INSERT INTO users (email, password_hash, first_name, last_name, phone, role)
+      `INSERT INTO employee (email, password_hash, first_name, last_name, phone, role)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, email, first_name, last_name, phone, role, created_at`,
       [email, hashedPassword, firstName, lastName, phone, role]

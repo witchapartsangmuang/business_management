@@ -29,10 +29,15 @@ export default function Layout({ children, }: { children: React.ReactNode }) {
                             <LayoutAdmin>
                                 {children}
                             </LayoutAdmin>
-                            :
-                            <LayoutUser>
-                                {children}
-                            </LayoutUser>
+
+                            : pathname.startsWith("/sys") ?
+                                <>
+                                    {children}
+                                </>
+                                :
+                                <LayoutUser>
+                                    {children}
+                                </LayoutUser>
             }
         </>
         // <div className="flex h-screen bg-gray-100">

@@ -14,6 +14,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
     const [open, setOpen] = useState(true);
     const [collapsed, setCollapsed] = useState<string>("");
     const [menus, setMenus] = useState([
+
         { name: "KPI Alignment", path: "/kpi-alignment", icon: IconBook, link: "/kpi-alignment" },
         {
             name: "Project Management", path: "/project", icon: IconDashboard, children: [
@@ -57,7 +58,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
 
     return (
         <>
-            <div className="flex h-16 p-2 sticky top-0 bg-yellow-100">
+            <div className="flex h-16 p-2 sticky top-0 shadow bg-white z-10">
                 <div className="w-[16rem] bg-[#555555]">Logo</div>
                 <div>
                     <button className="p-3 w-full text-left hover:bg-[#EBEDF0]" onClick={() => setOpen(!open)} >
@@ -66,7 +67,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                 </div>
                 <div className="w-full flex justify-end items-center pr-2">
                     <div className="mr-3">
-                        <NotificationBell/>
+                        <NotificationBell />
                     </div>
                     <div className="mr-3">
                         <LanguageSwitcher />
@@ -80,7 +81,7 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                 </div>
             </div>
             <div className="flex min-h-[calc(100vh-4rem)]">
-                <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1" : "w-0 p-0"} bg-[#F8FAFD]`}>
+                <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1 shadow" : "w-0 p-0"} bg-[#F8FAFD]`}>
                     <ul className="">
                         {
                             menus.map((menu) => (

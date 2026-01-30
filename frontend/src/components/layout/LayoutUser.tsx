@@ -4,6 +4,10 @@ import IconDashboard from "../icons/icon-dashboard";
 import IconBook from "../icons/icon-book";
 import IconDatabase from "../icons/icon-database";
 import { usePathname } from "next/navigation";
+import LanguageSwitcher from "../testCom/switcherLang";
+import UserMenuDropdown from "../testCom/userMenu";
+import IconArrowBarLeft from "../icons/icon-arrow-bar-left";
+import IconArrowBarRight from "../icons/icon-arrow-bar-right";
 export default function LayoutUser({ children, }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [open, setOpen] = useState(true);
@@ -56,13 +60,19 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                 <div className="w-[16rem] bg-[#555555]">Logo</div>
                 <div>
                     <button className="p-3 w-full text-left hover:bg-[#EBEDF0]" onClick={() => setOpen(!open)} >
-                        {open ? "⏴" : "⏵"}
+                        {open ? <IconArrowBarLeft className={" text-red-500"} size={20} /> : <IconArrowBarRight className={" text-red-500"} size={20} />}
                     </button>
                 </div>
-                <div className="w-full flex justify-end items-center">
-                    <Link href={"/profile"}>
+                <div className="w-full flex justify-end items-center pr-2">
+                    <div className="mr-3">
+                        <LanguageSwitcher />
+                    </div>
+                    <div>
+                        <UserMenuDropdown profileHref="/profile" />
+                    </div>
+                    {/* <Link href={"/profile"}>
                         <img className="w-[24px] h-[24px] object-cover rounded-full" src="/default-profile-avatar.webp" alt="avatar" />
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
             <div className="flex min-h-[calc(100vh-4rem)]">

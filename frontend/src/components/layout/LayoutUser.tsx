@@ -8,6 +8,7 @@ import LanguageSwitcher from "../testCom/switcherLang";
 import UserMenuDropdown from "../testCom/userMenu";
 import IconArrowBarLeft from "../icons/icon-arrow-bar-left";
 import IconArrowBarRight from "../icons/icon-arrow-bar-right";
+import NotificationBell from "../testCom/notificationBell";
 export default function LayoutUser({ children, }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [open, setOpen] = useState(true);
@@ -64,6 +65,9 @@ export default function LayoutUser({ children, }: { children: React.ReactNode })
                     </button>
                 </div>
                 <div className="w-full flex justify-end items-center pr-2">
+                    <div className="mr-3">
+                        <NotificationBell/>
+                    </div>
                     <div className="mr-3">
                         <LanguageSwitcher />
                     </div>

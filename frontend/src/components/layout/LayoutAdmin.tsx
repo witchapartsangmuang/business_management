@@ -1,20 +1,14 @@
-'use client';
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link";
 import IconDashboard from "../icons/icon-dashboard";
 import IconBook from "../icons/icon-book";
 import IconDatabase from "../icons/icon-database";
 import { usePathname } from "next/navigation";
-import LanguageSwitcher from "../testCom/switcherLang";
-import UserMenuDropdown from "../testCom/userMenu";
-import IconArrowBarLeft from "../icons/icon-arrow-bar-left";
-import IconArrowBarRight from "../icons/icon-arrow-bar-right";
-import NotificationBell from "../testCom/notificationBell";
-export default function LayoutAdmin({ children, }: { children: React.ReactNode }) {
+
+export default function LayoutAdmin({ children, open }: { children: React.ReactNode, open: boolean }) {
     const pathname = usePathname();
-    const [open, setOpen] = useState(true);
     const [collapsed, setCollapsed] = useState<string>("");
-    const [menus, setMenus] = useState([
+    const menus = [
         { name: "MD Policy", path: "/admin/md-policy", icon: IconBook, link: "/md-policy" },
         {
             name: "Master Data", path: "/admin/master-data", icon: IconDashboard, children: [
@@ -29,8 +23,8 @@ export default function LayoutAdmin({ children, }: { children: React.ReactNode }
                 { name: "Employee", path: "/admin/organizational-structure/employee", link: "/admin/organizational-structure/employee" },
             ]
         },
-        { name: "basic Menus", path: "/", icon: IconDatabase, link: "/" },
-    ]);
+        { name: "basic Menus", path: "/basic", icon: IconDatabase, link: "/" },
+    ]
     function collapseMenu(path: string) {
         if (path !== collapsed) {
             setCollapsed(path)
@@ -40,40 +34,18 @@ export default function LayoutAdmin({ children, }: { children: React.ReactNode }
     }
     return (
         <>
-            <div className="flex h-16 p-2 sticky top-0 shadow bg-white z-10">
-                <div className="w-[16rem] bg-[#555555]">Logo</div>
-                <div>
-                    <button className="p-3 w-full text-left hover:bg-[#EBEDF0]" onClick={() => setOpen(!open)} >
-                        {open ? <IconArrowBarLeft className={" text-red-500"} size={20} /> : <IconArrowBarRight className={" text-red-500"} size={20} />}
-                    </button>
-                </div>
-                <div className="w-full flex justify-end items-center pr-2">
-                    <div className="mr-3">
-                        <NotificationBell />
-                    </div>
-                    <div className="mr-3">
-                        <LanguageSwitcher />
-                    </div>
-                    <div>
-                        <UserMenuDropdown profileHref="/profile" />
-                    </div>
-                    {/* <Link href={"/profile"}>
-                        <img className="w-[24px] h-[24px] object-cover rounded-full" src="/default-profile-avatar.webp" alt="avatar" />
-                    </Link> */}
-                </div>
-            </div>
             <div className="flex min-h-[calc(100vh-4rem)]">
                 <div className={`h-[calc(100vh-4rem)] sticky top-16 text-white transition-all duration-300 overflow-y-auto ${open ? "min-w-66 p-1 shadow" : "w-0 p-0"} bg-[#F8FAFD]`}>
                     <ul className="">
                         {
                             menus.map((menu) => (
                                 menu.children ? (
-                                    <>
-                                        <li key={`${menu.name}-li`} className={`cursor-pointer p-1 flex h-10 items-center hover:bg-[#EBEDF0] rounded-md ${pathname.startsWith(menu.path) ? 'bg-[#D3E3FD]' : 'bg-[#F8FAFD]'}`} onClick={() => { collapseMenu(menu.path) }}>
+                                    <div key={`${menu.name}-li`}>
+                                        <li className={`cursor-pointer p-1 flex h-10 items-center hover:bg-[#EBEDF0] rounded-md ${pathname.startsWith(menu.path) ? 'bg-[#D3E3FD]' : 'bg-[#F8FAFD]'}`} onClick={() => { collapseMenu(menu.path) }}>
                                             <menu.icon className={" text-red-500"} size={20} />
                                             <span className="pl-2 text-black">{menu.name}</span>
                                         </li>
-                                        <ul key={`${menu.name}-ul`} className={`pl-4 overflow-hidden transition-all ${pathname.startsWith(menu.path) || collapsed === menu.path ? "max-h-100 duration-100" : "max-h-0 duration-0"}`}>
+                                        <ul className={`pl-4 overflow-hidden transition-all ${pathname.startsWith(menu.path) || collapsed === menu.path ? "max-h-100 duration-100" : "max-h-0 duration-0"}`}>
                                             {menu.children.map((subMenu) => (
                                                 <Link href={subMenu.link} key={subMenu.name}>
                                                     <li className={`flex items-center p-2 hover:bg-[#EBEDF0] rounded-md ${pathname.startsWith(subMenu.path) || collapsed === subMenu.path ? 'bg-[#D3E3FD]' : 'bg-[#F8FAFD]'}`}>
@@ -82,7 +54,7 @@ export default function LayoutAdmin({ children, }: { children: React.ReactNode }
                                                 </Link>
                                             ))}
                                         </ul>
-                                    </>
+                                    </div>
                                 ) : (
                                     <Link key={menu.name} href={menu.link}>
                                         <li className={`p-1 flex h-10 items-center hover:bg-[#EBEDF0] rounded-md ${pathname.startsWith(menu.path) ? 'bg-[#D3E3FD]' : 'bg-[#F8FAFD]'}`}>

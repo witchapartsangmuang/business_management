@@ -1,7 +1,7 @@
 export default function IconArrowBarRight({ className, size }: { className?: string, size?: number }) {
     return (
-        <svg className={className} width={size} height={size} viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <svg className={className} width={size} height={size} viewBox="0 0 24 24" strokeWidth="2"
+            stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
             <line x1="20" y1="12" x2="10" y2="12" />
             <line x1="20" y1="12" x2="16" y2="16" />

@@ -1,67 +1,63 @@
-"use client";
-
+'use client';
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Sidebar from "./menu";
 import LayoutUser from "./layout/LayoutUser";
 import LayoutAdmin from "./layout/LayoutAdmin";
-import LayoutSystemAdmin from "./layout/LayoutSystemAdmin";
-
+import IconArrowBarRight from "./icons/icon-arrow-bar-right";
+import IconArrowBarLeft from "./icons/icon-arrow-bar-left";
+import NotificationBell from "./navbar/NotificationBell";
+import LanguageSwitcher from "./navbar/LanguageSwitch";
+import UserMenuDropdown from "./navbar/UserMenuDropdown";
 export default function Layout({ children, }: { children: React.ReactNode }) {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const pathname = usePathname();
+    const [open, setOpen] = useState(true);
     useEffect(() => {
         console.log("pathname", pathname);
-
     }, [])
     return (
         <>
             {
-                pathname === "/login" ?
+                pathname === "/login" || pathname === "/sys" ?
                     <>
                         {children}
                     </>
-                    : pathname.startsWith("/system") ?
-                        <LayoutSystemAdmin>
-                            {children}
-                        </LayoutSystemAdmin>
-                        : pathname.startsWith("/admin") ?
-                            <LayoutAdmin>
-                                {children}
-                            </LayoutAdmin>
-
-                            : pathname.startsWith("/sys") ?
-                                <>
+                    :
+                    <>
+                        <div className="flex h-16 p-2 sticky top-0 shadow bg-white z-10">
+                            <div className="w-[16rem] bg-[#555555]">Logo</div>
+                            <div>
+                                <button className="p-3 w-full text-left hover:bg-[#EBEDF0]" onClick={() => setOpen(!open)} >
+                                    {open ? <IconArrowBarLeft className={" text-red-500"} size={20} /> : <IconArrowBarRight className={" text-red-500"} size={20} />}
+                                </button>
+                            </div>
+                            <div className="w-full flex justify-end items-center pr-2">
+                                <div className="mr-3">
+                                    <NotificationBell />
+                                </div>
+                                <div className="mr-3">
+                                    <LanguageSwitcher />
+                                </div>
+                                <div>
+                                    <UserMenuDropdown profileHref="/profile" />
+                                </div>
+                                {/* <Link href={"/profile"}>
+                                            <img className="w-[24px] h-[24px] object-cover rounded-full" src="/default-profile-avatar.webp" alt="avatar" />
+                                        </Link> */}
+                            </div>
+                        </div>
+                        {
+                            pathname.startsWith("/admin") ?
+                                <LayoutAdmin open={open}>
                                     {children}
-                                </>
+                                </LayoutAdmin>
                                 :
-                                <LayoutUser>
+                                <LayoutUser open={open}>
                                     {children}
                                 </LayoutUser>
+                        }
+                    </>
+
             }
         </>
-        // <div className="flex h-screen bg-gray-100">
-        //     <div>
-        //         <aside className={`${sidebarOpen ? "block" : "hidden"} w-64 bg-red-700 text-white sticky top-0 overflow-auto`}>
-        //             <div className="h-full bg-blue-500 flex items-center px-4 sticky top-0 overflow-auto">
-        //                 <div className="">
-        //                     {
-        //                         Array.from(Array(50), (e, i) => {
-        //                             return <li key={i}>Menu {i}</li>
-        //                         })
-        //                     }
-        //                 </div>
-        //             </div>
-        //         </aside>
-        //     </div>
-        //     <div className="flex-1 flex flex-col">
-        //         <header className="h-16 bg-blue-500 flex items-center px-4  sticky top-0">
-        //             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">Toggle Sidebar</button>
-        //         </header>
-        //         <main className="flex-1 p-4 bg-white">
-        //             {children}
-        //         </main>
-        //     </div>
-        // </div>
-    );
+    )
 }

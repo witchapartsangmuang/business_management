@@ -616,8 +616,12 @@ export default function Page() {
                 </div>
             </div>
             <div className="flex justify-between rounded bg-white mt-2 p-2">
-                <button className="px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Back</button>
-                <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save</button>
+                <div>
+                    <button className="secondary-button">Back</button>
+                </div>
+                <div>
+                    <button className="primary-button">Save</button>
+                </div>
             </div>
         </>
     )

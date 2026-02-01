@@ -69,6 +69,10 @@ export default function EmployeeDetailPage() {
         employee_update: true,
         employee_delete: true
     });
+    // useEffect(()=>{
+    //     console.log(employeeInfo.approver, 'employeeInfo.approver');
+        
+    // },[employeeInfo.approver])
     async function fetchData() {
         try {
             await axios.get(`/api/employee/${params.id}`).then((response) => {
@@ -169,11 +173,12 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label">Approver</label>
-                                <SearchSelect optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }]} onChange={(value) => setEmployeeInfo({ ...employeeInfo, approver: value })} />
-                                {/* <select className="form-select" value={employeeInfo.approver} onChange={(e) => setEmployeeInfo({ ...employeeInfo, approver: e.target.value })}>
-                                    <option>Mr. A</option>
-                                    <option>Mr. B</option>
-                                </select> */}
+                                <SearchSelect
+                                    optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
+                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, approver: value })} 
+                                    placeholder={'select!! Approver'}
+                                    />
+
                             </div>
 
                             <div className="col-span-6 mt-3 px-3">

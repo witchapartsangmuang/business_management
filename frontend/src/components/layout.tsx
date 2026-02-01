@@ -11,9 +11,9 @@ import UserMenuDropdown from "./navbar/UserMenuDropdown";
 export default function Layout({ children, }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [open, setOpen] = useState(true);
-    useEffect(() => {
-        console.log("pathname", pathname);
-    }, [])
+    // useEffect(() => {
+    //     console.log("pathname", pathname);
+    // }, [])
     return (
         <>
             {

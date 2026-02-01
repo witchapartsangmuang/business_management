@@ -1,24 +1,29 @@
 import { useEffect, useState } from "react"
 
-export default function SearchSelect({ optionList, placeholder, onChange }: { optionList: { value: string | number, label: string }[], placeholder: string, onChange: (value: string) => void }) {
+export default function SearchSelect({ optionList, placeholder, defaultValue, onChange }: { optionList: { value: string, label: string }[], placeholder: string, defaultValue: string | null, onChange: (value: string | null) => void }) {
     const [query, setQuery] = useState("")
     const [openDropdownList, setOpenDropdownList] = useState(false)
     const [filteredOptions, setFilteredOptions] = useState(optionList)
-    const [selected, setSelected] = useState<{ value: string | number, label: string } | null>(null)
+    const [selected, setSelected] = useState<{ value: string, label: string } | null>(null)
     const handleBlur = () => {
-        if (!selected) setQuery("")
+        if (!selected) {
+            setQuery("")
+            onChange(null)
+        }
         const timeoutId = setTimeout(() => {
             setOpenDropdownList(false)
         }, 200)
-        console.log("blur")
         return () => clearTimeout(timeoutId)
     }
 
-    const clickSelect = (value: string | number, label: string) => {
+    const clickSelect = (value: string, label: string) => {
         setSelected({ value, label })
         setQuery(label)
-        onChange(value as string)
-        handleBlur()
+        onChange(value)
+        const timeoutId = setTimeout(() => {
+            setOpenDropdownList(false)
+        }, 200)
+        return () => clearTimeout(timeoutId)
     }
 
     useEffect(() => {
@@ -28,12 +33,20 @@ export default function SearchSelect({ optionList, placeholder, onChange }: { op
             )
             setFilteredOptions(filtered)
         }
-    }, [query, optionList])
+    }, [query])
     useEffect(() => {
-        console.log("query : ", query);
-        console.log("selected : ", selected);
+        if (defaultValue !== undefined && defaultValue !== null) {
 
-    }, [query, selected])
+            const defaultOption = optionList.find(o => o.value === defaultValue)
+            if (defaultOption) {
+                setSelected(defaultOption)
+                setQuery(defaultOption.label)
+            }
+        }
+    }, [optionList])
+    // useEffect(() => {
+    //     console.log(`optionList ${placeholder} : `,optionList);
+    // }, [optionList])
     return (
         <div className="relative">
             <input
@@ -50,11 +63,11 @@ export default function SearchSelect({ optionList, placeholder, onChange }: { op
                 className="form-input"
             />
             {openDropdownList && filteredOptions.length &&
-                <div className="absolute z-10 p-1  my-1 w-full rounded-lg border border-gray-200 bg-white shadow">
+                <div className="absolute z-1000 p-1  my-1 w-full rounded-lg border border-gray-200 bg-white shadow">
                     <ul className="max-h-48 overflow-auto">
-                        {filteredOptions.map((option) => (
+                        {filteredOptions.map((option, index) => (
                             <li
-                                key={option.value}
+                                key={`${index}-${option.label}-${option.value}`}
                                 className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
                                 onClick={() => clickSelect(option.value, option.label)}
                             >

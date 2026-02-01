@@ -35,10 +35,10 @@ export type ProjectInfo = {
     // For Revise
     end_date_rev: string,
     opportunity_statement: string,
-    investment: number,
+    est_investment: number,
     // For Revise
-    investment_rev: number,
-    gross_earnings: number,
+    est_investment_rev: number,
+    est_gross_earnings: number,
     payback_period_year: number,
     return_on_investment: number,
     project_approver: string,

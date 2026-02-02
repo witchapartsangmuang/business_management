@@ -13,7 +13,7 @@ type userInfo = {
   organizationalUnit: string;
 }
 
-export default function AccountPage() {
+export default function ProfilePage() {
   const initialUrl = "/default-profile-avatar.webp";
 
   const inputRef = useRef<HTMLInputElement | null>(null);

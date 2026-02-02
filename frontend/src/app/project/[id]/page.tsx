@@ -3,6 +3,7 @@ import SearchSelect from "@/components/input/SearchSelect";
 import { useEffect, useState } from "react";
 
 import { Md_Policy, Kpi, Employee_Project, ProjectInfo, } from "@/types/project";
+import { Table, TableBody, TableFooter, TableHeader } from "@/components/table/Table";
 // Start Data List For Select
 const md_policy_list: Md_Policy[] = [
     { id: 1, policy_code: 'SD&SG', policy_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026 },
@@ -22,11 +23,11 @@ const employee_list: Employee_Project[] = [
     { id: 2, employee_code: 'EMP002', first_name: 'Aphiwit', last_name: 'Muangsang', is_project_leader: false, is_project_approver: true, is_project_member: true, },
     { id: 3, employee_code: 'EMP003', first_name: 'Sangya', last_name: 'Kanya', is_project_leader: true, is_project_approver: false, is_project_member: true, },
 ]
-export default function Page() {
+export default function ProjectPage() {
     const [select_md_policy_list, setselect_md_policy_list] = useState<{ value: string, label: string }[]>([])
 
     const [kpi_select_list, setkpi_select_list] = useState<{ value: string, label: string }[]>([])
-    const [other_benefit_select_list, setother_benefit_select_list] = useState<{ value: string, label: string }[]>([])
+    const [other_benefit_select_list, setother_benefit_select_list] = useState<{ value: string, label: string }[]>(kpi_list.map(kpi => ({ value: String(kpi.id), label: `${kpi.kpi_code} - ${kpi.kpi_name} (${kpi.unit})` })))
 
     const [select_project_leader_list, setselect_project_leader_list] = useState<{ value: string, label: string }[]>([])
     const [select_project_approver_list, setselect_project_approver_list] = useState<{ value: string, label: string }[]>([])
@@ -95,20 +96,17 @@ export default function Page() {
         grade_quality: '',
         grade_reason: ''
     });
-    const [project_kpi_list, setproject_kpi_list] = useState<{ id: number | null, sequence: number, kpi_id: number | null, target: number, plan: any[], actual: any[] }[]>([
+    const [project_kpi_list, setproject_kpi_list] = useState<{ id: number | null, sequence: number, kpi_id: number | null, target: number | null, plan: any[], actual: any[] }[]>([
         {
             id: null,
             sequence: 1,
             kpi_id: null,
-            target: 0,
+            target: null,
             plan: [],
             actual: []
         }
     ])
 
-    const [teamMember, setteamMember] = useState([
-        { sequence: 1, emp_no: "", empName: "", weight: 0, start_date: "", end_date: "", }
-    ])
 
     function onClickInsertProjectKpi(row: number) {
         setproject_kpi_list([...project_kpi_list, {
@@ -143,9 +141,72 @@ export default function Page() {
         setproject_kpi_list(updateKpi)
     }
 
-    useEffect(() => {
-        console.log(`project_kpi_list : `, project_kpi_list);
-    }, [project_kpi_list])
+
+
+    const [project_other_benefit_list, setproject_other_benefit_list] = useState<{ id: number | null, sequence: number, kpi_id: number | null, target: number | null, plan: any[], actual: any[] }[]>([
+        {
+            id: null,
+            sequence: 1,
+            kpi_id: null,
+            target: null,
+            plan: [],
+            actual: []
+        }
+    ])
+
+    function onClickInsertProjectOtherBenefit(row: number) {
+        setproject_other_benefit_list([...project_other_benefit_list, {
+            id: null,
+            sequence: row,
+            kpi_id: null,
+            target: 0,
+            plan: [],
+            actual: []
+        }])
+    }
+    function onChangeProjectOtherBenefit(row: number, selectedKpi: number | null, target?: number) {
+        const kpi_id = kpi_list.find((kpi) => kpi.id === selectedKpi)?.id || null
+        const updateKpi = project_other_benefit_list.map((projectKpi, index) => {
+            if (row === index) {
+                return { ...projectKpi, kpi_id, target: target !== undefined ? target : projectKpi.target }
+            } else {
+                return projectKpi
+            }
+        })
+        setproject_other_benefit_list(updateKpi)
+    }
+
+    function onClickRemoveProjectOtherBenefit(row: number) {
+        var updateKpi = project_other_benefit_list.filter((kpi) => kpi.sequence !== row)
+        var number = 1
+        updateKpi = updateKpi.map((projectKpi) => {
+            const kpiItem = { ...projectKpi, sequence: number }
+            number += 1
+            return kpiItem
+        })
+        setproject_other_benefit_list(updateKpi)
+    }
+
+
+
+    const [teamMember, setteamMember] = useState([
+        { sequence: 1, emp_no: "", empName: "", weight: 0, start_date: "", end_date: "", }
+    ])
+
+    function onClickInsertTeamMember(row: number) {
+        setteamMember([...teamMember, {
+            sequence: row,
+            emp_no: "",
+            empName: "",
+            weight: 0,
+            start_date: "",
+            end_date: ""
+        }])
+    }
+
+    // useEffect(() => {
+    //     console.log(`project_kpi_list : `, project_kpi_list);
+    // }, [project_kpi_list])
     return (
         <>
             <ul className="flex px-2 py-1 justify-center">
@@ -167,6 +228,8 @@ export default function Page() {
                     <button className={`py-1.5 px-4 rounded-t ${tabOpen === 3 ? "bg-blue-500 text-white" : ""}`} onClick={() => { setTabOpen(3) }}>Project Plan</button>
                 </ul>
             </div>
+
+
             <div className="bg-white rounded min-h-[calc(100vh-12rem)]">
                 <div className="grid grid-cols-12">
                     {tabOpen === 0 &&
@@ -181,11 +244,11 @@ export default function Page() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label" htmlFor="">MD Policy</label>
-                                {/* <SearchSelect optionList={select_md_policy_list} placeholder={'Select MD Policy'} defaultValue={String(projectInfo.md_policy)} onChange={(value) => setProjectInfo({ ...projectInfo, md_policy: Number(value) })} /> */}
+                                <SearchSelect optionList={select_md_policy_list} placeholder={'Select MD Policy'} defaultValue={String(projectInfo.md_policy)} onChange={(value) => setProjectInfo({ ...projectInfo, md_policy: Number(value) })} />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label" htmlFor="">Project Leader</label>
-                                {/* <SearchSelect optionList={select_project_leader_list} placeholder={'Select Project Leader'} defaultValue={projectInfo.project_leader} onChange={(value) => setProjectInfo({ ...projectInfo, project_leader: value })} /> */}
+                                <SearchSelect optionList={select_project_leader_list} placeholder={'Select Project Leader'} defaultValue={projectInfo.project_leader} onChange={(value) => setProjectInfo({ ...projectInfo, project_leader: value !== null ? value : '' })} />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label" htmlFor="">Start Date</label>
@@ -197,6 +260,39 @@ export default function Page() {
                             </div>
                             <div className="col-span-12 mt-10 px-3">
                                 <p className="font-bold">KPI (Key Peroformance Indicator)</p>
+                            </div>
+                            <div className="col-span-12 mt-3 px-3">
+                                <Table>
+                                    <TableHeader>
+                                        <tr>
+                                            <th>#</th>
+                                            <th className="min-w-[46rem]">KPI</th>
+                                            <th className="min-w-[42rem]">Target</th>
+                                            <th>Unit</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {project_kpi_list.map((projectKpi, index) => (
+                                            <tr key={`project_kpi_list-${index}`}>
+                                                <td>{projectKpi.sequence}</td>
+                                                <td>
+                                                    <SearchSelect optionList={kpi_select_list} placeholder={'Select KPI'} defaultValue={String(projectKpi.kpi_id)} onChange={(value) => { onChangeProjectKpi(index, Number(value)) }} />
+                                                </td>
+                                                <td><input type="number" className="form-input" value={projectKpi.target !== null ? projectKpi.target : ''} onChange={(e) => { onChangeProjectKpi(index, projectKpi.kpi_id, Number(e.target.value)) }} /></td>
+                                                <td><input type="text" className="form-input" value={projectKpi.kpi_id ? kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit : ""} readOnly /></td>
+                                                <td>
+                                                    <button className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={() => { onClickRemoveProjectKpi(projectKpi.sequence) }}>Delete</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </TableBody>
+                                    <TableFooter>
+                                        <tr>
+                                            <td colSpan={5}>Total: {project_kpi_list.length} kpi(s)</td>
+                                        </tr>
+                                    </TableFooter>
+                                </Table>
                             </div>
                             <div className="col-span-12 mt-3 px-3">
                                 <div className="table-wrapper">
@@ -213,11 +309,13 @@ export default function Page() {
                                         <tbody>
                                             {project_kpi_list.map((projectKpi, index) => (
                                                 <tr key={`project_kpi_list-${index}`}>
-                                                    <td>{projectKpi.sequence}</td>
+                                                    <td>
+                                                        {projectKpi.sequence}
+                                                    </td>
                                                     <td>
                                                         <SearchSelect optionList={kpi_select_list} placeholder={'Select KPI'} defaultValue={String(projectKpi.kpi_id)} onChange={(value) => { onChangeProjectKpi(index, Number(value)) }} />
                                                     </td>
-                                                    <td><input type="number" className="form-input" value={projectKpi.target} onChange={(e) => { onChangeProjectKpi(index, projectKpi.kpi_id, Number(e.target.value)) }} /></td>
+                                                    <td><input type="number" className="form-input" value={projectKpi.target !== null ? projectKpi.target : ''} onChange={(e) => { onChangeProjectKpi(index, projectKpi.kpi_id, Number(e.target.value)) }} /></td>
                                                     <td><input type="text" className="form-input" value={projectKpi.kpi_id ? kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit : ""} readOnly /></td>
                                                     <td>
                                                         <button className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={() => { onClickRemoveProjectKpi(projectKpi.sequence) }}>Delete</button>
@@ -266,20 +364,61 @@ export default function Page() {
                                 <label className="form-label" htmlFor="">Return on Investment - ROI (%)</label>
                                 <input type="number" className="form-input" readOnly value={projectInfo.return_on_investment} onChange={(e) => setProjectInfo({ ...projectInfo, return_on_investment: Number(e.target.value) })} />
                             </div>
+                            <div className="col-span-12 mt-10 px-3">
+                                <p className="font-bold">Other Benefit</p>
+                            </div>
                             <div className="col-span-12 mt-3 px-3">
                                 <div className="table-wrapper">
-                                    <table className="tbl tbl-zebra tbl-sortable">
-                                        <thead className="">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Other Benefit</th>
-                                                <th>Target</th>
-                                                <th>Unit</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table></div></div>
+                                    <div className="table-scroll-x">
+                                        <div className="table-inner">
+                                            <table className="tbl tbl-zebra tbl-sortable">
+                                                <thead className="">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Other Benefit</th>
+                                                        <th>Target</th>
+                                                        <th>Unit</th>
+                                                        <th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th><th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {project_other_benefit_list.map((projectKpi, index) => (
+                                                        <tr key={`project_other_benefit_list-${index}`}>
+                                                            <td>{projectKpi.sequence}</td>
+                                                            <td>
+                                                                <SearchSelect optionList={other_benefit_select_list} placeholder={'Select Other Benefit'} defaultValue={String(projectKpi.kpi_id)} onChange={(value) => { onChangeProjectOtherBenefit(index, Number(value)) }} />
+                                                            </td>
+                                                            <td><input type="number" className="form-input" value={projectKpi.target !== null ? projectKpi.target : ''} onChange={(e) => { onChangeProjectOtherBenefit(index, projectKpi.kpi_id, Number(e.target.value)) }} /></td>
+                                                            <td><input type="text" className="form-input" value={projectKpi.kpi_id ? kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit : ""} readOnly /></td>
+                                                            <td>
+                                                                <button className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={() => { onClickRemoveProjectOtherBenefit(projectKpi.sequence) }}>Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colSpan={5}>Total: {project_other_benefit_list.length} Other Benefit(s)</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between">
+                                    <div className="px-4 py-3">
+                                        <button className="primary-button" onClick={() => { onClickInsertProjectOtherBenefit(project_other_benefit_list.length + 1) }}>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <div className="tbl-pagination">
+                                        <button className="tbl-page-btn">Prev</button>
+                                        <button className="tbl-page-btn tbl-page-btn-active">1</button>
+                                        <button className="tbl-page-btn">2</button>
+                                        <button className="tbl-page-btn">Next</button>
+                                    </div>
+                                </div>
+                            </div>
                         </>
                     }
                     {tabOpen === 2 &&
@@ -295,49 +434,54 @@ export default function Page() {
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Name</th>
-                                                <th>% Weigth</th>
+                                                <th>% Weight</th>
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    <select className="form-select">
-                                                        <option value="test1">test1</option>
-                                                        <option value="test2">test2</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="number" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    <select className="form-select">
-                                                        <option value="test1">test1</option>
-                                                        <option value="test2">test2</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="number" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td></td>
-                                            </tr>
+                                            {
+                                                teamMember.map((member, index) => (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}</td>
+                                                        <td><SearchSelect optionList={select_project_member_list} placeholder={'Select Team Member'} defaultValue={member.empName} onChange={(value) => {
+                                                            const newTeamMember = [...teamMember];
+                                                            newTeamMember[index].empName = value !== null ? value : '';
+                                                            setteamMember(newTeamMember);
+                                                        }} /></td>
+                                                        <td><input type="number" className="form-input" value={member.weight} onChange={(e) => {
+                                                            const newTeamMember = [...teamMember];
+                                                            newTeamMember[index].weight = Number(e.target.value);
+                                                            setteamMember(newTeamMember);
+                                                        }} /></td>
+                                                        <td>
+                                                            <input type="date" className="form-input" value={member.start_date} onChange={(e) => {
+                                                                const newTeamMember = [...teamMember];
+                                                                newTeamMember[index].start_date = e.target.value;
+                                                                setteamMember(newTeamMember);
+                                                            }} /></td>
+                                                        <td>
+                                                            <input type="date" className="form-input" value={member.end_date} onChange={(e) => {
+                                                                const newTeamMember = [...teamMember];
+                                                                newTeamMember[index].end_date = e.target.value;
+                                                                setteamMember(newTeamMember);
+                                                            }} />
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                ))
+                                            }
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colSpan={6}>Total: 2 member(s)</td>
+                                                <td colSpan={6}>Total: {teamMember.length} member(s)</td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                     <div className="flex justify-between">
                                         <div className="px-4 py-3">
-                                            <button className="primary-button" onClick={() => { onClickInsertProjectKpi(project_kpi_list.length + 1) }}>
+                                            <button className="primary-button" onClick={() => { onClickInsertTeamMember(teamMember.length + 1) }}>
                                                 Add
                                             </button>
                                         </div>
@@ -510,142 +654,144 @@ export default function Page() {
 
                             <div className="col-span-12 mt-3 px-3">
                                 <div className="table-wrapper">
-                                    <table className="tbl tbl-zebra tbl-sortable">
-                                        <thead className="">
-                                            <tr>
-                                                <th className="min-w-[3rem]"></th>
-                                                <th className="min-w-[3rem]">No.</th>
-                                                <th className="min-w-[32rem]">Activity</th>
-                                                <th className="min-w-[12rem]">PIC</th>
-                                                <th className="min-w-[12rem]">Start Date</th>
-                                                <th className="min-w-[12rem]">End Date</th>
-                                                <th className="min-w-[8rem]">% Weigth</th>
-                                                <th className="min-w-[3rem]"></th>
-                                                <th>
-                                                    <div className="flex">
-                                                        <div className="w-[5rem] text-center p-1">Jan 25</div>
-                                                        <div className="w-[5rem] text-center p-1">Jan 25</div>
-                                                        <div className="w-[5rem] text-center p-1">Jan 25</div>
-                                                    </div>
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    -
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <textarea className="form-input"></textarea>
-                                                </td>
-                                                <td>
-                                                    <select className="form-select truncate">
-                                                        <option value="test1">Witchapart Sangmuang 1</option>
-                                                        <option value="test2">Witchapart Sangmuang 2</option>
-                                                    </select>
-                                                    {/* <SearchSelect
+                                    <div className="">
+                                        <table className="tbl tbl-zebra tbl-sortable">
+                                            <thead className="">
+                                                <tr>
+                                                    <th className="min-w-[3rem]"></th>
+                                                    <th className="min-w-[3rem]">No.</th>
+                                                    <th className="min-w-[32rem]">Activity</th>
+                                                    <th className="min-w-[12rem]">PIC</th>
+                                                    <th className="min-w-[12rem]">Start Date</th>
+                                                    <th className="min-w-[12rem]">End Date</th>
+                                                    <th className="min-w-[8rem]">% Weight</th>
+                                                    <th className="min-w-[3rem]"></th>
+                                                    <th>
+                                                        <div className="flex">
+                                                            <div className="w-[5rem] text-center p-1">Jan 25</div>
+                                                            <div className="w-[5rem] text-center p-1">Jan 25</div>
+                                                            <div className="w-[5rem] text-center p-1">Jan 25</div>
+                                                        </div>
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        -
+                                                    </td>
+                                                    <td>1</td>
+                                                    <td>
+                                                        <textarea className="form-input"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <select className="form-select truncate">
+                                                            <option value="test1">Witchapart Sangmuang 1</option>
+                                                            <option value="test2">Witchapart Sangmuang 2</option>
+                                                        </select>
+                                                        {/* <SearchSelect
                                                         optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }]}
                                                         onChange={(value) => setteamMember({ ...employeeInfo, approver: value })}
                                                         placeholder={'select!! Approver'}
                                                     /> */}
-                                                </td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="number" className="form-input" /></td>
-                                                <td>
-                                                    <div className="flex h-[3rem] items-center">P</div>
-                                                    <div className="flex h-[3rem] items-center">A</div>
-                                                </td>
-                                                <td>
-                                                    <div className="flex h-[3rem]">
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
+                                                    </td>
+                                                    <td><input type="date" className="form-input" /></td>
+                                                    <td><input type="date" className="form-input" /></td>
+                                                    <td><input type="number" className="form-input" /></td>
+                                                    <td>
+                                                        <div className="flex h-[3rem] items-center">P</div>
+                                                        <div className="flex h-[3rem] items-center">A</div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="flex h-[3rem]">
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
                                                         </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
+                                                        <div className="flex h-[3rem]">
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
                                                         </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
+                                                    </td>
+                                                    <td>
+                                                        <button>DEL</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        -
+                                                    </td>
+                                                    <td>1</td>
+                                                    <td>
+                                                        <textarea className="form-input"></textarea>
+                                                    </td>
+                                                    <td>
+                                                        <select className="form-select">
+                                                            <option value="test1">test1</option>
+                                                            <option value="test2">test2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="date" className="form-input" /></td>
+                                                    <td><input type="date" className="form-input" /></td>
+                                                    <td><input type="number" className="form-input" /></td>
+                                                    <td>
+                                                        <div className="flex h-[3rem] items-center">P</div>
+                                                        <div className="flex h-[3rem] items-center">A</div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="flex h-[3rem]">
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="flex h-[3rem]">
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
+                                                        <div className="flex h-[3rem]">
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
+                                                            <div className="w-[5rem] p-1">
+                                                                <input type="number" className="form-input" />
+                                                            </div>
                                                         </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button>DEL</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    -
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <textarea className="form-input"></textarea>
-                                                </td>
-                                                <td>
-                                                    <select className="form-select">
-                                                        <option value="test1">test1</option>
-                                                        <option value="test2">test2</option>
-                                                    </select>
-                                                </td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="date" className="form-input" /></td>
-                                                <td><input type="number" className="form-input" /></td>
-                                                <td>
-                                                    <div className="flex h-[3rem] items-center">P</div>
-                                                    <div className="flex h-[3rem] items-center">A</div>
-                                                </td>
-                                                <td>
-                                                    <div className="flex h-[3rem]">
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex h-[3rem]">
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                        <div className="w-[5rem] p-1">
-                                                            <input type="number" className="form-input" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button>DEL</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                    </td>
+                                                    <td>
+                                                        <button>DEL</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div className="rounded bg-white my-2">
                                     <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>

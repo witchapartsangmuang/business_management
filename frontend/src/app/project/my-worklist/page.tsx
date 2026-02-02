@@ -4,7 +4,7 @@ import IconList from "@/components/icons/icon-list";
 import IconPlus from "@/components/icons/icon-plus";
 import { useState } from "react";
 import Link from "next/link";
-export default function ProjectWorkList() {
+export default function ProjectMyWorkListPage() {
     const [category, setCategory] = useState<string>("Project Leader");
     return (
         <div className="bg-white rounded p-2 min-h-[calc(100vh-5rem)]">

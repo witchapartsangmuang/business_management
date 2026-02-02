@@ -67,7 +67,7 @@ body {
 
   /* --- Table Wrapper --- */
   .table-wrapper {
-    @apply w-full overflow-x-auto rounded-xl border border-gray-200 bg-white;
+    @apply w-full rounded-xl border border-gray-200 bg-white;
   }
 
   /* --- Main Table --- */

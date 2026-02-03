@@ -209,6 +209,19 @@ export default function ProjectPage() {
     // }, [project_kpi_list])
     return (
         <>
+        <div className="p-2">
+  <ol className="grid grid-cols-5">
+    <li className="flex items-center">
+      <div className="flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full bg-blue-700 text-white">1</div>
+      <p className="truncate pl-3 text-blue-700">Stepper 1</p>
+    </li>
+    <li className="flex items-center">
+      <div className="flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full bg-blue-700 text-white">1</div>
+      <p className="truncate pl-3 text-blue-700">Stepper 1</p>
+    </li>
+  </ol>
+</div>
+
             <ul className="flex px-2 py-1 justify-center">
                 <li className="text-center">Registered</li>
                 <li className="px-2">{`>`}</li>

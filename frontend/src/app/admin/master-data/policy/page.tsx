@@ -1,10 +1,15 @@
 "use client"
 
 import IconArchive from "@/components/icons/icon-archive";
+import IconList from "@/components/icons/icon-list";
+import IconPlus from "@/components/icons/icon-plus";
+import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
+import Link from "next/dist/client/link";
 import { useState } from "react";
 
 export default function PolicyPage() {
+    const [category, setCategory] = useState("All");
     const [policyList, setPolicyList] = useState([
         {
             id: 1,
@@ -64,33 +69,53 @@ export default function PolicyPage() {
         },
     ]);
     return (
-        <div className="bg-white rounded p-2 min-h-[calc(100vh-5rem)]">
-            {/* <ul className="flex">
-                <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Leader" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Leader")}>Project Leader</button></li>
-                <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Approver" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Approver")}>Project Approver</button></li>
-                <li className="p-0.5"><button className={`rounded p-3 ${category === "Team Member" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Team Member")}>Team Member</button></li>
-                <li className="p-0.5"><button className={`rounded p-3 ${category === "Project Sponsor" ? "bg-blue-500 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Project Sponsor")}>Project Sponsor</button></li>
-            </ul> */}
-            <div className="flex w-full justify-between my-2">
-                <ul className="flex ">
-                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">All</button></li>
-                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">Active</button></li>
-                    <li className="p-0.5"><button className="border rounded-md px-3 h-full text-nowrap">Inactive</button></li>
-                </ul>
-                <div className="flex w-full justify-between">
-                    <div className="flex items-center">
-                        {/* <Link href="/project/new">
-                            <button className="flex items-center rounded px-[0.5rem] py-[0.25rem] bg-gray-200 hover:bg-gray-300"><IconPlus className="h-6 w-6" size={24} /><span className="ml-1">New</span></button>
-                        </Link> */}
-                    </div>
-                    <div className="flex">
-                        <div className="flex items-center mr-0.5 p-1">
-                            {/* <button className="bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded"><IconList className="h-6 w-6" size={24} /></button> */}
+        <div className="bg-white rounded p-3 min-h-[calc(100vh-5rem)]">
+            <div className="border-b border-gray-200 pb-2">
+                <h2 className="text-xl font-bold mb-2">Policy Master</h2>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex w-full max-w-xl items-center gap-2">
+                        <button className="bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded"><IconList className="h-6 w-6" size={24} /></button>
+                        <div className="relative flex-1">
+                            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
+                                <IconSearch size={18} />
+                            </span>
+                            <input className="form-input pr-3 pl-10 " placeholder="Search" />
                         </div>
-                        <input className="form-input" type="text" />
+                        <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">
+                            <IconSearch size={18} />
+                            <span className="ml-1">Search</span>
+                        </button>
                     </div>
+                    <Link href="/admin/master-data/policy/new">
+                        <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">
+                            <IconPlus size={18} />
+                            <span className="ml-1">Add New Master</span>
+                        </button>
+                    </Link>
                 </div>
             </div>
+            <ul className="flex p-3 overflow-x-auto gap-3">
+                <span>Show :</span>
+                <div className="flex gap-5">
+                    <div className="flex items-center">
+                        <input className="cursor-pointer" type="radio" value="all" checked={category === "All"} onChange={() => setCategory("All")} id="all-category" />
+                        <label className="pl-1 cursor-pointer" htmlFor="all-category">All</label>
+                    </div>
+                    <div className="flex items-center">
+                        <input className="cursor-pointer" type="radio" value="active" checked={category === "Active"} onChange={() => setCategory("Active")} id="active-category" />
+                        <label className="pl-1 cursor-pointer" htmlFor="active-category">Active</label>
+                    </div>
+                    <div className="flex items-center">
+                        <input className="cursor-pointer" type="radio" value="inactive" checked={category === "Inactive"} onChange={() => setCategory("Inactive")} id="inactive-category" />
+                        <label className="pl-1 cursor-pointer" htmlFor="inactive-category">Inactive</label>
+                    </div>
+                </div>
+            </ul>
+            {/* <ul className="flex pb-2 mt-3 overflow-x-auto">
+                <li className="p-0.5"><button className={`rounded text-sm px-3 py-2 ${category === "All" ? "bg-blue-600 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("All")}>All</button></li>
+                <li className="p-0.5"><button className={`rounded text-sm px-3 py-2 ${category === "Active" ? "bg-blue-600 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Active")}>Active</button></li>
+                <li className="p-0.5"><button className={`rounded text-sm px-3 py-2 ${category === "Inactive" ? "bg-blue-600 text-white hover:bg-blue-500" : "bg-gray-200 hover:bg-gray-300"} `} onClick={() => setCategory("Inactive")}>Inactive</button></li>
+            </ul> */}
             <div className="table-wrapper">
                 <table className="tbl">
                     <thead>
@@ -118,7 +143,7 @@ export default function PolicyPage() {
                                                 <button className="danger-button w-auto"><IconShare className="text-red-200" size={24} /></button>
                                             )
                                         }
-                                        
+
                                     </td>
                                 </tr>
                             ))}
@@ -126,106 +151,6 @@ export default function PolicyPage() {
                     </tbody>
                 </table>
             </div>
-            <nav className="mt-4 flex items-center justify-between gap-3" aria-label="Pagination">
-                {/* <!-- Left: summary --> */}
-                <div className="text-sm text-gray-600">
-                    Showing <span className="font-medium text-gray-900">1</span> to
-                    <span className="font-medium text-gray-900">10</span> of
-                    <span className="font-medium text-gray-900">128</span> results
-                </div>
-
-                {/* <!-- Right: controls --> */}
-                <div className="flex items-center gap-2">
-                    {/* <!-- Rows per page --> */}
-                    <div className="flex items-center gap-2">
-                        <label htmlFor="pageSize" className="text-sm text-gray-600">Rows:</label>
-                        <select
-                            id="pageSize"
-                            className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option>10</option>
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                        </select>
-                    </div>
-
-                    {/* <!-- Prev --> */}
-                    <button
-                        className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        disabled
-                        aria-label="Previous page"
-                        type="button"
-                    >
-                        Prev
-                    </button>
-
-                    {/* <!-- Page numbers --> */}
-                    <div className="flex items-center gap-1" role="list">
-                        <button
-                            type="button"
-                            className="min-w-9 rounded border border-blue-600 bg-blue-600 px-3 py-1.5 text-sm text-white"
-                            aria-current="page"
-                        >
-                            1
-                        </button>
-                        <button
-                            type="button"
-                            className="min-w-9 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            2
-                        </button>
-                        <button
-                            type="button"
-                            className="min-w-9 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            3
-                        </button>
-
-                        <span className="px-2 text-gray-500">…</span>
-
-                        <button
-                            type="button"
-                            className="min-w-9 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            12
-                        </button>
-                        <button
-                            type="button"
-                            className="min-w-9 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            13
-                        </button>
-                    </div>
-
-                    {/* <!-- Next --> */}
-                    <button
-                        className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-                        aria-label="Next page"
-                        type="button"
-                    >
-                        Next
-                    </button>
-
-                    {/* <!-- Jump to page --> */}
-                    <div className="hidden items-center gap-2 sm:flex">
-                        <label htmlFor="jumpPage" className="text-sm text-gray-600">Page:</label>
-                        <input
-                            id="jumpPage"
-                            type="number"
-                            min="1"
-                            className="w-20 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="1"
-                        />
-                        <button
-                            type="button"
-                            className="rounded bg-gray-200 px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-300"
-                        >
-                            Go
-                        </button>
-                    </div>
-                </div>
-            </nav>
         </div>
     )
 }

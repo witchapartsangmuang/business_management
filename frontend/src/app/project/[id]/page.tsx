@@ -3,7 +3,7 @@ import SearchSelect from "@/components/input/SearchSelect";
 import { useEffect, useState } from "react";
 
 import { Md_Policy, Kpi, Employee_Project, ProjectInfo, } from "@/types/project";
-import { Table, TableBody, TableFooter, TableHeader } from "@/components/table/Table";
+import { Table, TableBody, TableFooter, TableHeader, TableWrapper } from "@/components/table/Table";
 // Start Data List For Select
 const md_policy_list: Md_Policy[] = [
     { id: 1, policy_code: 'SD&SG', policy_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026 },
@@ -209,28 +209,11 @@ export default function ProjectPage() {
     // }, [project_kpi_list])
     return (
         <>
-        <div className="p-2">
-  <ol className="grid grid-cols-5">
-    <li className="flex items-center">
-      <div className="flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full bg-blue-700 text-white">1</div>
-      <p className="truncate pl-3 text-blue-700">Stepper 1</p>
-    </li>
-    <li className="flex items-center">
-      <div className="flex h-[2.5rem] w-[2.5rem] items-center justify-center rounded-full bg-blue-700 text-white">1</div>
-      <p className="truncate pl-3 text-blue-700">Stepper 1</p>
-    </li>
-  </ol>
-</div>
-
-            <ul className="flex px-2 py-1 justify-center">
-                <li className="text-center">Registered</li>
-                <li className="px-2">{`>`}</li>
-                <li className="text-gray-400">Submitted for Approval</li>
-                <li className="px-2 text-gray-400">{`>`}</li>
-                <li className="text-gray-400">On Going</li>
-                <li className="px-2 text-gray-400">{`>`}</li>
-                <li className="text-gray-400">Submitted for Closure</li>
-                <li className="px-2 text-gray-400">{`>`}</li>
+            <ul className="flex bg-white rounded p-5 justify-center">
+                <li className="text-center text-blue-700">Registered<span className="px-2">{'>'}</span></li>
+                <li className="text-gray-400">Submitted for Approval<span className="px-2">{'>'}</span></li>
+                <li className="text-gray-400">On Going<span className="px-2">{'>'}</span></li>
+                <li className="text-gray-400">Submitted for Closure<span className="px-2">{'>'}</span></li>
                 <li className="text-gray-400">Completed</li>
             </ul>
             <div className="flex mt-3">
@@ -243,7 +226,7 @@ export default function ProjectPage() {
             </div>
 
 
-            <div className="bg-white rounded min-h-[calc(100vh-12rem)]">
+            <div className="bg-white rounded min-h-[calc(100vh-16rem)]">
                 <div className="grid grid-cols-12">
                     {tabOpen === 0 &&
                         <>
@@ -275,42 +258,9 @@ export default function ProjectPage() {
                                 <p className="font-bold">KPI (Key Peroformance Indicator)</p>
                             </div>
                             <div className="col-span-12 mt-3 px-3">
-                                <Table>
-                                    <TableHeader>
-                                        <tr>
-                                            <th>#</th>
-                                            <th className="min-w-[46rem]">KPI</th>
-                                            <th className="min-w-[42rem]">Target</th>
-                                            <th>Unit</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {project_kpi_list.map((projectKpi, index) => (
-                                            <tr key={`project_kpi_list-${index}`}>
-                                                <td>{projectKpi.sequence}</td>
-                                                <td>
-                                                    <SearchSelect optionList={kpi_select_list} placeholder={'Select KPI'} defaultValue={String(projectKpi.kpi_id)} onChange={(value) => { onChangeProjectKpi(index, Number(value)) }} />
-                                                </td>
-                                                <td><input type="number" className="form-input" value={projectKpi.target !== null ? projectKpi.target : ''} onChange={(e) => { onChangeProjectKpi(index, projectKpi.kpi_id, Number(e.target.value)) }} /></td>
-                                                <td><input type="text" className="form-input" value={projectKpi.kpi_id ? kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit : ""} readOnly /></td>
-                                                <td>
-                                                    <button className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onClick={() => { onClickRemoveProjectKpi(projectKpi.sequence) }}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </TableBody>
-                                    <TableFooter>
-                                        <tr>
-                                            <td colSpan={5}>Total: {project_kpi_list.length} kpi(s)</td>
-                                        </tr>
-                                    </TableFooter>
-                                </Table>
-                            </div>
-                            <div className="col-span-12 mt-3 px-3">
-                                <div className="table-wrapper">
-                                    <table className="tbl tbl-zebra tbl-sortable">
-                                        <thead className="">
+                                <TableWrapper>
+                                    <Table>
+                                        <TableHeader>
                                             <tr>
                                                 <th>#</th>
                                                 <th>KPI</th>
@@ -318,13 +268,11 @@ export default function ProjectPage() {
                                                 <th>Unit</th>
                                                 <th>Action</th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
+                                        </TableHeader>
+                                        <TableBody>
                                             {project_kpi_list.map((projectKpi, index) => (
                                                 <tr key={`project_kpi_list-${index}`}>
-                                                    <td>
-                                                        {projectKpi.sequence}
-                                                    </td>
+                                                    <td>{projectKpi.sequence}</td>
                                                     <td>
                                                         <SearchSelect optionList={kpi_select_list} placeholder={'Select KPI'} defaultValue={String(projectKpi.kpi_id)} onChange={(value) => { onChangeProjectKpi(index, Number(value)) }} />
                                                     </td>
@@ -335,13 +283,13 @@ export default function ProjectPage() {
                                                     </td>
                                                 </tr>
                                             ))}
-                                        </tbody>
-                                        <tfoot>
+                                        </TableBody>
+                                        <TableFooter>
                                             <tr>
                                                 <td colSpan={5}>Total: {project_kpi_list.length} kpi(s)</td>
                                             </tr>
-                                        </tfoot>
-                                    </table>
+                                        </TableFooter>
+                                    </Table>
                                     <div className="flex justify-between">
                                         <div className="px-4 py-3">
                                             <button className="primary-button" onClick={() => { onClickInsertProjectKpi(project_kpi_list.length + 1) }}>
@@ -355,7 +303,7 @@ export default function ProjectPage() {
                                             <button className="tbl-page-btn">Next</button>
                                         </div>
                                     </div>
-                                </div>
+                                </TableWrapper>
                             </div>
                         </>
                     }

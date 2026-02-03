@@ -1,10 +1,16 @@
+
+export function TableWrapper({ children, className}: { children: React.ReactNode, className?: string }) {
+    return (
+        <div className={`table-wrapper ${className || ''}`}>
+            {children}
+        </div>
+    )
+}
 export function Table({ children, }: { children: React.ReactNode }) {
     return (
-        <div className="table-wrapper">
-            <table className="tbl tbl-zebra tbl-sortable">
-                {children}
-            </table>
-        </div>
+        <table className="tbl tbl-zebra tbl-sortable">
+            {children}
+        </table>
     )
 }
 

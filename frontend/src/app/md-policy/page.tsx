@@ -1,5 +1,5 @@
 export default function Page() {
     return (
-        <div>MD Policy</div>
+        <div>MD Policy Page</div>
     )
 }

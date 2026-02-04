@@ -148,10 +148,10 @@ export default function KpiPage() {
                         </button>
                     </div>
                     {/* <Link href="/admin/master-data/kpi/new"> */}
-                        <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm" onClick={() => openKpiInfoModal(null)}>
-                            <IconPlus size={18} />
-                            <span className="ml-1">Add New KPI Master</span>
-                        </button>
+                    <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm" onClick={() => openKpiInfoModal(null)}>
+                        <IconPlus size={18} />
+                        <span className="ml-1">Add New KPI Master</span>
+                    </button>
                     {/* </Link> */}
                 </div>
             </div>
@@ -172,7 +172,7 @@ export default function KpiPage() {
                     </div>
                 </div>
             </ul>
-         
+
             <div className="table-wrapper">
                 <table className="tbl">
                     <thead>
@@ -315,95 +315,68 @@ export default function KpiPage() {
                 </div>
             </nav>
 
-            {/* <Modal onClose={closeKpiInfoModal} isOpen={isKpiInfoModalOpen} title="KPI Master Information">
-                            test
-            </Modal> */}
-            {isKpiInfoModalOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center"
-                    aria-modal="true"
-                    role="dialog"
-                >
-                    {/* Backdrop */}
-                    <div
-                        className="absolute inset-0 bg-black/50"
-                        onClick={closeKpiInfoModal}
-                    />
-
-                    {/* Modal Card */}
-                    <div className="relative z-10 w-[92%] max-w-md rounded-xl bg-white p-5 shadow-lg">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold">เปลี่ยนรหัสผ่าน</h3>
-                            <button
-                                type="button"
-                                onClick={closeKpiInfoModal}
-                                className="rounded-md px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                aria-label="Close"
-                            >
-                                ✕
-                            </button>
-                        </div>
-
-                        <form onSubmit={submitKpiInfo} className="mt-4 space-y-3">
-                            <div>
-                                <label className="form-label">Code</label>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    value={kpiInfo.code}
-                                    onChange={(e) => setKpiInfo({ ...kpiInfo, code: e.target.value })}
-                                    autoFocus
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    value={kpiInfo.name}
-                                    onChange={(e) => setKpiInfo({ ...kpiInfo, name: e.target.value })}
-                                    autoFocus
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">Description</label>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    value={kpiInfo.description}
-                                    onChange={(e) => setKpiInfo({ ...kpiInfo, description: e.target.value })}
-                                    autoFocus
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">Unit</label>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    value={kpiInfo.unit}
-                                    onChange={(e) => setKpiInfo({ ...kpiInfo, unit: e.target.value })}
-                                    autoFocus
-                                />
-                            </div>
-                            <div className="mt-4 flex justify-end gap-2">
-                                <button
-                                    type="button"
-                                    onClick={closeKpiInfoModal}
-                                    className="px-3 py-2 rounded-md border hover:bg-gray-50"
-                                >
-                                    ยกเลิก
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
-                                >
-                                    ยืนยันเปลี่ยนรหัส
-                                </button>
-                            </div>
-                        </form>
+            <Modal onClose={closeKpiInfoModal} isOpen={isKpiInfoModalOpen} title="KPI Master Information">
+                <form onSubmit={submitKpiInfo} className="mt-4 space-y-3">
+                    <div>
+                        <label className="form-label">Code</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={kpiInfo.code}
+                            onChange={(e) => setKpiInfo({ ...kpiInfo, code: e.target.value })}
+                            autoFocus
+                        />
                     </div>
+                    <div>
+                        <label className="form-label">Name</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={kpiInfo.name}
+                            onChange={(e) => setKpiInfo({ ...kpiInfo, name: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+                    <div>
+                        <label className="form-label">Description</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={kpiInfo.description}
+                            onChange={(e) => setKpiInfo({ ...kpiInfo, description: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+                    <div>
+                        <label className="form-label">Unit</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={kpiInfo.unit}
+                            onChange={(e) => setKpiInfo({ ...kpiInfo, unit: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+                    <div className="mt-4 flex justify-end gap-2">
+
+                    </div>
+                </form>
+                <div className="flex items-center justify-end pt-2 mt-2 border-t border-gray-300 gap-2">
+                    <button
+                        type="button"
+                        onClick={closeKpiInfoModal}
+                        className="px-3 py-2 rounded-md border hover:bg-gray-50"
+                    >
+                        ยกเลิก
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+                    >
+                        ยืนยันเปลี่ยนรหัส
+                    </button>
                 </div>
-            )}
+            </Modal>
         </div>
     )
 }

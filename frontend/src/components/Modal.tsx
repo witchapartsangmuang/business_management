@@ -5,9 +5,8 @@ export default function Modal({ isOpen, onClose, title, children }: { isOpen: bo
         <>
             <div className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-
                 <div className="relative z-10 w-[92%] max-w-md rounded-xl bg-white p-5 shadow-lg">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between border-b mb-2 pb-2 border-gray-300">
                         <h3 className="text-lg font-semibold">{title}</h3>
                         <button
                             type="button"
@@ -18,8 +17,8 @@ export default function Modal({ isOpen, onClose, title, children }: { isOpen: bo
                             ✕
                         </button>
                     </div>
+                    {children}
                 </div>
-                {children}
             </div>
         </>
     )

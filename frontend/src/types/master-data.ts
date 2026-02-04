@@ -1,5 +1,5 @@
-export type KpiMaster = {
-    id: number,
+export type PolicyMaster = {
+    id: number | null,
     policy_code: string,
     policy_name: string,
     description: string
@@ -7,8 +7,8 @@ export type KpiMaster = {
     is_active: boolean
 }
 
-export type PolicyMaster = {
-    id: number,
+export type KpiMaster = {
+    id: number | null,
     kpi_code: string,
     kpi_name: string,
     description: string

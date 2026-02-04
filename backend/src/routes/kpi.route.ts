@@ -3,6 +3,6 @@ import { KpiController } from "../controllers/kpi.controller";
 
 const router = Router();
 
-router.post("/kpi/", KpiController.register);
+router.get("/", KpiController.readAllKpi);
 
 export default router;

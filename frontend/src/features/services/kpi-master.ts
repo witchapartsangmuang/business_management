@@ -5,7 +5,7 @@ const api = axios.create({
     timeout: 15000,
     headers: { "Content-Type": "application/json" },
 })
-const KPI_ENDPOINT = "/api/kpi";
+const KPI_ENDPOINT = "/kpi";
 
 function throwAxiosError(err: unknown): never {
     const e = err as AxiosError<any>;
@@ -14,22 +14,17 @@ function throwAxiosError(err: unknown): never {
         e.response?.data?.error ||
         e.message ||
         "Request failed";
+    console.log("msg : ", msg);
+
     throw new Error(msg);
 }
 
+// <{ kpi: KpiMaster[] }>
 
 export const kpiMasterService = {
-    async readAll(): Promise<KpiMaster[]> {
+    async readAll(): Promise<{ kpi: KpiMaster[] }> {
         try {
-            const res = await api.get<KpiMaster[]>(KPI_ENDPOINT);
-            return res.data;
-        } catch (err) {
-            throwAxiosError(err);
-        }
-    },
-    async readDetail(id: number): Promise<KpiMaster> {
-        try {
-            const res = await api.get<KpiMaster>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`);
+            const res = await api.get<{ kpi: KpiMaster[] }>(KPI_ENDPOINT);
             return res.data;
         } catch (err) {
             throwAxiosError(err);

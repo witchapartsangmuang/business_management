@@ -129,6 +129,9 @@ export default function KpiPage() {
         console.log("kpiInfo", kpiInfo);
 
     }, [kpiInfo]);
+    useEffect(() => {
+
+    }, []);
     return (
         <div className="bg-white rounded p-3 min-h-[calc(100vh-5rem)]">
             <div className="border-b border-gray-200 pb-2">

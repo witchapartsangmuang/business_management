@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 // route
+import kpiRouter from "./routes/kpi.route";
 import authRouter from "./routes/auth.route";
 import dashboardRouter from "./routes/dashboard.route";
 // middleware
@@ -22,6 +23,7 @@ app.get("/me", authMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 // Routes
+app.use("/kpi", kpiRouter);
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
 app.listen(port, () => {

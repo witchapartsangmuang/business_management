@@ -1,4 +1,3 @@
-
 export default function IconDatabase({ className, size }: { className?: string, size?: number }) {
     return (
         <svg className={className} width={size} height={size} viewBox="0 0 24 24"

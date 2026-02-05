@@ -171,4 +171,7 @@ body {
   .success-button {
     @apply bg-green-600 hover:bg-green-700 text-white shadow w-full rounded-lg px-3 py-2 text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed;
   }
+  .icon-button {
+    @apply bg-gray-100 hover:bg-gray-500 text-gray-500 hover:text-white shadow w-full rounded-lg p-1 text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed;
+  }
 }

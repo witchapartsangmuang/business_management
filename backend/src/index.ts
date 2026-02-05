@@ -1,8 +1,12 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config"; // ✅ ถ้าใช้ .env
+import "dotenv/config";
 
 import kpiRouter from "./routes/kpi.route";
+import policyRouter from "./routes/policy.route"
+
+
+
 import authRouter from "./routes/auth.route";
 import dashboardRouter from "./routes/dashboard.route";
 import { authMiddleware } from "./middleware/auth.middleware";
@@ -21,7 +25,7 @@ app.get("/me", authMiddleware, (req, res) => {
   // @ts-ignore
   res.json({ user: req.user });
 });
-
+app.use("/policy",policyRouter)
 app.use("/kpi", kpiRouter);
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);

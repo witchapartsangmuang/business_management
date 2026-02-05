@@ -9,6 +9,7 @@ import Modal from "@/components/Modal";
 import { useEffect, useState } from "react";
 import { KpiMaster } from "@/types/master-data";
 import { kpiMasterService } from "@/features/services/kpi-master";
+import IconPencil from "@/components/icons/icon-pen";
 const defKPI = [
     {
         id: 1,
@@ -16,7 +17,7 @@ const defKPI = [
         kpi_name: "Strategic Objective Achievement Rate",
         description: "สัดส่วนเป้าหมายเชิงกลยุทธ์ที่บรรลุตามแผนประจำปี",
         unit: "%",
-        isActive: false,
+        is_active: false,
     },
     {
         id: 2,
@@ -24,7 +25,7 @@ const defKPI = [
         kpi_name: "Corporate KPI Achievement Index",
         description: "คะแนนเฉลี่ยการบรรลุ KPI ระดับองค์กร",
         unit: "%",
-        isActive: true,
+        is_active: true,
     },
     {
         id: 3,
@@ -32,7 +33,7 @@ const defKPI = [
         kpi_name: "Key Position Successor Coverage",
         description: "ตำแหน่งสำคัญที่มีผู้สืบทอดพร้อมใช้งาน",
         unit: "%",
-        isActive: true,
+        is_active: true,
     },
     {
         id: 4,
@@ -40,7 +41,7 @@ const defKPI = [
         kpi_name: "Cost Reduction from Process Improvement",
         description: "มูลค่าการลดต้นทุนจากการปรับปรุงกระบวนการ",
         unit: "MB",
-        isActive: true,
+        is_active: true,
     },
     {
         id: 5,
@@ -48,7 +49,7 @@ const defKPI = [
         kpi_name: "Digital Adoption Rate",
         description: "อัตราการใช้งานระบบดิจิทัลตามที่กำหนด",
         unit: "%",
-        isActive: true,
+        is_active: true,
     },
     {
         id: 6,
@@ -56,7 +57,7 @@ const defKPI = [
         kpi_name: "Major Compliance & Risk Incident",
         description: "จำนวนเหตุการณ์ความเสี่ยง/ไม่ปฏิบัติตามที่มีผลกระทบร้ายแรง",
         unit: "Case",
-        isActive: false,
+        is_active: false,
     },
     {
         id: 7,
@@ -64,7 +65,7 @@ const defKPI = [
         kpi_name: "Customer Satisfaction Index (CSI)",
         description: "คะแนนความพึงพอใจลูกค้าเฉลี่ยทั้งองค์กร",
         unit: "Score",
-        isActive: true,
+        is_active: true,
     },
     {
         id: 8,
@@ -72,12 +73,13 @@ const defKPI = [
         kpi_name: "On-Time Strategic Project Delivery",
         description: "โครงการเชิงกลยุทธ์ที่ส่งมอบตรงเวลา",
         unit: "%",
-        isActive: true,
+        is_active: true,
     },
 ]
 export default function KpiPage() {
     const [category, setCategory] = useState("All");
     const [isKpiInfoModalOpen, setIsKpiInfoModalOpen] = useState(false);
+    const [kpiList, setKpiList] = useState<KpiMaster[]>([]);
     const [kpiInfo, setKpiInfo] = useState<KpiMaster>({
         id: null,
         kpi_code: '',
@@ -86,10 +88,17 @@ export default function KpiPage() {
         unit: '',
         is_active: true
     });
-    const [kpiList, setKpiList] = useState<KpiMaster[]>([]);
 
+    const [validateValue, setValidateValue] = useState<{ kpi_code: string, kpi_name: string, unit: string }>({
+        kpi_code: "",
+        kpi_name: "",
+        unit: ""
+    })
     function validateInfo() {
-
+        return kpiList.some(
+            (item, index) =>
+                kpiList.findIndex(v => v['kpi_code'] === kpiInfo['kpi_code']) !== index
+        )
     }
 
     const submitKpiInfo = (event: React.FormEvent) => {
@@ -188,9 +197,10 @@ export default function KpiPage() {
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Policy Code</th>
-                            <th>Policy Name</th>
+                            <th>KPI Code</th>
+                            <th>KPI Name</th>
                             <th>Description</th>
+                            <th>Unit</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -204,20 +214,7 @@ export default function KpiPage() {
                                     <td>{kpi.description}</td>
                                     <td>{kpi.unit}</td>
                                     <td>
-                                        {
-                                            kpi.is_active ? (
-                                                <>
-                                                    <button className="danger-button w-auto" onClick={() => openKpiInfoModal(kpi)}>Edit</button>
-                                                    <button className="danger-button w-auto"><IconArchive className="text-red-200" size={24} /></button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <button className="danger-button w-auto" onClick={() => openKpiInfoModal(kpi)}>Edit</button>
-                                                    <button className="danger-button w-auto"><IconShare className="text-red-200" size={24} /></button>
-                                                </>
-                                            )
-                                        }
-
+                                        <button className="icon-button w-auto" onClick={() => openKpiInfoModal(kpi)}><IconPencil className="text-gray-400" size={18} /></button>
                                     </td>
                                 </tr>
                             ))}

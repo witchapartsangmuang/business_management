@@ -3,7 +3,6 @@ export type PolicyMaster = {
     policy_code: string,
     policy_name: string,
     description: string
-    unit: string,
     is_active: boolean
 }
 

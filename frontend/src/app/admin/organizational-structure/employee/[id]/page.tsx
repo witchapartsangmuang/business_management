@@ -71,7 +71,7 @@ export default function EmployeeDetailPage() {
     });
     // useEffect(()=>{
     //     console.log(employeeInfo.approver, 'employeeInfo.approver');
-        
+
     // },[employeeInfo.approver])
     async function fetchData() {
         try {
@@ -175,9 +175,9 @@ export default function EmployeeDetailPage() {
                                 <label className="form-label">Approver</label>
                                 <SearchSelect
                                     optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
-                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, approver: value })} 
+                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, approver: value })}
                                     placeholder={'select!! Approver'}
-                                    />
+                                />
 
                             </div>
 

@@ -1,6 +1,6 @@
 export default function IconArchive({ className, size }: { className?: string, size?: number }) {
     return (
-        <svg className={className || "h-8 w-8 text-red-500"} width={size} height={size} viewBox="0 0 24 24" strokeWidth="2"
+        <svg className={className} width={size} height={size} viewBox="0 0 24 24" strokeWidth="2"
             stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
             <rect x="3" y="4" width="18" height="4" rx="2" />

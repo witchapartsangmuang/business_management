@@ -5,69 +5,130 @@ import IconList from "@/components/icons/icon-list";
 import IconPlus from "@/components/icons/icon-plus";
 import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
+import { PolicyMaster } from "@/types/master-data";
+import { policyMasterService } from "@/features/services/policy-master";
 import Link from "next/dist/client/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import ToggleSwitch from "@/components/input/ToggleSwitch";
+import IconPencil from "@/components/icons/icon-pen";
 
+const defPolicy = [
+    {
+        id: 1,
+        policy_code: "SD&SG",
+        policy_name: "Strategic Direction & Sustainable Growth Policy",
+        description: "นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน",
+        is_active: true,
+    },
+    {
+        id: 2,
+        policy_code: "PRM",
+        policy_name: "Performance & Result-Oriented Management Policy",
+        description: "นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน",
+        is_active: true,
+    },
+    {
+        id: 3,
+        policy_code: "PLS",
+        policy_name: "People, Leadership & Successor Development Policy",
+        description: "นโยบายบุคลากรและผู้นำ",
+        is_active: true,
+    },
+    {
+        id: 4,
+        policy_code: "PE&CE",
+        policy_name: "Process Excellence & Cost Efficiency Policy",
+        description: "นโยบายการพัฒนากระบวนการและต้นทุน",
+        is_active: true,
+    },
+    {
+        id: 5,
+        policy_code: "DT&TE",
+        policy_name: "Digital Transformation & Technology Enablement Policy",
+        description: "นโยบายดิจิทัลและเทคโนโลยี",
+        is_active: true,
+    },
+    {
+        id: 6,
+        policy_code: "GRC",
+        policy_name: "Governance, Risk & Compliance Policy",
+        description: "นโยบายธรรมาภิบาลและการกำกับดูแล",
+        is_active: true,
+    },
+    {
+        id: 7,
+        policy_code: "CSV",
+        policy_name: "Customer & Stakeholder Value Policy",
+        description: "นโยบายคุณค่าลูกค้าและผู้มีส่วนได้ส่วนเสีย",
+        is_active: false,
+    },
+    {
+        id: 8,
+        policy_code: "EDA",
+        policy_name: "Execution Discipline & Accountability Policy",
+        description: "นโยบายวินัยการปฏิบัติและความรับผิดชอบ",
+        is_active: false,
+    },
+]
 export default function PolicyPage() {
     const [category, setCategory] = useState("All");
-    const [policyList, setPolicyList] = useState([
-        {
-            id: 1,
-            code: "SD&SG",
-            name: "Strategic Direction & Sustainable Growth Policy",
-            description: "นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน",
-            isActive: true,
-        },
-        {
-            id: 2,
-            code: "PRM",
-            name: "Performance & Result-Oriented Management Policy",
-            description: "นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน",
-            isActive: true,
-        },
-        {
-            id: 3,
-            code: "PLS",
-            name: "People, Leadership & Successor Development Policy",
-            description: "นโยบายบุคลากรและผู้นำ",
-            isActive: true,
-        },
-        {
-            id: 4,
-            code: "PE&CE",
-            name: "Process Excellence & Cost Efficiency Policy",
-            description: "นโยบายการพัฒนากระบวนการและต้นทุน",
-            isActive: true,
-        },
-        {
-            id: 5,
-            code: "DT&TE",
-            name: "Digital Transformation & Technology Enablement Policy",
-            description: "นโยบายดิจิทัลและเทคโนโลยี",
-            isActive: true,
-        },
-        {
-            id: 6,
-            code: "GRC",
-            name: "Governance, Risk & Compliance Policy",
-            description: "นโยบายธรรมาภิบาลและการกำกับดูแล",
-            isActive: true,
-        },
-        {
-            id: 7,
-            code: "CSV",
-            name: "Customer & Stakeholder Value Policy",
-            description: "นโยบายคุณค่าลูกค้าและผู้มีส่วนได้ส่วนเสีย",
-            isActive: false,
-        },
-        {
-            id: 8,
-            code: "EDA",
-            name: "Execution Discipline & Accountability Policy",
-            description: "นโยบายวินัยการปฏิบัติและความรับผิดชอบ",
-            isActive: false,
-        },
-    ]);
+    const [isPolicyInfoModalOpen, setIsPolicyInfoModalOpen] = useState(false);
+    const [policyList, setPolicyList] = useState<PolicyMaster[]>([]);
+    const [policyInfo, setPolicyInfo] = useState<PolicyMaster>({
+        id: null,
+        policy_code: '',
+        policy_name: '',
+        description: '',
+        is_active: true
+    });
+
+    const submitPolicyInfo = (event: React.FormEvent) => {
+        event.preventDefault();
+        console.log("Submitted Policy Info:", policyInfo)
+        setPolicyInfo({
+            id: null,
+            policy_code: '',
+            policy_name: '',
+            description: '',
+            is_active: true
+        })
+        setIsPolicyInfoModalOpen(false);
+    }
+
+    const openPolicyInfoModal = (policyInfo: PolicyMaster | null) => {
+        if (policyInfo) {
+            setPolicyInfo(policyInfo);
+        } else {
+            setPolicyInfo({
+                id: null,
+                policy_code: '',
+                policy_name: '',
+                description: '',
+                is_active: true
+            })
+        }
+        setIsPolicyInfoModalOpen(true);
+    };
+
+    const closePolicyInfoModal = () => {
+        setIsPolicyInfoModalOpen(false);
+        setPolicyInfo({
+            id: null,
+            policy_code: '',
+            policy_name: '',
+            description: '',
+            is_active: true
+        })
+    };
+
+    async function GetAllPolicyList() {
+        await policyMasterService.readAll().then((res) => setPolicyList(res.policy)).catch(() => (setPolicyList([])))
+    }
+    useEffect(() => {
+        GetAllPolicyList()
+    }, []);
+
     return (
         <div className="bg-white rounded p-3 min-h-[calc(100vh-5rem)]">
             <div className="border-b border-gray-200 pb-2">
@@ -86,12 +147,10 @@ export default function PolicyPage() {
                             <span className="ml-1">Search</span>
                         </button>
                     </div>
-                    <Link href="/admin/master-data/policy/new">
-                        <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm">
-                            <IconPlus size={18} />
-                            <span className="ml-1">Add New Master</span>
-                        </button>
-                    </Link>
+                    <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-3 py-2 text-sm" onClick={() => openPolicyInfoModal(null)}>
+                        <IconPlus size={18} />
+                        <span className="ml-1">Add New Master</span>
+                    </button>
                 </div>
             </div>
             <ul className="flex p-3 overflow-x-auto gap-3">
@@ -132,18 +191,13 @@ export default function PolicyPage() {
                             policyList.map((policy, index) => (
                                 <tr key={policy.id}>
                                     <td>{index + 1}.</td>
-                                    <td>{policy.code}</td>
-                                    <td>{policy.name}</td>
+                                    <td>{policy.policy_code}</td>
+                                    <td>{policy.policy_name}</td>
                                     <td>{policy.description}</td>
                                     <td>
-                                        {
-                                            policy.isActive ? (
-                                                <button className="danger-button w-auto"><IconArchive className="text-red-200" size={24} /></button>
-                                            ) : (
-                                                <button className="danger-button w-auto"><IconShare className="text-red-200" size={24} /></button>
-                                            )
-                                        }
-
+                                        <div className="gap-1 flex">
+                                            <button className="icon-button w-auto" onClick={() => { openPolicyInfoModal(policy) }}><IconPencil size={18} /></button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -151,6 +205,60 @@ export default function PolicyPage() {
                     </tbody>
                 </table>
             </div>
+            <Modal onClose={closePolicyInfoModal} isOpen={isPolicyInfoModalOpen} title="Policy Master Information">
+                <form onSubmit={submitPolicyInfo} className="mt-4 space-y-3">
+                    <div>
+                        <label className="form-label">Code</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={policyInfo.policy_code}
+                            onChange={(e) => setPolicyInfo({ ...policyInfo, policy_code: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+                    <div>
+                        <label className="form-label">Name</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={policyInfo.policy_name}
+                            onChange={(e) => setPolicyInfo({ ...policyInfo, policy_name: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+                    <div>
+                        <label className="form-label">Description</label>
+                        <textarea className="form-input" rows={2} value={policyInfo.description} onChange={(e) => setPolicyInfo({ ...policyInfo, description: e.target.value })} />
+                    </div>
+                    <div>
+                        <ToggleSwitch checked={policyInfo.is_active} checked_label="Active" unchecked_label="Inactive" onChange={() => setPolicyInfo({ ...policyInfo, is_active: !policyInfo.is_active })} />
+                    </div>
+                    {/* <div className="mt-4 flex justify-end gap-2">
+
+                    </div> */}
+                </form>
+                <div className="flex items-center justify-end pt-2 mt-2 border-t border-gray-300 gap-2">
+                    <div>
+                        <button
+                            type="button"
+                            onClick={closePolicyInfoModal}
+                            className="secondary-button"
+                        >
+                            Close
+                        </button>
+                    </div>
+                    <div>
+
+                        <button
+                            type="submit"
+                            className="primary-button"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

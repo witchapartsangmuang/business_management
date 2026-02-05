@@ -1,4 +1,12 @@
+'use client'
+
+import { useEffect, useState } from "react"
+
 export default function EmployeePage() {
+    const [emplyeeList,setEmployeeList] = useState([])
+    useEffect(()=>{
+
+    },[])
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
             {/* <!-- Header --> */}

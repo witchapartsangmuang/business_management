@@ -19,8 +19,6 @@ function throwAxiosError(err: unknown): never {
     throw new Error(msg);
 }
 
-// <{ kpi: KpiMaster[] }>
-
 export const kpiMasterService = {
     async readAll(): Promise<{ kpi: KpiMaster[] }> {
         try {

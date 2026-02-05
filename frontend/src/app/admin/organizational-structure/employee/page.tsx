@@ -1,12 +1,22 @@
 'use client'
 
 import { useEffect, useState } from "react"
-
+import { Employee, Permission } from "@/types/types";
+import { EmployeeService } from "@/features/services/employee";
 export default function EmployeePage() {
-    const [emplyeeList,setEmployeeList] = useState([])
-    useEffect(()=>{
+    const [emplyeeList, setEmployeeList] = useState<Employee[] & Permission[]>([])
 
-    },[])
+
+    async function GetAllPolicyList() {
+        await EmployeeService.readAll().then((res) => setEmployeeList(res.employee)).catch(() => (setEmployeeList([])))
+    }
+    useEffect(() => {
+        GetAllPolicyList()
+    }, []);
+    useEffect(() => {
+        console.log(emplyeeList);
+
+    }, [emplyeeList])
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
             {/* <!-- Header --> */}
@@ -61,86 +71,34 @@ export default function EmployeePage() {
                     </thead>
 
                     <tbody className="divide-y divide-gray-200">
-                        {/* <!-- Row 1 --> */}
-                        <tr className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-gray-900">EMP-0001</td>
-                            <td className="px-4 py-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div className="font-medium text-gray-900">Piyawadee S.</div>
-                                        <div className="text-xs text-gray-500">Department Manager</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="px-4 py-3 text-gray-700">piyawadee@company.com</td>
-                            <td className="px-4 py-3 text-gray-700">Marketing</td>
-                            <td className="px-4 py-3">
-                                <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-                                    Active
-                                </span>
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                                <div className="inline-flex gap-2">
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">View</button>
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">Edit</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {/* <!-- Row 2 --> */}
-                        <tr className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-gray-900">EMP-0002</td>
-                            <td className="px-4 py-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div className="font-medium text-gray-900">Kittipong C.</div>
-                                        <div className="text-xs text-gray-500">Officer</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="px-4 py-3 text-gray-700">kittipong@company.com</td>
-                            <td className="px-4 py-3 text-gray-700">Finance</td>
-                            <td className="px-4 py-3">
-                                <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700">
-                                    Pending
-                                </span>
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                                <div className="inline-flex gap-2">
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">View</button>
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">Edit</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {/* <!-- Row 3 --> */}
-                        <tr className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-gray-900">EMP-0003</td>
-                            <td className="px-4 py-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <div className="font-medium text-gray-900">Sirawich V.</div>
-                                        <div className="text-xs text-gray-500">Section Manager</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="px-4 py-3 text-gray-700">sirawich@company.com</td>
-                            <td className="px-4 py-3 text-gray-700">IT</td>
-                            <td className="px-4 py-3">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
-                                    Inactive
-                                </span>
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                                <div className="inline-flex gap-2">
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">View</button>
-                                    <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">Edit</button>
-                                </div>
-                            </td>
-                        </tr>
+                        {
+                            emplyeeList.map((emp) => (
+                                <tr className="hover:bg-gray-50">
+                                    <td className="px-4 py-3 text-gray-900">{emp.employee_code}</td>
+                                    <td className="px-4 py-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-8 w-8 rounded-full bg-gray-200"></div>
+                                            <div>
+                                                <div className="font-medium text-gray-900">Piyawadee S.</div>
+                                                <div className="text-xs text-gray-500">Department Manager</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-700">piyawadee@company.com</td>
+                                    <td className="px-4 py-3 text-gray-700">Marketing</td>
+                                    <td className="px-4 py-3">
+                                        <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td className="px-4 py-3 text-right">
+                                        <div className="inline-flex gap-2">
+                                            <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">View</button>
+                                            <button className="rounded-md border px-3 py-1.5 text-xs hover:bg-gray-50">Edit</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>

@@ -7,7 +7,6 @@ import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
 import { PolicyMaster } from "@/types/master-data";
 import { policyMasterService } from "@/features/services/policy-master";
-import Link from "next/dist/client/link";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/input/ToggleSwitch";

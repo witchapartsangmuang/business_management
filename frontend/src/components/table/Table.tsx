@@ -1,37 +1,50 @@
 
-export function TableWrapper({ children, className}: { children: React.ReactNode, className?: string }) {
+export function TableWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <div className={`table-wrapper ${className || ''}`}>
+        <div className={`${className || ''}`}>
             {children}
         </div>
     )
 }
-export function Table({ children, }: { children: React.ReactNode }) {
+export function Table({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <table className="tbl tbl-zebra tbl-sortable">
+        <table className={`${className || ''}`}>
             {children}
         </table>
     )
 }
-
-export function TableHeader({ children, }: { children: React.ReactNode }) {
+export function Tr({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <thead className="bg-gray-100">
+        <table className={`${className || ''}`}>
             {children}
-        </thead>
+        </table>
     )
 }
-export function TableBody({ children, }: { children: React.ReactNode }) {
+export function Thead({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <tbody>
+        <table className={`${className || ''}`}>
             {children}
-        </tbody>
+        </table>
     )
 }
-export function TableFooter({ children, }: { children: React.ReactNode }) {
+export function Th({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <tfoot className="bg-gray-100">
+        <table className={`${className || 'px-4 py-3 text-sm font-semibold text-gray-700 border-b border-gray-200 whitespace-nowrap'}`}>
             {children}
-        </tfoot>
+        </table>
+    )
+}
+export function Tbody({ children, className }: { children: React.ReactNode, className?: string }) {
+    return (
+        <table className={`${className || ''}`}>
+            {children}
+        </table>
+    )
+}
+export function Td({ children, className }: { children: React.ReactNode, className?: string }) {
+    return (
+        <table className={`${className || 'px-4 py-2 text-sm text-gray-800 border-b border-gray-100'}`}>
+            {children}
+        </table>
     )
 }

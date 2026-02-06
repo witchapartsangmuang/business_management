@@ -1,13 +1,13 @@
 'use client';
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import LayoutUser from "./layout/LayoutUser";
-import LayoutAdmin from "./layout/LayoutAdmin";
-import IconArrowBarRight from "./icons/icon-arrow-bar-right";
-import IconArrowBarLeft from "./icons/icon-arrow-bar-left";
-import NotificationBell from "./navbar/NotificationBell";
-import LanguageSwitcher from "./navbar/LanguageSwitch";
-import UserMenuDropdown from "./navbar/UserMenuDropdown";
+import LayoutUser from "./LayoutUser";
+import LayoutAdmin from "./LayoutAdmin";
+import IconArrowBarRight from "../icons/icon-arrow-bar-right";
+import IconArrowBarLeft from "../icons/icon-arrow-bar-left";
+import NotificationBell from "../navbar/NotificationBell";
+import LanguageSwitcher from "../navbar/LanguageSwitch";
+import UserMenuDropdown from "../navbar/UserMenuDropdown";
 export default function Layout({ children, }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [open, setOpen] = useState(true);

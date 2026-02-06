@@ -2,9 +2,9 @@
 
 import IconList from "@/components/icons/icon-list";
 import IconPlus from "@/components/icons/icon-plus";
+import IconSearch from "@/components/icons/icon-search";
 import { useState } from "react";
 import Link from "next/link";
-import IconSearch from "@/components/icons/icon-search";
 import { Table, TableBody, TableFooter, TableHeader, TableWrapper } from "@/components/table/Table";
 export default function ProjectMyWorkListPage() {
     const [category, setCategory] = useState<string>("Project Leader");
@@ -57,7 +57,7 @@ export default function ProjectMyWorkListPage() {
                             <th>Estimate Cost Saving</th>
                             <th>Actual Cost Saving</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th className="sticky right-0">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

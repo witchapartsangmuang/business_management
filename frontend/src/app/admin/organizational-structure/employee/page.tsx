@@ -74,7 +74,7 @@ export default function EmployeePage() {
                         {
                             emplyeeList.map((emp) => (
                                 <tr className="hover:bg-gray-50">
-                                    <td className="px-4 py-3 text-gray-900">{emp.employee_code}</td>
+                                    <td className="px-4 py-3 text-gray-900">{emp.emp_code}</td>
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
                                             <div className="h-8 w-8 rounded-full bg-gray-200"></div>

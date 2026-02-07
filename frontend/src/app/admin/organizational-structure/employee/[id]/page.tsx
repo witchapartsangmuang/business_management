@@ -6,73 +6,85 @@ import { useParams, notFound } from "next/navigation";
 import axios from "axios";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
+import { EmployeeService } from "@/features/services/employee";
 export default function EmployeeDetailPage() {
     const params = useParams<{ id: string }>()
     const [tabOpen, setTabOpen] = useState(0);
-    const [employeeInfo, setEmployeeInfo] = useState<Employee & Permission>({
+    const [employeeInfo, setEmployeeInfo] = useState<Omit<Employee, "password">>({
         id: null,
         profile_picture: '',
-        employee_code: '',
-        description: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        position: '',
+        emp_code: 'EMP01',
+        description: 'description',
+        first_name: 'Witchapart',
+        last_name: 'Sangmuang',
+        email: 'witchapart.s@gmail.com',
+        phone: '0837531397',
+        position: 'Officer',
         organizational_unit: '',
-        approver: '',
+        report_to: null,
         language: 'en',
         is_active: true,
         is_project_leader: true,
         is_project_approver: true,
         is_project_member: true,
-        // Permissions
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
+    });
+    const [permission, setpermission] = useState<Permission>({
+        id: null,
         md_policy_view: true,
         kpi_alignment_view: true,
         project_view: true,
         project_create: true,
         project_update: true,
         project_delete: true,
-
         report_view: true,
         report_update: true,
         report_delete: true,
-
         dashboard_executive_view: true,
         dashboard_manager_view: true,
         dashboard_user_view: true,
-
         admin_view: true,
-
         cost_saving_type_view: true,
         cost_saving_type_create: true,
         cost_saving_type_update: true,
         cost_saving_type_delete: true,
-
         policy_view: true,
         policy_create: true,
         policy_update: true,
         policy_delete: true,
-
         kpi_view: true,
         kpi_create: true,
         kpi_update: true,
         kpi_delete: true,
-
         organizational_unit_view: true,
         organizational_unit_create: true,
         organizational_unit_update: true,
         organizational_unit_delete: true,
-
         employee_view: true,
         employee_create: true,
         employee_update: true,
-        employee_delete: true
-    });
+        employee_delete: true,
+        permission_for: null
+    })
     // useEffect(()=>{
     //     console.log(employeeInfo.approver, 'employeeInfo.approver');
 
     // },[employeeInfo.approver])
+    function submitEmployeeInfo() {
+        console.log('employeeInfo', employeeInfo);
+        // Extact for correct type
+        const { id, ...newObj } = employeeInfo
+        if (employeeInfo.id !== null) {
+            EmployeeService.update(employeeInfo.id, newObj)
+        } else {
+            EmployeeService.create(newObj)
+        }
+    }
+
+
     async function fetchData() {
         try {
             await axios.get(`/api/employee/${params.id}`).then((response) => {
@@ -120,7 +132,7 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <div
-                                    className="group relative w-[128px] h-[128px] cursor-pointer overflow-hidden rounded-full"
+                                    className="group relative w-32 h-32 cursor-pointer overflow-hidden rounded-full"
                                     // onClick={openPicker}
                                     title="คลิกเพื่อเปลี่ยนรูป"
                                 >
@@ -128,7 +140,7 @@ export default function EmployeeDetailPage() {
                                         // src={displayUrl}
                                         src="/default-profile-avatar.webp"
                                         alt="Profile"
-                                        className="w-[128px] h-[128px] object-cover rounded-full border border-gray-300 bg-gray-200"
+                                        className="w-32 h-32 object-cover rounded-full border border-gray-300 bg-gray-200"
                                     />
 
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -145,7 +157,7 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label" htmlFor="">Employee Code</label>
-                                <input type="text" className="form-input" value={employeeInfo.employee_code} onChange={(e) => setEmployeeInfo({ ...employeeInfo, employee_code: e.target.value })} />
+                                <input type="text" className="form-input" value={employeeInfo.emp_code} onChange={(e) => setEmployeeInfo({ ...employeeInfo, emp_code: e.target.value })} />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <label className="form-label" htmlFor="">First Name</label>
@@ -175,10 +187,10 @@ export default function EmployeeDetailPage() {
                                 <label className="form-label">Approver</label>
                                 <SearchSelect
                                     optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
-                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, approver: value })}
-                                    placeholder={'select!! Approver'}
+                                    placeholder={'Select Approver'}
+                                    defaultValue={String(employeeInfo.report_to)}
+                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, report_to: value !== null ? Number(value) : null })}
                                 />
-
                             </div>
 
                             <div className="col-span-6 mt-3 px-3">
@@ -224,9 +236,9 @@ export default function EmployeeDetailPage() {
                                             <tr>
                                                 <td>MD Policy</td>
                                                 <td>
-                                                    <ToggleSwitch checked={employeeInfo.md_policy_view}
-                                                        onChange={() => setEmployeeInfo({
-                                                            ...employeeInfo, md_policy_view: !employeeInfo.md_policy_view,
+                                                    <ToggleSwitch checked={permission.md_policy_view}
+                                                        onChange={() => setpermission({
+                                                            ...permission, md_policy_view: !permission.md_policy_view,
                                                         })
                                                         }
                                                     />
@@ -240,11 +252,11 @@ export default function EmployeeDetailPage() {
                                                 <td>KPI Alignment</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.kpi_alignment_view}
+                                                        checked={permission.kpi_alignment_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                kpi_alignment_view: !employeeInfo.kpi_alignment_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                kpi_alignment_view: !permission.kpi_alignment_view,
                                                             })
                                                         }
                                                     />
@@ -258,44 +270,44 @@ export default function EmployeeDetailPage() {
                                                 <td>Project</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.project_view}
+                                                        checked={permission.project_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                project_view: !employeeInfo.project_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                project_view: !permission.project_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.project_create}
+                                                        checked={permission.project_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                project_create: !employeeInfo.project_create,
+                                                            setpermission({
+                                                                ...permission,
+                                                                project_create: !permission.project_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.project_update}
+                                                        checked={permission.project_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                project_update: !employeeInfo.project_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                project_update: !permission.project_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.project_delete}
+                                                        checked={permission.project_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                project_delete: !employeeInfo.project_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                project_delete: !permission.project_delete,
                                                             })
                                                         }
                                                     />
@@ -306,11 +318,11 @@ export default function EmployeeDetailPage() {
                                                 <td>Report</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.report_view}
+                                                        checked={permission.report_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                report_view: !employeeInfo.report_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                report_view: !permission.report_view,
                                                             })
                                                         }
                                                     />
@@ -318,22 +330,22 @@ export default function EmployeeDetailPage() {
                                                 <td className="text-gray-400">-</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.report_update}
+                                                        checked={permission.report_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                report_update: !employeeInfo.report_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                report_update: !permission.report_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.report_delete}
+                                                        checked={permission.report_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                report_delete: !employeeInfo.report_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                report_delete: !permission.report_delete,
                                                             })
                                                         }
                                                     />
@@ -344,11 +356,11 @@ export default function EmployeeDetailPage() {
                                                 <td>Dashboard (Executive)</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.dashboard_executive_view}
+                                                        checked={permission.dashboard_executive_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                dashboard_executive_view: !employeeInfo.dashboard_executive_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                dashboard_executive_view: !permission.dashboard_executive_view,
                                                             })
                                                         }
                                                     />
@@ -362,11 +374,11 @@ export default function EmployeeDetailPage() {
                                                 <td>Dashboard (Manager)</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.dashboard_manager_view}
+                                                        checked={permission.dashboard_manager_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                dashboard_manager_view: !employeeInfo.dashboard_manager_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                dashboard_manager_view: !permission.dashboard_manager_view,
                                                             })
                                                         }
                                                     />
@@ -380,11 +392,11 @@ export default function EmployeeDetailPage() {
                                                 <td>Dashboard (User)</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.dashboard_user_view}
+                                                        checked={permission.dashboard_user_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                dashboard_user_view: !employeeInfo.dashboard_user_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                dashboard_user_view: !permission.dashboard_user_view,
                                                             })
                                                         }
                                                     />
@@ -418,11 +430,11 @@ export default function EmployeeDetailPage() {
                                                 <td>Admin</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.admin_view}
+                                                        checked={permission.admin_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                admin_view: !employeeInfo.admin_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                admin_view: !permission.admin_view,
                                                             })
                                                         }
                                                     />
@@ -436,44 +448,44 @@ export default function EmployeeDetailPage() {
                                                 <td>Cost Saving Type</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.cost_saving_type_view}
+                                                        checked={permission.cost_saving_type_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                cost_saving_type_view: !employeeInfo.cost_saving_type_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                cost_saving_type_view: !permission.cost_saving_type_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.cost_saving_type_create}
+                                                        checked={permission.cost_saving_type_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                cost_saving_type_create: !employeeInfo.cost_saving_type_create,
+                                                            setpermission({
+                                                                ...permission,
+                                                                cost_saving_type_create: !permission.cost_saving_type_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.cost_saving_type_update}
+                                                        checked={permission.cost_saving_type_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                cost_saving_type_update: !employeeInfo.cost_saving_type_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                cost_saving_type_update: !permission.cost_saving_type_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.cost_saving_type_delete}
+                                                        checked={permission.cost_saving_type_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                cost_saving_type_delete: !employeeInfo.cost_saving_type_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                cost_saving_type_delete: !permission.cost_saving_type_delete,
                                                             })
                                                         }
                                                     />
@@ -484,44 +496,44 @@ export default function EmployeeDetailPage() {
                                                 <td>Policy</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.policy_view}
+                                                        checked={permission.policy_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                policy_view: !employeeInfo.policy_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                policy_view: !permission.policy_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.policy_create}
+                                                        checked={permission.policy_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                policy_create: !employeeInfo.policy_create,
+                                                            setpermission({
+                                                                ...permission,
+                                                                policy_create: !permission.policy_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.policy_update}
+                                                        checked={permission.policy_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                policy_update: !employeeInfo.policy_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                policy_update: !permission.policy_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.policy_delete}
+                                                        checked={permission.policy_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                policy_delete: !employeeInfo.policy_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                policy_delete: !permission.policy_delete,
                                                             })
                                                         }
                                                     />
@@ -532,44 +544,44 @@ export default function EmployeeDetailPage() {
                                                 <td>KPI</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.kpi_view}
+                                                        checked={permission.kpi_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                kpi_view: !employeeInfo.kpi_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                kpi_view: !permission.kpi_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.kpi_create}
+                                                        checked={permission.kpi_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                kpi_create: !employeeInfo.kpi_create,
+                                                            setpermission({
+                                                                ...permission,
+                                                                kpi_create: !permission.kpi_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.kpi_update}
+                                                        checked={permission.kpi_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                kpi_update: !employeeInfo.kpi_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                kpi_update: !permission.kpi_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.kpi_delete}
+                                                        checked={permission.kpi_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                kpi_delete: !employeeInfo.kpi_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                kpi_delete: !permission.kpi_delete,
                                                             })
                                                         }
                                                     />
@@ -580,47 +592,47 @@ export default function EmployeeDetailPage() {
                                                 <td>Organizational Unit</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.organizational_unit_view}
+                                                        checked={permission.organizational_unit_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                organizational_unit_view: !employeeInfo.organizational_unit_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                organizational_unit_view: !permission.organizational_unit_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.organizational_unit_create}
+                                                        checked={permission.organizational_unit_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
+                                                            setpermission({
+                                                                ...permission,
                                                                 organizational_unit_create:
-                                                                    !employeeInfo.organizational_unit_create,
+                                                                    !permission.organizational_unit_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.organizational_unit_update}
+                                                        checked={permission.organizational_unit_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
+                                                            setpermission({
+                                                                ...permission,
                                                                 organizational_unit_update:
-                                                                    !employeeInfo.organizational_unit_update,
+                                                                    !permission.organizational_unit_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.organizational_unit_delete}
+                                                        checked={permission.organizational_unit_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
+                                                            setpermission({
+                                                                ...permission,
                                                                 organizational_unit_delete:
-                                                                    !employeeInfo.organizational_unit_delete,
+                                                                    !permission.organizational_unit_delete,
                                                             })
                                                         }
                                                     />
@@ -631,44 +643,44 @@ export default function EmployeeDetailPage() {
                                                 <td>Employee</td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.employee_view}
+                                                        checked={permission.employee_view}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                employee_view: !employeeInfo.employee_view,
+                                                            setpermission({
+                                                                ...permission,
+                                                                employee_view: !permission.employee_view,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.employee_create}
+                                                        checked={permission.employee_create}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                employee_create: !employeeInfo.employee_create,
+                                                            setpermission({
+                                                                ...permission,
+                                                                employee_create: !permission.employee_create,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.employee_update}
+                                                        checked={permission.employee_update}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                employee_update: !employeeInfo.employee_update,
+                                                            setpermission({
+                                                                ...permission,
+                                                                employee_update: !permission.employee_update,
                                                             })
                                                         }
                                                     />
                                                 </td>
                                                 <td>
                                                     <ToggleSwitch
-                                                        checked={employeeInfo.employee_delete}
+                                                        checked={permission.employee_delete}
                                                         onChange={() =>
-                                                            setEmployeeInfo({
-                                                                ...employeeInfo,
-                                                                employee_delete: !employeeInfo.employee_delete,
+                                                            setpermission({
+                                                                ...permission,
+                                                                employee_delete: !permission.employee_delete,
                                                             })
                                                         }
                                                     />
@@ -687,7 +699,7 @@ export default function EmployeeDetailPage() {
                     <button className="secondary-button">Back</button>
                 </div>
                 <div>
-                    <button className="primary-button">Save</button>
+                    <button className="primary-button" onClick={submitEmployeeInfo}>Save</button>
                 </div>
             </div>
         </>

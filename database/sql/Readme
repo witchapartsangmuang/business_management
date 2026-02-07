@@ -1,0 +1,2 @@
+หลัง start docker แล้วให้ script ข้างล่างเพื่อสร้าง table init >>
+docker compose exec postgres psql -U SuperAdminBM -d business_management_database -f /sql/init.sql

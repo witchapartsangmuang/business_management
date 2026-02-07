@@ -19,9 +19,9 @@ const kpi_list: Kpi[] = [
 ]
 
 const employee_list: Employee_Project[] = [
-    { id: 1, employee_code: 'EMP001', first_name: 'Witchapart', last_name: 'Sangmuang', is_project_leader: true, is_project_approver: false, is_project_member: true, },
-    { id: 2, employee_code: 'EMP002', first_name: 'Aphiwit', last_name: 'Muangsang', is_project_leader: false, is_project_approver: true, is_project_member: true, },
-    { id: 3, employee_code: 'EMP003', first_name: 'Sangya', last_name: 'Kanya', is_project_leader: true, is_project_approver: false, is_project_member: true, },
+    { id: 1, emp_code: 'EMP001', first_name: 'Witchapart', last_name: 'Sangmuang', is_project_leader: true, is_project_approver: false, is_project_member: true, },
+    { id: 2, emp_code: 'EMP002', first_name: 'Aphiwit', last_name: 'Muangsang', is_project_leader: false, is_project_approver: true, is_project_member: true, },
+    { id: 3, emp_code: 'EMP003', first_name: 'Sangya', last_name: 'Kanya', is_project_leader: true, is_project_approver: false, is_project_member: true, },
 ]
 export default function ProjectPage() {
     const [select_md_policy_list, setselect_md_policy_list] = useState<{ value: string, label: string }[]>([])
@@ -56,13 +56,13 @@ export default function ProjectPage() {
         const filter_select_project_member_list: { value: string, label: string }[] = []
         employee_list.map((emp) => {
             if (emp.is_project_leader) {
-                filter_select_project_leader_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.employee_code})` })
+                filter_select_project_leader_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.emp_code})` })
             }
             if (emp.is_project_approver) {
-                filter_select_project_approver_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.employee_code})` })
+                filter_select_project_approver_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.emp_code})` })
             }
             if (emp.is_project_member) {
-                filter_select_project_member_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.employee_code})` })
+                filter_select_project_member_list.push({ value: String(emp.id), label: `${emp.first_name} ${emp.last_name} (${emp.emp_code})` })
             }
         })
         setselect_project_leader_list(select_project_leader_list => [...select_project_leader_list, ...filter_select_project_leader_list])

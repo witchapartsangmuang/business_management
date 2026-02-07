@@ -78,20 +78,31 @@ export class EmployeeService {
         return result.rows;
     }
 
-    static async createKpi(data: Kpi) {
-        const { kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime } = data
-        if (!kpi_code || !kpi_name || !description || !unit || is_active === undefined || !created_by || !created_datetime || !updated_by || !updated_datetime) {
-            throw new Error("All KPI details are required.");
-        }
+
+
+    static async createEmployee(data: any) {
+        const { emp_code, first_name, last_name } = data
+        // const { emp_code, first_name, last_name, description, email, phone, password, organizational_unit, position, approver, language, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime } = data
+        // if (!emp_code || !first_name || !last_name || !email || !organizational_unit) {
+        //     throw new Error("All employee details are required.");
+        // }
+        // const result = await db.query(
+        //     `INSERT INTO employees (emp_code, first_name, last_name, description, email, phone, organizational_unit, position, approver, language, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime)
+        //      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16, $17, $18)
+        //      RETURNING id, emp_code, first_name, last_name, description, email, phone, password, organizational_unit, position, approver, language, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime`,
+        //     [emp_code.trim(), first_name.trim(), last_name.trim(), description?.trim() || null, email.trim(), phone.trim() || null, organizational_unit.trim(), position.trim(), approver.trim(), language.trim(), is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime]
+
+        // )
+
         const result = await db.query(
-            `INSERT INTO kpis (kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-             RETURNING id, kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime`,
-            [kpi_code.trim(), kpi_name.trim(), description?.trim() || null, unit.trim(), is_active, created_by, created_datetime, updated_by, updated_datetime]
+            `INSERT INTO employee (emp_code, first_name, last_name)
+            VALUES ($1, $2, $3)
+            RETURNING id, emp_code, first_name, last_name`,
+            [emp_code.trim(), first_name.trim(), last_name.trim()]
         )
         return result.rows[0];
     }
-    static async updateKpi(data: Kpi) {
+    static async updateEmployee(data: Kpi) {
         const { id, kpi_code, kpi_name, description, unit, is_active, updated_by, updated_datetime } = data;
         if (!id || !kpi_code || !kpi_name || !description || !unit || is_active === undefined || !updated_by || !updated_datetime) {
             throw new Error("All KPI details are required.");

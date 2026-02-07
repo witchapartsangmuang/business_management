@@ -314,9 +314,10 @@ export class EmployeeController {
     }
     static async create(req: Request, res: Response) {
         try {
-            const kpi = await EmployeeService.createKpi(req.body);
+            console.log('req.body',req.body);
+            const kpi = await EmployeeService.createEmployee(req.body);
             return res.status(201).json({
-                message: "KPI registered successfully",
+                message: "Employee registered successfully",
                 kpi,
             });
         } catch (error: any) {
@@ -326,7 +327,7 @@ export class EmployeeController {
     }
     static async update(req: Request, res: Response) {
         try {
-            const kpi = await EmployeeService.updateKpi(req.body);
+            const kpi = await EmployeeService.updateEmployee(req.body);
         } catch (error: any) {
             console.error("Register error:", error);
             return res.status(400).json({ message: error.message || "Bad request" });

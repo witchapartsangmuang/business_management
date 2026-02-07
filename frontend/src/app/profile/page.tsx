@@ -127,14 +127,14 @@ export default function ProfilePage() {
       <div className="grid grid-cols-12">
         <div className="col-span-6 mt-3 px-3">
           <div
-            className="group relative w-[128px] h-[128px] cursor-pointer overflow-hidden rounded-full"
+            className="group relative w-32 h-32 cursor-pointer overflow-hidden rounded-full"
             onClick={openPicker}
             title="คลิกเพื่อเปลี่ยนรูป"
           >
             <img
               src={displayUrl}
               alt="Profile"
-              className="w-[128px] h-[128px] object-cover rounded-full border border-gray-300 bg-gray-200"
+              className="w-32 h-32 object-cover rounded-full border border-gray-300 bg-gray-200"
             />
 
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -3,5 +3,5 @@ import { EmployeeController } from "../controllers/employee.controller";
 
 const router = Router();
 router.get("/", EmployeeController.readAll);
-
+router.post("/", EmployeeController.create);
 export default router;

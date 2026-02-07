@@ -14,7 +14,7 @@ export type Kpi = {
 
 export type Employee_Project = {
     id: number,
-    employee_code: string,
+    emp_code: string,
     first_name: string,
     last_name: string,
     is_project_leader: boolean,

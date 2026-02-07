@@ -314,11 +314,10 @@ export class EmployeeController {
     }
     static async create(req: Request, res: Response) {
         try {
-            console.log('req.body',req.body);
-            const kpi = await EmployeeService.createEmployee(req.body);
+            const employee = await EmployeeService.createEmployee(req.body);
             return res.status(201).json({
                 message: "Employee registered successfully",
-                kpi,
+                employee,
             });
         } catch (error: any) {
             console.error("Register error:", error);

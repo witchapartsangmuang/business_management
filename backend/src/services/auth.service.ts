@@ -3,94 +3,90 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { db } from "../db";
 
-const JWT_SECRET = process.env.JWT_SECRET || "DEV_SECRET_CHANGE_ME";
+const JWT_SECRET = process.env.JWT_SECRET || "BMJWTSUPERSECRETKEY";
 
 export class AuthService {
-  static async register(data: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    role: string;
-  }) {
-    const { email, password, firstName, lastName, phone, role } = data;
-    console.log("data: ", data);
-    // ตรวจ user ซ้ำ
-    const existing = await db.query(
-      "SELECT id FROM users WHERE email = $1",
-      [email]
-    );
-    if (existing.rows.length > 0) {
-      throw new Error("Email already exists.");
-    }
-    // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+	static async register(data: {
+		email: string;
+		password: string;
+		firstName: string;
+		lastName: string;
+		phone: string;
+		role: string;
+	}) {
+		const { email, password, firstName, lastName, phone, role } = data;
+		console.log("data: ", data);
+		// ตรวจ user ซ้ำ
+		const existing = await db.query(
+			"SELECT id FROM users WHERE email = $1",
+			[email]
+		);
+		if (existing.rows.length > 0) {
+			throw new Error("Email already exists.");
+		}
+		// hash password
+		const hashedPassword = await bcrypt.hash(password, 10);
 
-    // insert user
-    const result = await db.query(
-      `INSERT INTO employee (email, password_hash, first_name, last_name, phone, role)
+		// insert user
+		const result = await db.query(
+			`INSERT INTO employee (email, password_hash, first_name, last_name, phone, role)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, email, first_name, last_name, phone, role, created_at`,
-      [email, hashedPassword, firstName, lastName, phone, role]
-    );
-    // const createCapability = await db.query(
-    //   `INSERT INTO capability (group_name,strategy_read,strategy_create,strategy_update,strategy_delete,kpi_read,kpi_create,kpi_update,kpi_delete,executive_dashboard_read,manager_dashboard_read,user_dashboard_read,project_report_read,idea_report_read,inspiration,knowledge_management_read,admin_page)
-    //     VALUES ($1,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE)`,
-    //   [result.rows[0].id]
-    // );
-    return result.rows[0];
+			[email, hashedPassword, firstName, lastName, phone, role]
+		);
 
-  }
+		return result.rows[0];
 
-  static async login(data: { email: string; password: string }) {
-    console.log("data: ", data);
+	}
 
-    const { email, password } = data;
+	static async login(data: { email: string; password: string }) {
+		console.log("data: ", data);
 
-    if (!email || !password) {
-      throw new Error("email and password are required.");
-    }
+		const { email, password } = data;
 
-    // email = username หรือ email ก็ได้
-    const userResult = await db.query(
-      `SELECT id, email, password_hash, role
+		if (!email || !password) {
+			throw new Error("email and password are required.");
+		}
+
+		// email = username หรือ email ก็ได้
+		const userResult = await db.query(
+			`SELECT id, email, password_hash, role
        FROM users
        WHERE  email = $1
        LIMIT 1`,
-      [email]
-    );
+			[email]
+		);
 
-    if (userResult.rows.length === 0) {
-      throw new Error("Invalid username/email or password.");
-    }
+		if (userResult.rows.length === 0) {
+			throw new Error("Invalid username/email or password.");
+		}
 
-    const user = userResult.rows[0];
+		const user = userResult.rows[0];
 
-    const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) {
-      throw new Error("Invalid username/email or password.");
-    }
+		const isMatch = await bcrypt.compare(password, user.password_hash);
+		if (!isMatch) {
+			throw new Error("Invalid username/email or password.");
+		}
 
-    // สร้าง JWT
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+		// สร้าง JWT
+		const token = jwt.sign(
+			{
+				userId: user.id,
+				role: user.role,
+			},
+			JWT_SECRET,
+			{ expiresIn: "1h" }
+		);
 
-    // ไม่ส่ง password_hash กลับ
-    return {
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      },
-    };
-  }
+		// ไม่ส่ง password_hash กลับ
+		return {
+			token,
+			user: {
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				role: user.role,
+			},
+		};
+	}
 }

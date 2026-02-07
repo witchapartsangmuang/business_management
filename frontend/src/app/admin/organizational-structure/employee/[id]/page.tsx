@@ -7,10 +7,15 @@ import axios from "axios";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
+import PasswordInput from "@/components/input/InputPassword";
+import { ValidateEmployeeError } from "@/types/validate-types";
+import Modal from "@/components/Modal";
+import Label from "@/components/input/Label";
 export default function EmployeeDetailPage() {
     const params = useParams<{ id: string }>()
     const [tabOpen, setTabOpen] = useState(0);
-    const [employeeInfo, setEmployeeInfo] = useState<Omit<Employee, "password">>({
+    const [confirmPassword, setconfirmPassword] = useState('')
+    const [employeeInfo, setEmployeeInfo] = useState<Employee>({
         id: null,
         profile_picture: '',
         emp_code: 'EMP01',
@@ -19,6 +24,7 @@ export default function EmployeeDetailPage() {
         last_name: 'Sangmuang',
         email: 'witchapart.s@gmail.com',
         phone: '0837531397',
+        password: '',
         position: 'Officer',
         organizational_unit: '',
         report_to: null,
@@ -69,10 +75,101 @@ export default function EmployeeDetailPage() {
         employee_delete: true,
         permission_for: null
     })
-    // useEffect(()=>{
-    //     console.log(employeeInfo.approver, 'employeeInfo.approver');
 
-    // },[employeeInfo.approver])
+    const [validateErrorModalOpen, setvalidateErrorModalOpen] = useState(false);
+    const [validateFieldError, setvalidateFieldError] = useState<ValidateEmployeeError>({
+        emp_code: {
+            valid_status: true,
+            errorText: ''
+        },
+        first_name: {
+            valid_status: true,
+            errorText: ''
+        },
+        last_name: {
+            valid_status: true,
+            errorText: ''
+        },
+        email: {
+            valid_status: true,
+            errorText: ''
+        },
+        password: {
+            valid_status: true,
+            errorText: ''
+        },
+        confirmPassword: {
+            valid_status: true,
+            errorText: ''
+        }
+    })
+
+    useEffect(() => {
+        console.log(validateFieldError, "validateFieldError");
+    }, [validateFieldError])
+
+    function validateData() {
+        let validateStatus = true;
+        const errorList: ValidateEmployeeError = { ...validateFieldError };
+        // emp_code
+        if (employeeInfo.emp_code.trim() === "") {
+            errorList.emp_code = { valid_status: false, errorText: "Please define employee code." };
+            validateStatus = false;
+        } else {
+            errorList.emp_code = { valid_status: true, errorText: "" };
+        }
+        // first_name
+        if (employeeInfo.first_name.trim() === "") {
+            errorList.first_name = { valid_status: false, errorText: "Please define first name." };
+            validateStatus = false;
+        } else {
+            errorList.first_name = { valid_status: true, errorText: "" };
+        }
+        // last_name
+        if (employeeInfo.last_name.trim() === "") {
+            errorList.last_name = { valid_status: false, errorText: "Please define last name." };
+            validateStatus = false;
+        } else {
+            errorList.last_name = { valid_status: true, errorText: "" };
+        }
+        // email
+        if (employeeInfo.email.trim() === "") {
+            errorList.email = { valid_status: false, errorText: "Please define email." };
+            validateStatus = false;
+        } else {
+            errorList.email = { valid_status: true, errorText: "" };
+        }
+        // password
+        if (employeeInfo.password === "") {
+            errorList.password = { valid_status: false, errorText: "Please define password." };
+            validateStatus = false;
+        } else {
+            errorList.password = { valid_status: true, errorText: "" };
+        }
+        // confirmPassword
+        if (confirmPassword === "") {
+            errorList.confirmPassword = { valid_status: false, errorText: "Please confirm password." };
+            validateStatus = false;
+        } else if (employeeInfo.password !== confirmPassword) {
+            errorList.confirmPassword = {
+                valid_status: false,
+                errorText: "Password and Confirm Password do not match.",
+            };
+            validateStatus = false;
+        } else {
+            errorList.confirmPassword = { valid_status: true, errorText: "" };
+        }
+
+        setvalidateFieldError(errorList);
+
+        return validateStatus;
+    }
+
+    const closeValidateModal = () => {
+        setvalidateErrorModalOpen(false)
+    }
+
+
     function submitEmployeeInfo() {
         console.log('employeeInfo', employeeInfo);
         // Extact for correct type
@@ -80,7 +177,11 @@ export default function EmployeeDetailPage() {
         if (employeeInfo.id !== null) {
             EmployeeService.update(employeeInfo.id, newObj)
         } else {
-            EmployeeService.create(newObj)
+            if (validateData()) {
+                // EmployeeService.create({ employee: newObj, permission: permission })
+            } else {
+                setvalidateErrorModalOpen(true)
+            }
         }
     }
 
@@ -152,39 +253,70 @@ export default function EmployeeDetailPage() {
                                 )} */}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Description</label>
+                                <Label title="Description" />
                                 <textarea className="form-input" value={employeeInfo.description} onChange={(e) => setEmployeeInfo({ ...employeeInfo, description: e.target.value })}></textarea>
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Employee Code</label>
-                                <input type="text" className="form-input" value={employeeInfo.emp_code} onChange={(e) => setEmployeeInfo({ ...employeeInfo, emp_code: e.target.value })} />
+                                <Label title="Employee Code" require />
+                                <input type="text" className={`form-input ${!validateFieldError.emp_code.valid_status && 'border-red-500'}`}
+                                    value={employeeInfo.emp_code}
+                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, emp_code: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, emp_code: e.target.value }) }} />
+                                {validateFieldError.emp_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.emp_code.errorText}.</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">First Name</label>
-                                <input type="text" className="form-input" value={employeeInfo.first_name} onChange={(e) => setEmployeeInfo({ ...employeeInfo, first_name: e.target.value })} />
+                                <Label title="First Name" require />
+                                <input type="text" className="form-input"
+                                    value={employeeInfo.first_name}
+                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, first_name: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, first_name: e.target.value }) }} />
+                                {validateFieldError.first_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.first_name.errorText}.</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Last Name</label>
-                                <input type="text" className="form-input" value={employeeInfo.last_name} onChange={(e) => setEmployeeInfo({ ...employeeInfo, last_name: e.target.value })} />
+                                <Label title="Last Name" require />
+                                <input type="text" className="form-input"
+                                    value={employeeInfo.last_name}
+                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, last_name: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, last_name: e.target.value }) }} />
+                                {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label">Email</label>
-                                <input
-                                    type="text" className="form-input" value={employeeInfo.email} onChange={(e) => setEmployeeInfo({ ...employeeInfo, email: e.target.value })}
-                                />
+                                <Label title="Email" require />
+                                <input type="text" className="form-input"
+                                    value={employeeInfo.email}
+                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, email: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, email: e.target.value }) }} />
+                                {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label">Phone</label>
+                                <Label title="Password" require />
+                                <PasswordInput value={employeeInfo.password} onChange={(e) => {
+                                    setEmployeeInfo({ ...employeeInfo, password: e.target.value })
+                                    setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } })
+                                }} />
+                                {validateFieldError.password.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                            </div>
+                            <div className="col-span-6 mt-3 px-3">
+                                <Label title="Confirm Password" require />
+                                <PasswordInput value={confirmPassword} onChange={(e) => {
+                                    setconfirmPassword(e.target.value)
+                                    setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } })
+                                }} />
+                                {validateFieldError.confirmPassword.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                            </div>
+
+                            <div className="col-span-6 mt-3 px-3">
+                                <Label title="Phone" />
                                 <input type="text" className="form-input" value={employeeInfo.phone} onChange={(e) => setEmployeeInfo({ ...employeeInfo, phone: e.target.value })}
                                 />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label">Position</label>
+                                <Label title="Position" />
                                 <input type="text" className="form-input" value={employeeInfo.position} onChange={(e) => setEmployeeInfo({ ...employeeInfo, position: e.target.value })}
                                 />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label">Approver</label>
+                                <Label title="Report To" />
                                 <SearchSelect
                                     optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
                                     placeholder={'Select Approver'}
@@ -192,24 +324,37 @@ export default function EmployeeDetailPage() {
                                     onChange={(value) => setEmployeeInfo({ ...employeeInfo, report_to: value !== null ? Number(value) : null })}
                                 />
                             </div>
-
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label">Organizational Unit</label>
+                                <Label title="Organizational Unit" />
                                 <select className="form-select" value={employeeInfo.organizational_unit} onChange={(e) => setEmployeeInfo({ ...employeeInfo, organizational_unit: e.target.value })}  >
                                     <option>Sales</option>
                                     <option>Marketing</option>
                                 </select>
                             </div>
+                            {
+                                employeeInfo.id !== null &&
+                                <div className="col-span-12 mt-3 px-3">
+                                    <div className="flex justify-end">
+                                        <div className="pt-2">
+                                            <button className="primary-button">
+                                                Change Password
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
                             <div className="col-span-12 mt-10 px-3">
                                 <p className="font-bold">Special Role</p>
                             </div>
-                            <div className="col-span-2 mt-3 px-3">
+                            <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mt-3 px-3">
                                 <ToggleSwitch checked={employeeInfo.is_project_leader} onChange={() => setEmployeeInfo({ ...employeeInfo, is_project_leader: !employeeInfo.is_project_leader })} checked_label="Project Leader" unchecked_label="Project Leader" />
                             </div>
-                            <div className="col-span-2 mt-3 px-3">
+                            <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mt-3 px-3">
                                 <ToggleSwitch checked={employeeInfo.is_project_approver} onChange={() => setEmployeeInfo({ ...employeeInfo, is_project_approver: !employeeInfo.is_project_approver })} checked_label="Project Approver" unchecked_label="Project Approver" />
                             </div>
-                            <div className="col-span-2 mt-3 px-3">
+                            <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mt-3 px-3">
                                 <ToggleSwitch checked={employeeInfo.is_project_member} onChange={() => setEmployeeInfo({ ...employeeInfo, is_project_member: !employeeInfo.is_project_member })} checked_label="Project Member" unchecked_label="Project Member" />
                             </div>
                         </>
@@ -702,6 +847,14 @@ export default function EmployeeDetailPage() {
                     <button className="primary-button" onClick={submitEmployeeInfo}>Save</button>
                 </div>
             </div>
+            <Modal isOpen={validateErrorModalOpen} onClose={closeValidateModal} title="Validate Data Failed!">
+                {validateFieldError.emp_code.errorText !== '' && <p>{validateFieldError.emp_code.errorText}</p>}
+                {validateFieldError.first_name.errorText !== '' && <p>{validateFieldError.first_name.errorText}</p>}
+                {validateFieldError.last_name.errorText !== '' && <p>{validateFieldError.last_name.errorText}</p>}
+                {validateFieldError.email.errorText !== '' && <p>{validateFieldError.email.errorText}</p>}
+                {validateFieldError.password.errorText !== '' && <p>{validateFieldError.password.errorText}</p>}
+                {validateFieldError.confirmPassword.errorText !== '' && <p>{validateFieldError.confirmPassword.errorText}</p>}
+            </Modal>
         </>
     )
 }

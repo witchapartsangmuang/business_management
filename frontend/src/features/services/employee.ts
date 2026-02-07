@@ -35,20 +35,28 @@ export const EmployeeService = {
             throwAxiosError(err);
         }
     },
-    async create(payload: Omit<Employee, "id"> & { id?: string }): Promise<{ employee: Employee[] & Permission[] }> {
+    async create(payload: { employee: Omit<Employee, "id">, permission: Permission }): Promise<{ employee: Employee, permission: Permission }> {
         try {
-            const res = await api.post<{ employee: Employee[] & Permission[] }>(KPI_ENDPOINT, payload);
+            const res = await api.post<{ employee: Employee, permission: Permission }>(KPI_ENDPOINT, payload);
             return res.data;
         } catch (err) {
             throwAxiosError(err);
         }
     },
-    async update(id: number, payload: Omit<Employee, "id"> & { id?: string }): Promise<{ employee: Employee[] & Permission[] }> {
+    async update(id: number, payload: { employee: Employee, permission: Permission }): Promise<{ employee: Employee, permission: Permission }> {
         try {
-            const res = await api.put<{ employee: Employee[] & Permission[] }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
+            const res = await api.put<{ employee: Employee, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;
         } catch (err) {
             throwAxiosError(err);
         }
     },
+    async changePassword(id: number, payload: { password: string, confirm_password: string }) {
+        try {
+            const res = await api.post<{ employee: Employee, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
+            return res.data;
+        } catch (err) {
+            throwAxiosError(err);
+        }
+    }
 }

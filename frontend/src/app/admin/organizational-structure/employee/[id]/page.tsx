@@ -17,18 +17,17 @@ export default function EmployeeDetailPage() {
     const [confirmPassword, setconfirmPassword] = useState('')
     const [employeeInfo, setEmployeeInfo] = useState<Employee>({
         id: null,
-        profile_picture: '',
-        emp_code: 'EMP01',
-        description: 'description',
-        first_name: 'Witchapart',
-        last_name: 'Sangmuang',
-        email: 'witchapart.s@gmail.com',
-        phone: '0837531397',
+        profile_picture: null,
+        emp_code: '',
+        description: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
         password: '',
-        position: 'Officer',
-        organizational_unit: '',
+        position: '',
+        organizational_unit: null,
         report_to: null,
-        language: 'en',
         is_active: true,
         is_project_leader: true,
         is_project_approver: true,
@@ -101,12 +100,12 @@ export default function EmployeeDetailPage() {
         confirmPassword: {
             valid_status: true,
             errorText: ''
-        }
+        },
+        organizational_unit: {
+            valid_status: true,
+            errorText: ''
+        },
     })
-
-    useEffect(() => {
-        console.log(validateFieldError, "validateFieldError");
-    }, [validateFieldError])
 
     function validateData() {
         let validateStatus = true;
@@ -146,6 +145,15 @@ export default function EmployeeDetailPage() {
         } else {
             errorList.password = { valid_status: true, errorText: "" };
         }
+        // organizational_unit
+        if (employeeInfo.organizational_unit === null) {
+            errorList.organizational_unit = { valid_status: false, errorText: "Please define unit." };
+            validateStatus = false;
+        } else {
+            errorList.organizational_unit = { valid_status: true, errorText: "" };
+        }
+
+
         // confirmPassword
         if (confirmPassword === "") {
             errorList.confirmPassword = { valid_status: false, errorText: "Please confirm password." };
@@ -162,6 +170,8 @@ export default function EmployeeDetailPage() {
 
         setvalidateFieldError(errorList);
 
+        console.log('errorList', errorList);
+
         return validateStatus;
     }
 
@@ -171,14 +181,14 @@ export default function EmployeeDetailPage() {
 
 
     function submitEmployeeInfo() {
-        console.log('employeeInfo', employeeInfo);
         // Extact for correct type
-        const { id, ...newObj } = employeeInfo
+        const { id: employeeId, password, ...employeeObj } = employeeInfo
+        const { id: permissionId, ...permissionObj } = permission
         if (employeeInfo.id !== null) {
-            EmployeeService.update(employeeInfo.id, newObj)
+            // EmployeeService.update(employeeInfo.id, employeeObj)
         } else {
             if (validateData()) {
-                // EmployeeService.create({ employee: newObj, permission: permission })
+                EmployeeService.create({ employee: { ...employeeObj, password }, permission: permission })
             } else {
                 setvalidateErrorModalOpen(true)
             }
@@ -200,7 +210,7 @@ export default function EmployeeDetailPage() {
         }
     }
     useEffect(() => {
-        console.log("Employee ID:", params.id);
+        // console.log("Employee ID:", params.id);
         if (params.id === 'new') {
 
         } else {
@@ -260,49 +270,51 @@ export default function EmployeeDetailPage() {
                                 <Label title="Employee Code" require />
                                 <input type="text" className={`form-input ${!validateFieldError.emp_code.valid_status && 'border-red-500'}`}
                                     value={employeeInfo.emp_code}
-                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, emp_code: { valid_status: true, errorText: '' } }) }}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, emp_code: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, emp_code: e.target.value }) }} />
-                                {validateFieldError.emp_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.emp_code.errorText}.</p>}
+                                {validateFieldError.emp_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.emp_code.errorText}</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="First Name" require />
-                                <input type="text" className="form-input"
+                                <input type="text" className={`form-input ${!validateFieldError.first_name.valid_status && 'border-red-500'}`}
                                     value={employeeInfo.first_name}
-                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, first_name: { valid_status: true, errorText: '' } }) }}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, first_name: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, first_name: e.target.value }) }} />
-                                {validateFieldError.first_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.first_name.errorText}.</p>}
+                                {validateFieldError.first_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.first_name.errorText}</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Last Name" require />
-                                <input type="text" className="form-input"
+                                <input type="text" className={`form-input ${!validateFieldError.last_name.valid_status && 'border-red-500'}`}
                                     value={employeeInfo.last_name}
-                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, last_name: { valid_status: true, errorText: '' } }) }}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, last_name: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, last_name: e.target.value }) }} />
-                                {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                                {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Email" require />
-                                <input type="text" className="form-input"
+                                <input type="text" className={`form-input ${!validateFieldError.email.valid_status && 'border-red-500'}`}
                                     value={employeeInfo.email}
-                                    onMouseDown={() => { setvalidateFieldError({ ...validateFieldError, email: { valid_status: true, errorText: '' } }) }}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, email: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, email: e.target.value }) }} />
-                                {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                                {validateFieldError.email.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.email.errorText}</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Password" require />
-                                <PasswordInput value={employeeInfo.password} onChange={(e) => {
-                                    setEmployeeInfo({ ...employeeInfo, password: e.target.value })
-                                    setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } })
-                                }} />
-                                {validateFieldError.password.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                                <PasswordInput
+                                    value={employeeInfo.password}
+                                    error={!validateFieldError.password.valid_status}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, password: e.target.value }) }} />
+                                {validateFieldError.password.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.password.errorText}</p>}
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Confirm Password" require />
-                                <PasswordInput value={confirmPassword} onChange={(e) => {
-                                    setconfirmPassword(e.target.value)
-                                    setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } })
-                                }} />
-                                {validateFieldError.confirmPassword.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}.</p>}
+                                <PasswordInput
+                                    value={confirmPassword}
+                                    error={!validateFieldError.confirmPassword.valid_status}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(e) => { setconfirmPassword(e.target.value) }} />
+                                {validateFieldError.confirmPassword.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.confirmPassword.errorText}</p>}
                             </div>
 
                             <div className="col-span-6 mt-3 px-3">
@@ -316,20 +328,25 @@ export default function EmployeeDetailPage() {
                                 />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
+                                <Label title="Organizational Unit" />
+                                <SearchSelect
+                                    optionList={[{ value: "1.1", label: "Sales" }, { value: "1.2", label: "Purchase" }, { value: "1.3", label: "Production" }]}
+                                    placeholder={'Select Unit'}
+                                    error={!validateFieldError.organizational_unit.valid_status}
+                                    defaultSelectedValue={String(employeeInfo.organizational_unit)}
+                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, organizational_unit: { valid_status: true, errorText: '' } }) }}
+                                    onChange={(value) => setEmployeeInfo({ ...employeeInfo, organizational_unit: value !== null ? value : null })}
+                                />
+                                {validateFieldError.organizational_unit.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.organizational_unit.errorText}</p>}
+                            </div>
+                            <div className="col-span-6 mt-3 px-3">
                                 <Label title="Report To" />
                                 <SearchSelect
                                     optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
                                     placeholder={'Select Approver'}
-                                    defaultValue={String(employeeInfo.report_to)}
+                                    defaultSelectedValue={String(employeeInfo.report_to)}
                                     onChange={(value) => setEmployeeInfo({ ...employeeInfo, report_to: value !== null ? Number(value) : null })}
                                 />
-                            </div>
-                            <div className="col-span-6 mt-3 px-3">
-                                <Label title="Organizational Unit" />
-                                <select className="form-select" value={employeeInfo.organizational_unit} onChange={(e) => setEmployeeInfo({ ...employeeInfo, organizational_unit: e.target.value })}  >
-                                    <option>Sales</option>
-                                    <option>Marketing</option>
-                                </select>
                             </div>
                             {
                                 employeeInfo.id !== null &&
@@ -343,7 +360,6 @@ export default function EmployeeDetailPage() {
                                     </div>
                                 </div>
                             }
-
 
                             <div className="col-span-12 mt-10 px-3">
                                 <p className="font-bold">Special Role</p>

@@ -35,7 +35,7 @@ export const EmployeeService = {
             throwAxiosError(err);
         }
     },
-    async create(payload: { employee: Omit<Employee, "id">, permission: Permission }): Promise<{ employee: Employee, permission: Permission }> {
+    async create(payload: { employee: Omit<Employee, "id">, permission: Omit<Permission, "id"> }): Promise<{ employee: Employee, permission: Permission }> {
         try {
             const res = await api.post<{ employee: Employee, permission: Permission }>(KPI_ENDPOINT, payload);
             return res.data;
@@ -43,9 +43,9 @@ export const EmployeeService = {
             throwAxiosError(err);
         }
     },
-    async update(id: number, payload: { employee: Employee, permission: Permission }): Promise<{ employee: Employee, permission: Permission }> {
+    async update(id: number, payload: { employee: Omit<Employee, "password">, permission: Permission }): Promise<{ employee: Omit<Employee, "password">, permission: Permission }> {
         try {
-            const res = await api.put<{ employee: Employee, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
+            const res = await api.put<{ employee: Omit<Employee, "password">, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;
         } catch (err) {
             throwAxiosError(err);

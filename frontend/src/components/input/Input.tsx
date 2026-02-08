@@ -1,3 +1,10 @@
+// type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+//   label?: string
+//   error?: string
+// }
+
+// export const Input = ({error,className,...props}: InputProps) {}
+
 type Input = {
     id?: string
     name?: string

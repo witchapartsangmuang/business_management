@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Employee, Permission } from "@/types/types";
 import { EmployeeService } from "@/features/services/employee";
+import { redirect } from "next/navigation";
 export default function EmployeePage() {
     const [emplyeeList, setEmployeeList] = useState<Employee[] & Permission[]>([])
 
@@ -49,7 +50,7 @@ export default function EmployeePage() {
 
                     {/* <!-- Button --> */}
                     <button
-                        className="w-full sm:w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        className="w-full sm:w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700" onClick={() =>{redirect("/admin/organizational-structure/employee/new")}}
                     >
                         + Add User
                     </button>

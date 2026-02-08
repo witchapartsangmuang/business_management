@@ -5,10 +5,11 @@ CREATE TABLE IF NOT EXISTS policy (
 	description VARCHAR(200),
 	is_active BOOLEAN,
 	created_by INT,
-    created_datetime TIMESTAMP
+    created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
-)
+);
+
 CREATE TABLE IF NOT EXISTS kpi (
 	id SERIAL PRIMARY KEY,
 	kpi_code VARCHAR(100),
@@ -17,10 +18,10 @@ CREATE TABLE IF NOT EXISTS kpi (
 	description VARCHAR(200),
 	is_active BOOLEAN,
 	created_by INT,
-    created_datetime TIMESTAMP
+    created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
-)
+);
 
 
 CREATE TABLE IF NOT EXISTS organization_structure_level (
@@ -28,10 +29,10 @@ CREATE TABLE IF NOT EXISTS organization_structure_level (
 	org_level_name VARCHAR(100),
 	level INT,
 	created_by INT,
-    created_datetime TIMESTAMP
+    created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
-)
+);
 
 CREATE TABLE IF NOT EXISTS organization_structure (
 	id SERIAL PRIMARY KEY,
@@ -41,10 +42,10 @@ CREATE TABLE IF NOT EXISTS organization_structure (
 	parent_org_id INT,
 	path VARCHAR(100),
 	created_by INT,
-    created_datetime TIMESTAMP
+    created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
-)
+);
 
 CREATE TABLE IF NOT EXISTS employee (
     id SERIAL PRIMARY KEY,
@@ -52,20 +53,19 @@ CREATE TABLE IF NOT EXISTS employee (
 	emp_code VARCHAR(100) NOT NULL UNIQUE,
 	first_name VARCHAR(100),
 	last_name VARCHAR(100),
-	desription VARCHAR(500),
+	description VARCHAR(500),
     email VARCHAR(100) NOT NULL UNIQUE,
 	phone VARCHAR(10),
     password VARCHAR(100) NOT NULL,
-	organizational_unit VARCHAR(100)
+	organizational_unit VARCHAR(100),
 	position VARCHAR(100),
 	report_to INT,
-	language VARCHAR(10),
 	is_active BOOLEAN,
 	is_project_leader BOOLEAN,
-	is_approver BOOLEAN,
-	is_team_member BOOLEAN,
+	is_project_approver BOOLEAN,
+	is_project_member BOOLEAN,
 	created_by INT,
-    created_datetime TIMESTAMP
+    created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
 );

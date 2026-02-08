@@ -11,9 +11,8 @@ export type Employee = {
     phone: string;
     password: string;
     position: string;
-    organizational_unit: string;
+    organizational_unit: null | string;
     report_to: null | number;
-    language: string;
     is_active: boolean;
     is_project_leader: boolean;
     is_project_approver: boolean;
@@ -22,7 +21,8 @@ export type Employee = {
     created_datetime: null | string;
     updated_by: null | number;
     updated_datetime: null | string;
-}
+};
+
 export type Permission = {
     id: null | number;
     md_policy_view: boolean;
@@ -61,8 +61,29 @@ export type Permission = {
     permission_for: null | number;
 }
 
-function generatePassword() {
+async function duplicateCheck(emp_code: string, email: string) {
+    const duplicateCheck = await db.query(
+        `SELECT (emp_code = $1) AS emp_code_dup, (email = $2) AS email_dup FROM employee
+            WHERE emp_code = $1 OR email = $2 LIMIT 1`,
+        [emp_code.trim(), email.trim()]
+    )
+    if (duplicateCheck.rows.length > 0) {
+        const row = duplicateCheck.rows[0];
+        const duplicatedFields: string[] = [];
 
+        if (row.emp_code_dup) duplicatedFields.push("emp_code");
+        if (row.email_dup) duplicatedFields.push("email");
+        if (row.phone_dup) duplicatedFields.push("phone");
+
+        if (duplicatedFields.length > 0) {
+            throw {
+                status: 409,
+                code: "DUPLICATE_FIELD",
+                message: "Value already exist",
+                fields: duplicatedFields
+            };
+        }
+    }
 }
 
 export class EmployeeService {
@@ -71,32 +92,28 @@ export class EmployeeService {
         return result.rows;
     }
 
-
-    static async createEmployee(data: Employee) {
-        const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, language, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = data
-        console.log('createEmployee : ', data);
-        // const hashedPassword = await bcrypt.hash(password, 10)
+    static async createEmployee(data: { employee: Omit<Employee, "id">, permission: Permission }) {
+        const { employee, permission } = data
+        const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
+        // console.log('createEmployee : ', data);
         if (!emp_code || !first_name || !last_name || !email || !password || !organizational_unit) {
-            throw new Error("All employee details are required.");
+            throw {
+                status: 400,
+                code: "VALIDATION_ERROR",
+                message: "Required fields are missing"
+            };
         }
-
-        // const result = await db.query(
-        //     `INSERT INTO employees (emp_code, first_name, last_name, description, email, phone, organizational_unit, position, approver, language, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime)
-        //      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16, $17, $18)
-        //      RETURNING id, emp_code, first_name, last_name, description, email, phone, password, organizational_unit, position, approver, language, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime`,
-        //     [emp_code.trim(), first_name.trim(), last_name.trim(), description?.trim() || null, email.trim(), phone.trim() || null, organizational_unit.trim(), position.trim(), approver.trim(), language.trim(), is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime]
-        // )
-
-        // const result = await db.query(
-        //     `INSERT INTO employee (emp_code, first_name, last_name)
-        //     VALUES ($1, $2, $3)
-        //     RETURNING id, emp_code, first_name, last_name`,
-        //     [emp_code.trim(), first_name.trim(), last_name.trim()]
-        // )
-        // return result.rows[0];
-        return "gg"
+        await duplicateCheck(emp_code.trim(), email.trim())
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const result = await db.query(
+            `INSERT INTO employee (profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16, $17, $18, $19)
+             RETURNING id, profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime`,
+            [profile_picture?.trim() || null, emp_code.trim(), first_name.trim(), last_name.trim(), description?.trim() || null, email.trim(), phone?.trim() || null, hashedPassword, position?.trim() || null, organizational_unit.trim(), report_to || null, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime]
+        )
+        return result.rows[0];
     }
-    static async updateEmployee(data: Kpi) {
+    static async updateEmployee(data: Employee) {
         const { id, kpi_code, kpi_name, description, unit, is_active, updated_by, updated_datetime } = data;
         if (!id || !kpi_code || !kpi_name || !description || !unit || is_active === undefined || !updated_by || !updated_datetime) {
             throw new Error("All KPI details are required.");

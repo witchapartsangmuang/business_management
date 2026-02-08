@@ -9,9 +9,8 @@ export type Employee = {
     phone: string;
     password: string;
     position: string;
-    organizational_unit: string;
+    organizational_unit: null | string;
     report_to: null | number;
-    language: string;
     is_active: boolean;
     is_project_leader: boolean;
     is_project_approver: boolean;

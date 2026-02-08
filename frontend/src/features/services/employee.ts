@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { Employee, Permission } from "@/types/types";
+import { ApiError } from "@/types/validate-types";
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
     timeout: 15000,
@@ -7,40 +8,41 @@ const api = axios.create({
 })
 const KPI_ENDPOINT = "/employee";
 
-function throwAxiosError(err: unknown): never {
-    const e = err as AxiosError<any>;
-    const msg =
-        e.response?.data?.message ||
-        e.response?.data?.error ||
-        e.message ||
-        "Request failed";
-    console.log("msg : ", msg);
-
-    throw new Error(msg);
-}
 export const EmployeeService = {
     async readAll(): Promise<{ employee: Employee[] & Permission[] }> {
         try {
             const res = await api.get<{ employee: Employee[] & Permission[] }>(KPI_ENDPOINT);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw {
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     },
-    async readDetail(id: string): Promise<{ employee: Employee[] & Permission[] }> {
+    async readDetail(id: number) {
         try {
-            const res = await api.get<{ employee: Employee[] & Permission[] }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`);
+            const res = await api.get<{ employee: Omit<Employee, "password">, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw {
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     },
-    async create(payload: { employee: Omit<Employee, "id">, permission: Omit<Permission, "id"> }): Promise<{ employee: Employee, permission: Permission }> {
+    async create(payload: { employee: Omit<Employee, "id">, permission: Omit<Permission, "id"> }): Promise<{ employee: Employee; permission: Permission }> {
         try {
-            const res = await api.post<{ employee: Employee, permission: Permission }>(KPI_ENDPOINT, payload);
+            const res = await api.post<{ employee: Employee; permission: Permission }>(KPI_ENDPOINT, payload);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw <ApiError>{
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     },
     async update(id: number, payload: { employee: Omit<Employee, "password">, permission: Permission }): Promise<{ employee: Omit<Employee, "password">, permission: Permission }> {
@@ -48,7 +50,11 @@ export const EmployeeService = {
             const res = await api.put<{ employee: Omit<Employee, "password">, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw {
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     },
     async changePassword(id: number, payload: { password: string, confirm_password: string }) {
@@ -56,7 +62,11 @@ export const EmployeeService = {
             const res = await api.post<{ employee: Employee, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw {
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     }
 }

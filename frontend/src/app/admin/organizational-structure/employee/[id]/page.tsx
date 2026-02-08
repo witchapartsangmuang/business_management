@@ -8,7 +8,7 @@ import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
 import PasswordInput from "@/components/input/InputPassword";
-import { ValidateEmployeeError } from "@/types/validate-types";
+import { ApiError, BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/types/validate-types";
 import Modal from "@/components/Modal";
 import Label from "@/components/input/Label";
 export default function EmployeeDetailPage() {
@@ -180,7 +180,8 @@ export default function EmployeeDetailPage() {
     }
 
 
-    function submitEmployeeInfo() {
+
+    async function submitEmployeeInfo() {
         // Extact for correct type
         const { id: employeeId, password, ...employeeObj } = employeeInfo
         const { id: permissionId, ...permissionObj } = permission
@@ -188,22 +189,46 @@ export default function EmployeeDetailPage() {
             // EmployeeService.update(employeeInfo.id, employeeObj)
         } else {
             if (validateData()) {
-                EmployeeService.create({ employee: { ...employeeObj, password }, permission: permission })
+                try {
+                    const res = await EmployeeService.create({ employee: { ...employeeObj, password }, permission: permission })
+                    console.log(res, 'res');
+                } catch (err) {
+                    if (isApiError(err)) {
+                        const errorList: ValidateEmployeeError = { ...validateFieldError };
+                        const backendErr = err.data as BackendDuplicateError;
+                        backendErr.fields.forEach((field) => {
+                            errorList[field] = {
+                                valid_status: false,
+                                errorText: backendErr.message
+                            };
+                        });
+
+                        // set state ครั้งเดียว
+                        setvalidateFieldError(errorList);
+                        setvalidateErrorModalOpen(true)
+
+                    }
+                }
             } else {
                 setvalidateErrorModalOpen(true)
             }
         }
     }
 
+    useEffect(() => {
+        console.log("employeeInfo: ", employeeInfo);
+
+    }, [employeeInfo])
 
     async function fetchData() {
         try {
-            await axios.get(`/api/employee/${params.id}`).then((response) => {
-                setEmployeeInfo(response.data);
-            }).catch((error) => {
-                console.error("Error fetching employee data:", error);
-                notFound();
-            })
+            const res = await EmployeeService.readDetail(Number(params.id))
+            const { ...employeeObj } = res.employee
+            // const { ...permissionObj } = res.permission
+            setEmployeeInfo((prev) => ({
+                ...prev,
+                ...employeeObj,
+            }))
         } catch (error) {
             console.error("Error fetching employee data:", error);
             notFound();

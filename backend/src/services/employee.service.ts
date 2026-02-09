@@ -32,7 +32,6 @@ export class EmployeeService {
         const result = await db.query(`SELECT * FROM employee`)
         return result.rows;
     }
-
     static async readDetail(id: number) {
         if (!id) {
             throw {
@@ -45,11 +44,15 @@ export class EmployeeService {
         const { password, ...employeeObj } = result.rows[0]
         return employeeObj
     }
-
-    static async createEmployee(data: { employee: Omit<Employee, "id">, permission: Permission }) {
+    static async createEmployee(data: { employee: Omit<Employee, "id">, permission: Omit<Permission, "id"> }) {
         const { employee, permission } = data
-        const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
-        // console.log('createEmployee : ', data);
+        const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit,
+            report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
+        const { md_policy_view, kpi_alignment_view, project_view, project_create, project_update, project_delete, report_view,
+            report_update, report_delete, dashboard_executive_view, dashboard_manager_view, dashboard_user_view, admin_view, cost_saving_type_view,
+            cost_saving_type_create, cost_saving_type_update, cost_saving_type_delete, policy_view, policy_create, policy_update, policy_delete, kpi_view,
+            kpi_create, kpi_update, kpi_delete, organizational_unit_view, organizational_unit_create, organizational_unit_update, organizational_unit_delete,
+            employee_view, employee_create, employee_update, employee_delete, permission_for } = permission
         if (!emp_code || !first_name || !last_name || !email || !password || !organizational_unit) {
             throw {
                 status: 400,
@@ -59,26 +62,55 @@ export class EmployeeService {
         }
         await duplicateCheck(emp_code.trim(), email.trim())
         const hashedPassword = await bcrypt.hash(password, 10)
+        const employeeCreated = await db.query(
+            `INSERT INTO employee (profile_picture, emp_code, first_name, last_name, description, email, phone, 
+            password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, 
+            is_project_member, created_by, created_datetime, updated_by, updated_datetime)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16, $17, $18, $19)
+            RETURNING *;`,
+            [profile_picture?.trim() || null, emp_code.trim(), first_name.trim(), last_name.trim(), description?.trim() || null, email.trim(),
+            phone?.trim() || null, hashedPassword, position?.trim() || null, organizational_unit.trim(), report_to || null, is_active,
+                is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime])
+        const permissionCreated = await db.query(
+            `INSERT INTO permission (md_policy_view, kpi_alignment_view, project_view, project_create, project_update, project_delete,
+            report_view, report_update, report_delete, dashboard_executive_view, dashboard_manager_view, dashboard_user_view,
+            admin_view, cost_saving_type_view, cost_saving_type_create, cost_saving_type_update, cost_saving_type_delete, policy_view, 
+            policy_create, policy_update, policy_delete, kpi_view, kpi_create, kpi_update, kpi_delete, organizational_unit_view, 
+            organizational_unit_create, organizational_unit_update, organizational_unit_delete, employee_view, employee_create, 
+            employee_update, employee_delete, permission_for)
+            VALUES (
+            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34)
+            RETURNING *;`,
+            [md_policy_view, kpi_alignment_view, project_view, project_create, project_update, project_delete, report_view, report_update,
+                report_delete, dashboard_executive_view, dashboard_manager_view, dashboard_user_view, admin_view, cost_saving_type_view,
+                cost_saving_type_create, cost_saving_type_update, cost_saving_type_delete, policy_view, policy_create, policy_update,
+                policy_delete, kpi_view, kpi_create, kpi_update, kpi_delete, organizational_unit_view, organizational_unit_create,
+                organizational_unit_update, organizational_unit_delete, employee_view, employee_create, employee_update, employee_delete, employeeCreated.rows[0].id])
+        return { employee: employeeCreated.rows[0], permission: permissionCreated.rows[0] }
+
+    }
+
+    static async updateEmployee(data: { employee: Employee, permission: Permission }) {
+        const { employee, permission } = data
+        const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit,
+            report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
+        const { md_policy_view, kpi_alignment_view, project_view, project_create, project_update, project_delete, report_view,
+            report_update, report_delete, dashboard_executive_view, dashboard_manager_view, dashboard_user_view, admin_view, cost_saving_type_view,
+            cost_saving_type_create, cost_saving_type_update, cost_saving_type_delete, policy_view, policy_create, policy_update, policy_delete, kpi_view,
+            kpi_create, kpi_update, kpi_delete, organizational_unit_view, organizational_unit_create, organizational_unit_update, organizational_unit_delete,
+            employee_view, employee_create, employee_update, employee_delete, permission_for } = permission
+        if (!emp_code || !first_name || !last_name || !email || !password || !organizational_unit) {
+            throw {
+                status: 400,
+                code: "VALIDATION_ERROR",
+                message: "Required fields are missing"
+            };
+        }
+        await duplicateCheck(emp_code.trim(), email.trim())
         const result = await db.query(
-            `INSERT INTO employee (profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16, $17, $18, $19)
-             RETURNING id, profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime`,
-            [profile_picture?.trim() || null, emp_code.trim(), first_name.trim(), last_name.trim(), description?.trim() || null, email.trim(), phone?.trim() || null, hashedPassword, position?.trim() || null, organizational_unit.trim(), report_to || null, is_active, is_project_leader, is_project_member, is_project_approver, created_by, created_datetime, updated_by, updated_datetime]
+            `UPDATE kpis SET kpi_code = $1, kpi_name = $2, description = $3, unit = $4, is_active = $5, updated_by = $6, updated_datetime = $7 WHERE id = $8 RETURNING id, kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime`,
+            [emp_code.trim(), emp_code.trim(), description?.trim() || null, emp_code.trim(), is_active, emp_code.trim(), updated_datetime, emp_code]
         )
         return result.rows[0];
     }
-
-
-    // static async updateEmployee(data: Employee) {
-    //     const { employee, permission } = data
-    //     const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit, report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
-    //     if (!id || !kpi_code || !kpi_name || !description || !unit || is_active === undefined || !updated_by || !updated_datetime) {
-    //         throw new Error("All KPI details are required.");
-    //     }
-    //     const result = await db.query(
-    //         `UPDATE kpis SET kpi_code = $1, kpi_name = $2, description = $3, unit = $4, is_active = $5, updated_by = $6, updated_datetime = $7 WHERE id = $8 RETURNING id, kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime`,
-    //         [kpi_code.trim(), kpi_name.trim(), description?.trim() || null, unit.trim(), is_active, updated_by.trim(), updated_datetime, id]
-    //     )
-    //     return result.rows[0];
-    // }
 }

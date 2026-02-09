@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS employee (
 
 CREATE TABLE IF NOT EXISTS permission (
     id SERIAL PRIMARY KEY,
-	data_scope VARCHAR(100),
 	md_policy_view BOOLEAN,
 	kpi_alignment_view BOOLEAN,
 	project_view BOOLEAN,

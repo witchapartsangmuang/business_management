@@ -3,12 +3,11 @@ import IconPencil from "@/components/icons/icon-pen";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import { useEffect, useState } from "react";
 import { useParams, notFound } from "next/navigation";
-import axios from "axios";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
 import PasswordInput from "@/components/input/InputPassword";
-import { ApiError, BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/types/validate-types";
+import { BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/types/validate-types";
 import Modal from "@/components/Modal";
 import Label from "@/components/input/Label";
 export default function EmployeeDetailPage() {

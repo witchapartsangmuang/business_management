@@ -1,3 +1,8 @@
+export type Login = {
+    email: string;
+    password: string;
+}
+
 export type Employee = {
     id: null | number;
     profile_picture: null | string;

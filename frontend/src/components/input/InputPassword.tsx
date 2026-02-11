@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, InputHTMLAttributes } from "react";
 import IconEyeOpen from "../icons/icon-eye-open";
 import IconEyeClose from "../icons/icon-eye-close";
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     error?: boolean
 }
-export default function PasswordInput({ error, className, placeholder = "Enter password", value, onChange, onFocus, ...props }: InputProps) {
+export default function InputPassword({ error, className, placeholder, value, onChange, onFocus, ...props }: InputProps) {
     const [show, setShow] = useState(false);
     return (
         <>
@@ -31,30 +31,3 @@ export default function PasswordInput({ error, className, placeholder = "Enter p
         </>
     );
 }
-
-// export default function PasswordInput({ value, onChange, placeholder = "Enter password", error }: { value: string, onChange: (value: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string, error?: boolean }) {
-//     const [show, setShow] = useState(false);
-//     return (
-//         <>
-//             <div className="relative">
-//                 <input
-//                     type={show ? "text" : "password"}
-//                     value={value}
-//                     onChange={(e) => onChange(e)}
-//                     placeholder={placeholder}
-//                     className={`form-input appearance-none ${error
-//                         ? "border-red-500"
-//                         : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
-//                         }`}
-//                 />
-//                 <button
-//                     type="button"
-//                     onClick={() => setShow(!show)}
-//                     className="absolute inset-y-0 right-3 flex items-center text-gray-500"
-//                 >
-//                     {show ? <IconEyeOpen size={18} /> : <IconEyeClose size={18} />}
-//                 </button>
-//             </div>
-//         </>
-//     );
-// }

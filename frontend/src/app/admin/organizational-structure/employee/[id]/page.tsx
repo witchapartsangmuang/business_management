@@ -6,7 +6,7 @@ import { useParams, notFound } from "next/navigation";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
-import PasswordInput from "@/components/input/InputPassword";
+import InputPassword from "@/components/input/InputPassword";
 import { BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/types/validate-types";
 import Modal from "@/components/Modal";
 import Label from "@/components/input/Label";
@@ -185,7 +185,6 @@ export default function EmployeeDetailPage() {
         const { id: employeeId, password, ...employeeObj } = employeeInfo
         const { id: permissionId, ...permissionObj } = permission
         if (employeeInfo.id !== null) {
-            // EmployeeService.update(employeeInfo.id, employeeObj)
         } else {
             if (validateData()) {
                 try {
@@ -201,11 +200,8 @@ export default function EmployeeDetailPage() {
                                 errorText: backendErr.message
                             };
                         });
-
-                        // set state ครั้งเดียว
                         setvalidateFieldError(errorList);
                         setvalidateErrorModalOpen(true)
-
                     }
                 }
             } else {
@@ -324,7 +320,7 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Password" require />
-                                <PasswordInput
+                                <InputPassword
                                     value={employeeInfo.password}
                                     error={!validateFieldError.password.valid_status}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } }) }}
@@ -333,7 +329,7 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Confirm Password" require />
-                                <PasswordInput
+                                <InputPassword
                                     value={confirmPassword}
                                     error={!validateFieldError.confirmPassword.valid_status}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } }) }}

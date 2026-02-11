@@ -54,7 +54,7 @@ export class EmployeeController {
             }
             return res.status(500).json({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Internal server error",
+                message: "Internal server error.",
             })
         }
     }

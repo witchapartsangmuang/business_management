@@ -2,9 +2,13 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { db } from "../db";
+import { Employee } from "../types/types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "BMJWTSUPERSECRETKEY";
-
+function unpackPassword(employee: Employee) {
+	const { password, ...employeeObj } = employee
+	return employeeObj
+}
 export class AuthService {
 	static async register(data: {
 		email: string;
@@ -41,52 +45,38 @@ export class AuthService {
 
 	static async login(data: { email: string; password: string }) {
 		console.log("data: ", data);
-
 		const { email, password } = data;
-
 		if (!email || !password) {
 			throw new Error("email and password are required.");
 		}
-
-		// email = username หรือ email ก็ได้
-		const userResult = await db.query(
-			`SELECT id, email, password_hash, role
-       FROM users
-       WHERE  email = $1
-       LIMIT 1`,
+		const employee = await db.query(
+			`SELECT * FROM employee WHERE email = $1 LIMIT 1;`,
 			[email]
 		);
-
-		if (userResult.rows.length === 0) {
+		if (employee.rows.length === 0) {
 			throw new Error("Invalid username/email or password.");
 		}
-
-		const user = userResult.rows[0];
-
-		const isMatch = await bcrypt.compare(password, user.password_hash);
+		const employee_info = employee.rows[0];
+		const isMatch = await bcrypt.compare(password, employee_info.password);
 		if (!isMatch) {
 			throw new Error("Invalid username/email or password.");
 		}
-
+		const userInfo = unpackPassword(employee_info)
+		const permission = await db.query(`SELECT * FROM permission WHERE permission_for = $1 LIMIT 1;`, [employee_info.id])
+		const permissionInfo = permission.rows[0];
 		// สร้าง JWT
 		const token = jwt.sign(
 			{
-				userId: user.id,
-				role: user.role,
+				employee: userInfo,
+				permission: permissionInfo,
 			},
 			JWT_SECRET,
 			{ expiresIn: "1h" }
 		);
-
-		// ไม่ส่ง password_hash กลับ
 		return {
 			token,
-			user: {
-				id: user.id,
-				username: user.username,
-				email: user.email,
-				role: user.role,
-			},
+			employee: userInfo,
+			permission: permissionInfo,
 		};
 	}
 }

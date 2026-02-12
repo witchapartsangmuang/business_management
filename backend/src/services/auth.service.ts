@@ -79,4 +79,13 @@ export class AuthService {
 			permission: permissionInfo,
 		};
 	}
+
+	static async refresh(token: string) {
+		const decoded = jwt.verify(
+			token,
+			JWT_SECRET
+		)
+		console.log(decoded, 'decoded');
+
+	}
 }

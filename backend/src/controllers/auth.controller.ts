@@ -38,4 +38,9 @@ export class AuthController {
 			})
 		}
 	}
+	static async refresh(req: Request, res: Response) {
+		const result = await AuthService.refresh(req.cookies.auth_token);
+		console.log(result,'result');
+		
+	}
 }

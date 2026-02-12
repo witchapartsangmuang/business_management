@@ -1,13 +1,25 @@
-INSERT INTO policy (policy_code, policy_name, description, is_active, created_by, created_datetime, updated_by, updated_datetime)
-VALUES
-()
+
+INSERT INTO policy (policy_code, policy_name, description, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
+('SD&SG', 'Strategic Direction & Sustainable Growth Policy', 'นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน', TRUE, null, null, null, null),
+('PRM', 'Performance & Result-Oriented Management Policy', 'นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน', TRUE, null, null, null, null),
+('PLS', 'People, Leadership & Successor Development Policy', 'นโยบายบุคลากรและผู้นำ', TRUE, null, null, null, null),
+('PE&CE', 'Process Excellence & Cost Efficiency Policy', 'นโยบายการพัฒนากระบวนการและต้นทุน', TRUE, null, null, null, null),
+('DT&TE', 'Digital Transformation & Technology Enablement Policy', 'นโยบายดิจิทัลและเทคโนโลยี', TRUE, null, null, null, null),
+('GRC', 'Governance, Risk & Compliance Policy', 'นโยบายธรรมาภิบาลและการกำกับดูแล', TRUE, null, null, null, null),
+('CSV', 'Customer & Stakeholder Value Policy', 'นโยบายคุณค่าลูกค้าและผู้มีส่วนได้ส่วนเสีย', FALSE, null, null, null, null),
+('EDA', 'Execution Discipline & Accountability Policy', 'นโยบายวินัยการปฏิบัติและความรับผิดชอบ', FALSE, null, null, null, null);
 
 
-	
+INSERT INTO kpi (kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
+('SOAR', 'Strategic Objective Achievement Rate', '%', 'สัดส่วนเป้าหมายเชิงกลยุทธ์ที่บรรลุตามแผนประจำปี', FALSE, null, null, null, null),
+('CKAAI', 'Corporate KPI Achievement Index', '%', 'คะแนนเฉลี่ยการบรรลุ KPI ระดับองค์กร', TRUE, null, null, null, null),
+('KPIC', 'Key Position Successor Coverage', '%', 'ตำแหน่งสำคัญที่มีผู้สืบทอดพร้อมใช้งาน', TRUE, null, null, null, null),
+('CRPI', 'Cost Reduction from Process Improvement', 'MB', 'มูลค่าการลดต้นทุนจากการปรับปรุงกระบวนการ', TRUE, null, null, null, null),
+('DAR', 'Digital Adoption Rate', '%', 'อัตราการใช้งานระบบดิจิทัลตามที่กำหนด', TRUE, null, null, null, null),
+('MCRI', 'Major Compliance & Risk Incident', 'Case', 'จำนวนเหตุการณ์ความเสี่ยง/ไม่ปฏิบัติตามที่มีผลกระทบร้ายแรง', FALSE, null, null, null, null),
+('CSI', 'Customer Satisfaction Index (CSI)', 'Score', 'คะแนนความพึงพอใจลูกค้าเฉลี่ยทั้งองค์กร', TRUE, null, null, null, null),
+('OTSPD', 'On-Time Strategic Project Delivery', '%', 'โครงการเชิงกลยุทธ์ที่ส่งมอบตรงเวลา',  TRUE, null, null, null, null);
 
-INSERT INTO  (kpi_code, kpi_name, unit, description, is_active, created_by, created_datetime, updated_by, updated_datetime)
-VALUES
-()
 
 
 INSERT INTO organization_structure_level (org_level_name, level, created_by, created_datetime, updated_by, updated_datetime)

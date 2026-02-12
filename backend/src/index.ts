@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
 
@@ -13,13 +14,17 @@ import { authMiddleware } from "./middleware/auth.middleware";
 const app = express();
 const port = Number(process.env.PORT) || 4000;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_ORIGIN, // เช่น http://localhost:3000
+  credentials: true, // ✅ สำคัญ
+}));
+app.use(cookieParser())
 app.use(express.json());
 
 
-app.use("/policy",policyRouter)
+app.use("/policy", policyRouter)
 app.use("/kpi", kpiRouter);
-app.use("/employee",employeeRouter)
+app.use("/employee", employeeRouter)
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
 

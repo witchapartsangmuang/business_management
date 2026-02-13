@@ -1,4 +1,10 @@
+export type Login = {
+    email: string;
+    password: string;
+}
+
 export type Employee = {
+    [key: string | number]: any
     id: null | number;
     profile_picture: null | string;
     emp_code: string;
@@ -22,6 +28,7 @@ export type Employee = {
 };
 
 export type Permission = {
+    [key: string | number]: any
     id: null | number;
     md_policy_view: boolean;
     kpi_alignment_view: boolean;
@@ -32,6 +39,7 @@ export type Permission = {
     report_view: boolean;
     report_update: boolean;
     report_delete: boolean;
+    dashboard_view: boolean
     dashboard_executive_view: boolean;
     dashboard_manager_view: boolean;
     dashboard_user_view: boolean;

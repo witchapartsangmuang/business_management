@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS permission (
 	report_view BOOLEAN,
 	report_update BOOLEAN,
 	report_delete BOOLEAN,
+	dashboard_view BOOLEAN,
 	dashboard_executive_view BOOLEAN,
 	dashboard_manager_view BOOLEAN,
 	dashboard_user_view BOOLEAN,

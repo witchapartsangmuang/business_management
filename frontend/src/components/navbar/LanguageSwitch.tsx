@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { LangCode, LangItem } from '@/types/language';
+import { LangCode, LangItem } from '@/types/frontend-type';
 
 const LANGS: LangItem[] = [
 	{ code: 'th', label: 'ไทย', flag: '🇹🇭' },

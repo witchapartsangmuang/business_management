@@ -4,9 +4,12 @@ import IconDashboard from "../icons/icon-dashboard";
 import IconBook from "../icons/icon-book";
 import IconDatabase from "../icons/icon-database";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export default function LayoutAdmin({ children, open }: { children: React.ReactNode, open: boolean }) {
     const pathname = usePathname();
+    const userPermission = useSelector((state:RootState) => state.userSlice.userPermission)
     const [collapsed, setCollapsed] = useState<string>("");
     const menus = [
         { name: "MD Policy", path: "/admin/md-policy", icon: IconBook, link: "/md-policy" },

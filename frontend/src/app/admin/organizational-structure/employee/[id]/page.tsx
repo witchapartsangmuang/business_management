@@ -2,7 +2,7 @@
 import IconPencil from "@/components/icons/icon-pen";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import { useEffect, useState } from "react";
-import { useParams, notFound } from "next/navigation";
+import { useParams, notFound, redirect } from "next/navigation";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
@@ -10,7 +10,11 @@ import InputPassword from "@/components/input/InputPassword";
 import { BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/types/validate-types";
 import Modal from "@/components/Modal";
 import Label from "@/components/input/Label";
+
+import { useRouter } from 'next/navigation'
+
 export default function EmployeeDetailPage() {
+    const router = useRouter()
     const params = useParams<{ id: string }>()
     const [tabOpen, setTabOpen] = useState(0);
     const [confirmPassword, setconfirmPassword] = useState('')
@@ -47,6 +51,7 @@ export default function EmployeeDetailPage() {
         report_view: true,
         report_update: true,
         report_delete: true,
+        dashboard_view: true,
         dashboard_executive_view: true,
         dashboard_manager_view: true,
         dashboard_user_view: true,
@@ -190,6 +195,9 @@ export default function EmployeeDetailPage() {
                 try {
                     const res = await EmployeeService.create({ employee: { ...employeeObj, password }, permission: permission })
                     console.log(res, 'res');
+                    router.replace(
+                        `/admin/organizational-structure/employee/${res.employee.employee.id}`
+                    )
                 } catch (err) {
                     if (isApiError(err)) {
                         const errorList: ValidateEmployeeError = { ...validateFieldError };
@@ -284,12 +292,12 @@ export default function EmployeeDetailPage() {
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Description" />
-                                <textarea className="form-input" value={employeeInfo.description} onChange={(e) => setEmployeeInfo({ ...employeeInfo, description: e.target.value })}></textarea>
+                                <textarea className="form-input" value={employeeInfo.description || ""} onChange={(e) => setEmployeeInfo({ ...employeeInfo, description: e.target.value })}></textarea>
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Employee Code" require />
                                 <input type="text" className={`form-input ${!validateFieldError.emp_code.valid_status && 'border-red-500'}`}
-                                    value={employeeInfo.emp_code}
+                                    value={employeeInfo.emp_code || ""}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, emp_code: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, emp_code: e.target.value }) }} />
                                 {validateFieldError.emp_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.emp_code.errorText}</p>}
@@ -297,7 +305,7 @@ export default function EmployeeDetailPage() {
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="First Name" require />
                                 <input type="text" className={`form-input ${!validateFieldError.first_name.valid_status && 'border-red-500'}`}
-                                    value={employeeInfo.first_name}
+                                    value={employeeInfo.first_name || ""}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, first_name: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, first_name: e.target.value }) }} />
                                 {validateFieldError.first_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.first_name.errorText}</p>}
@@ -305,7 +313,7 @@ export default function EmployeeDetailPage() {
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Last Name" require />
                                 <input type="text" className={`form-input ${!validateFieldError.last_name.valid_status && 'border-red-500'}`}
-                                    value={employeeInfo.last_name}
+                                    value={employeeInfo.last_name || ""}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, last_name: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, last_name: e.target.value }) }} />
                                 {validateFieldError.last_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.last_name.errorText}</p>}
@@ -313,7 +321,7 @@ export default function EmployeeDetailPage() {
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Email" require />
                                 <input type="text" className={`form-input ${!validateFieldError.email.valid_status && 'border-red-500'}`}
-                                    value={employeeInfo.email}
+                                    value={employeeInfo.email || ""}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, email: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, email: e.target.value }) }} />
                                 {validateFieldError.email.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.email.errorText}</p>}
@@ -321,7 +329,7 @@ export default function EmployeeDetailPage() {
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Password" require />
                                 <InputPassword
-                                    value={employeeInfo.password}
+                                    value={employeeInfo.password || ""}
                                     error={!validateFieldError.password.valid_status}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, password: e.target.value }) }} />
@@ -330,7 +338,7 @@ export default function EmployeeDetailPage() {
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Confirm Password" require />
                                 <InputPassword
-                                    value={confirmPassword}
+                                    value={confirmPassword || ""}
                                     error={!validateFieldError.confirmPassword.valid_status}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } }) }}
                                     onChange={(e) => { setconfirmPassword(e.target.value) }} />
@@ -339,12 +347,12 @@ export default function EmployeeDetailPage() {
 
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Phone" />
-                                <input type="text" className="form-input" value={employeeInfo.phone} onChange={(e) => setEmployeeInfo({ ...employeeInfo, phone: e.target.value })}
+                                <input type="text" className="form-input" value={employeeInfo.phone || ""} onChange={(e) => setEmployeeInfo({ ...employeeInfo, phone: e.target.value })}
                                 />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Position" />
-                                <input type="text" className="form-input" value={employeeInfo.position} onChange={(e) => setEmployeeInfo({ ...employeeInfo, position: e.target.value })}
+                                <input type="text" className="form-input" value={employeeInfo.position || ""} onChange={(e) => setEmployeeInfo({ ...employeeInfo, position: e.target.value })}
                                 />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
@@ -353,7 +361,7 @@ export default function EmployeeDetailPage() {
                                     optionList={[{ value: "1.1", label: "Sales" }, { value: "1.2", label: "Purchase" }, { value: "1.3", label: "Production" }]}
                                     placeholder={'Select Unit'}
                                     error={!validateFieldError.organizational_unit.valid_status}
-                                    defaultSelectedValue={String(employeeInfo.organizational_unit)}
+                                    defaultSelectedValue={String(employeeInfo.organizational_unit || "")}
                                     onFocus={() => { setvalidateFieldError({ ...validateFieldError, organizational_unit: { valid_status: true, errorText: '' } }) }}
                                     onChange={(value) => setEmployeeInfo({ ...employeeInfo, organizational_unit: value !== null ? value : null })}
                                 />
@@ -364,7 +372,7 @@ export default function EmployeeDetailPage() {
                                 <SearchSelect
                                     optionList={[{ value: "1", label: "Mr. A" }, { value: "2", label: "Mr. B" }, { value: "3", label: "Mr. C" }]}
                                     placeholder={'Select Approver'}
-                                    defaultSelectedValue={String(employeeInfo.report_to)}
+                                    defaultSelectedValue={String(employeeInfo.report_to || "")}
                                     onChange={(value) => setEmployeeInfo({ ...employeeInfo, report_to: value !== null ? Number(value) : null })}
                                 />
                             </div>
@@ -531,6 +539,24 @@ export default function EmployeeDetailPage() {
                                                         }
                                                     />
                                                 </td>
+                                            </tr>
+                                            {/* Dashboard */}
+                                            <tr>
+                                                <td>Dashboard</td>
+                                                <td>
+                                                    <ToggleSwitch
+                                                        checked={permission.dashboard_view}
+                                                        onChange={() =>
+                                                            setpermission({
+                                                                ...permission,
+                                                                dashboard_view: !permission.dashboard_view,
+                                                            })
+                                                        }
+                                                    />
+                                                </td>
+                                                <td className="text-gray-400">-</td>
+                                                <td className="text-gray-400">-</td>
+                                                <td className="text-gray-400">-</td>
                                             </tr>
                                             {/* Dashboard - Executive */}
                                             <tr>
@@ -877,7 +903,7 @@ export default function EmployeeDetailPage() {
             </div>
             <div className="flex justify-between rounded bg-white mt-2 p-2">
                 <div>
-                    <button className="secondary-button">Back</button>
+                    <button className="secondary-button" onClick={() => { router.back() }}>Back</button>
                 </div>
                 <div>
                     <button className="primary-button" onClick={submitEmployeeInfo}>Save</button>

@@ -35,6 +35,7 @@ const initialState: { userProfile: Omit<Employee, 'password'>, userPermission: P
         report_view: false,
         report_update: false,
         report_delete: false,
+        dashboard_view:false,
         dashboard_executive_view: false,
         dashboard_manager_view: false,
         dashboard_user_view: false,

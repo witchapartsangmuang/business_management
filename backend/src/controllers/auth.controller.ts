@@ -40,7 +40,28 @@ export class AuthController {
 	}
 	static async refresh(req: Request, res: Response) {
 		const result = await AuthService.refresh(req.cookies.auth_token);
-		console.log(result,'result');
-		
+		console.log(result, 'result');
+
+	}
+	static async logout(req: Request, res: Response) {
+		try {
+			const refreshToken = req.cookies.auth_token;
+			if (!refreshToken) {
+				return res.status(200).json({ message: "Already logged out" });
+			}
+			res.clearCookie("auth_token", {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "lax",
+				path: "/",
+			});
+			return res.status(200).json({
+				message: "Logout successful",
+			});
+		} catch (error) {
+			return res.status(500).json({
+				message: "Logout failed",
+			});
+		}
 	}
 }

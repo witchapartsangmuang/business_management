@@ -86,6 +86,5 @@ export class AuthService {
 			JWT_SECRET
 		)
 		console.log(decoded, 'decoded');
-
 	}
 }

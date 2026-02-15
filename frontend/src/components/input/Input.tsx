@@ -2,9 +2,10 @@ import { InputHTMLAttributes } from "react"
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     error?: boolean
 }
-export default function Input({ error, className, placeholder, value, onChange, onFocus, ...props }: InputProps) {
+export default function Input({ id, error, className, placeholder, value, onChange, onFocus, ...props }: InputProps) {
     return (
         <input
+            id={id}
             type="text"
             value={value}
             onChange={onChange}

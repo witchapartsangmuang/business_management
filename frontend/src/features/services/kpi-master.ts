@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { KpiMaster } from "@/types/master-data";
+import { KpiMaster } from "@/types/types";
+import { ApiError } from "@/types/validate-types";
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
     timeout: 15000,
@@ -28,12 +29,16 @@ export const kpiMasterService = {
             throwAxiosError(err);
         }
     },
-    async create(payload: KpiMaster): Promise<KpiMaster> {
+    async create(payload: KpiMaster): Promise<{kpi:KpiMaster}> {
         try {
-            const res = await api.post<KpiMaster>(KPI_ENDPOINT, payload);
+            const res = await api.post<{kpi:KpiMaster}>(KPI_ENDPOINT, payload);
             return res.data;
         } catch (err) {
-            throwAxiosError(err);
+            const e = err as AxiosError;
+            throw <ApiError>{
+                status: e.response?.status ?? 500,
+                data: e.response?.data ?? { message: "Unexpected error" },
+            };
         }
     },
     async update(id: string, payload: Partial<Omit<KpiMaster, "id">>): Promise<KpiMaster> {

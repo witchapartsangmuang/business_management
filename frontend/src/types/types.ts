@@ -66,3 +66,20 @@ export type Permission = {
     employee_delete: boolean
     permission_for: null | number;
 }
+
+export type PolicyMaster = {
+    id: number | null;
+    policy_code: string;
+    policy_name: string;
+    description: string | null
+    is_active: boolean;
+}
+
+export type KpiMaster = {
+    id: number | null;
+    kpi_code: string;
+    kpi_name: string;
+    description: string | null;
+    unit: string;
+    is_active: boolean;
+}

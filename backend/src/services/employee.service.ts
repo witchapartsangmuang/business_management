@@ -91,6 +91,8 @@ export class EmployeeService {
     }
 
     static async updateEmployee(data: { employee: Employee, permission: Permission }) {
+        console.log(data);
+        
         const { employee, permission } = data
         const { profile_picture, emp_code, first_name, last_name, description, email, phone, password, position, organizational_unit,
             report_to, is_active, is_project_leader, is_project_approver, is_project_member, created_by, created_datetime, updated_by, updated_datetime } = employee
@@ -111,7 +113,7 @@ export class EmployeeService {
             `UPDATE kpis SET kpi_code = $1, kpi_name = $2, description = $3, unit = $4, is_active = $5, updated_by = $6, updated_datetime = $7 WHERE id = $8 RETURNING id, kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime`,
             [emp_code.trim(), emp_code.trim(), description?.trim() || null, emp_code.trim(), is_active, emp_code.trim(), updated_datetime, emp_code]
         )
-
+        return
         const employeeUpdated = await db.query(`
             UPDATE employee SET
             profile_picture = $1,
@@ -156,8 +158,7 @@ export class EmployeeService {
 
         // 🔹 UPDATE PERMISSION
         const permissionUpdated = await db.query(
-            `
-    UPDATE permission SET
+            `UPDATE permission SET
       md_policy_view = $1,
       kpi_alignment_view = $2,
       project_view = $3,
@@ -230,7 +231,7 @@ export class EmployeeService {
                 employee_create,
                 employee_update,
                 employee_delete,
-                id // 👈 permission_for = employee id
+                // id // 👈 permission_for = employee id
             ]
         );
 

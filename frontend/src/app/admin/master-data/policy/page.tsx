@@ -5,12 +5,13 @@ import IconList from "@/components/icons/icon-list";
 import IconPlus from "@/components/icons/icon-plus";
 import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
-import { PolicyMaster } from "@/types/master-data";
+import { PolicyMaster } from "@/types/types";
 import { policyMasterService } from "@/features/services/policy-master";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import IconPencil from "@/components/icons/icon-pen";
+import { ValidatePolicyMasterError } from "@/types/validate-types";
 
 const defPolicy = [
     {
@@ -81,6 +82,18 @@ export default function PolicyPage() {
         description: '',
         is_active: true
     });
+    const [validateFieldError, setvalidateFieldError] = useState<ValidatePolicyMasterError>({
+        policy_code: {
+            valid_status: true,
+            errorText: ''
+        },
+        policy_name: {
+            valid_status: true,
+            errorText: ''
+        }
+    })
+
+    
 
     const submitPolicyInfo = (event: React.FormEvent) => {
         event.preventDefault();

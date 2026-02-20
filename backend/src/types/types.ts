@@ -15,7 +15,7 @@ export type Employee = {
     phone: string;
     password: string;
     position: string;
-    organizational_unit: null | string;
+    organizational_unit: string;
     report_to: null | number;
     is_active: boolean;
     is_project_leader: boolean;

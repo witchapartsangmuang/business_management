@@ -190,6 +190,8 @@ export default function EmployeeDetailPage() {
         const { id: employeeId, password, ...employeeObj } = employeeInfo
         const { id: permissionId, ...permissionObj } = permission
         if (employeeInfo.id !== null) {
+
+            
         } else {
             if (validateData()) {
                 try {

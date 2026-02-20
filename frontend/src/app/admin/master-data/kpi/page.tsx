@@ -7,9 +7,13 @@ import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
 import Modal from "@/components/Modal";
 import { useEffect, useState } from "react";
-import { KpiMaster } from "@/types/master-data";
+import { KpiMaster } from "@/types/types";
 import { kpiMasterService } from "@/features/services/kpi-master";
 import IconPencil from "@/components/icons/icon-pen";
+import { BackendDuplicateError, isApiError, ValidateKpiMasterError } from "@/types/validate-types";
+import Input from "@/components/input/Input";
+import Label from "@/components/input/Label";
+import ToggleSwitch from "@/components/input/ToggleSwitch";
 const defKPI = [
     {
         id: 1,
@@ -84,35 +88,96 @@ export default function KpiPage() {
         id: null,
         kpi_code: '',
         kpi_name: '',
-        description: '',
+        description: null,
         unit: '',
         is_active: true
     });
-
-    const [validateValue, setValidateValue] = useState<{ kpi_code: string, kpi_name: string, unit: string }>({
-        kpi_code: "",
-        kpi_name: "",
-        unit: ""
+    const [validateFieldError, setvalidateFieldError] = useState<ValidateKpiMasterError>({
+        kpi_code: {
+            valid_status: true,
+            errorText: ''
+        },
+        kpi_name: {
+            valid_status: true,
+            errorText: ''
+        },
+        unit: {
+            valid_status: true,
+            errorText: ''
+        },
     })
-    function validateInfo() {
-        return kpiList.some(
-            (item, index) =>
-                kpiList.findIndex(v => v['kpi_code'] === kpiInfo['kpi_code']) !== index
-        )
+    function validateData() {
+        let validateStatus = true;
+        const errorList: ValidateKpiMasterError = { ...validateFieldError };
+        // emp_code
+        if (kpiInfo.kpi_code.trim() === "") {
+            errorList.kpi_code = { valid_status: false, errorText: "Please define KPI code." };
+            validateStatus = false;
+        } else {
+            errorList.kpi_code = { valid_status: true, errorText: "" };
+        }
+        // emp_code
+        if (kpiInfo.kpi_name.trim() === "") {
+            errorList.kpi_name = { valid_status: false, errorText: "Please define KPI name." };
+            validateStatus = false;
+        } else {
+            errorList.kpi_name = { valid_status: true, errorText: "" };
+        }
+        // emp_code
+        if (kpiInfo.unit.trim() === "") {
+            errorList.unit = { valid_status: false, errorText: "Please define unit." };
+            validateStatus = false;
+        } else {
+            errorList.unit = { valid_status: true, errorText: "" };
+        }
+        setvalidateFieldError(errorList);
+        console.log('errorList', errorList);
+        return validateStatus;
     }
 
-    const submitKpiInfo = (event: React.FormEvent) => {
-        event.preventDefault();
+
+    async function submitKpiInfo() {
         console.log("Submitted KPI Info:", kpiInfo)
-        setKpiInfo({
-            id: null,
-            kpi_code: '',
-            kpi_name: '',
-            description: '',
-            unit: '',
-            is_active: true
-        })
-        setIsKpiInfoModalOpen(false);
+        if (kpiInfo.id !== null) {
+            if (validateData()) {
+                console.log('pass');
+            } else {
+                console.log('fail');
+            }
+        } else {
+            if (validateData()) {
+                try {
+                    await kpiMasterService.create(kpiInfo).then((res) => {
+                        setKpiList(pre => [...pre, res.kpi])
+                        setKpiInfo({
+                            id: null,
+                            kpi_code: '',
+                            kpi_name: '',
+                            description: '',
+                            unit: '',
+                            is_active: true
+                        })
+                    })
+
+                } catch (err) {
+                    if (isApiError(err)) {
+                        const errorList: ValidateKpiMasterError = { ...validateFieldError };
+                        const backendErr = err.data as BackendDuplicateError;
+                        backendErr.fields.forEach((field) => {
+                            errorList[field] = {
+                                valid_status: false,
+                                errorText: backendErr.message
+                            };
+                        });
+                        setvalidateFieldError(errorList);
+                    }
+                }
+
+            } else {
+
+            }
+        }
+
     }
 
     const openKpiInfoModal = (kpiInfo: KpiMaster | null) => {
@@ -123,7 +188,7 @@ export default function KpiPage() {
                 id: null,
                 kpi_code: '',
                 kpi_name: '',
-                description: '',
+                description: null,
                 unit: '',
                 is_active: true
             })
@@ -137,7 +202,7 @@ export default function KpiPage() {
             id: null,
             kpi_code: '',
             kpi_name: '',
-            description: '',
+            description: null,
             unit: '',
             is_active: true
         })
@@ -150,6 +215,9 @@ export default function KpiPage() {
         GetAllKpiList()
     }, []);
 
+    useEffect(() => {
+        console.log('validateFieldError', validateFieldError);
+    }, [validateFieldError])
     return (
         <div className="bg-white rounded p-3 min-h-[calc(100vh-5rem)]">
             <div className="border-b border-gray-200 pb-2">
@@ -324,52 +392,58 @@ export default function KpiPage() {
             </nav>
 
             <Modal onClose={closeKpiInfoModal} isOpen={isKpiInfoModalOpen} title="KPI Master Information">
-                <form onSubmit={submitKpiInfo} className="mt-4 space-y-3">
-                    <div>
-                        <label className="form-label">Code</label>
-                        <input
+                <div className="grid grid-cols-12">
+                    <div className="col-span-12 mt-3 px-3">
+                        <Label title="Code" htmlFor="kpi_code" require />
+                        <Input
                             type="text"
-                            className="form-input"
-                            value={kpiInfo.kpi_code}
+                            id="kpi_code"
+                            error={!validateFieldError.kpi_code.valid_status}
+                            value={kpiInfo.kpi_code || ""}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, kpi_code: { valid_status: true, errorText: '' } }) }}
                             onChange={(e) => setKpiInfo({ ...kpiInfo, kpi_code: e.target.value })}
-                            autoFocus
                         />
+                        {validateFieldError.kpi_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.kpi_code.errorText}</p>}
                     </div>
-                    <div>
-                        <label className="form-label">Name</label>
-                        <input
+                    <div className="col-span-12 mt-3 px-3">
+                        <Label title="Name" htmlFor="kpi_name" require />
+                        <Input
                             type="text"
-                            className="form-input"
-                            value={kpiInfo.kpi_name}
+                            id="kpi_name"
+                            error={!validateFieldError.kpi_name.valid_status}
+                            value={kpiInfo.kpi_name || ""}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, kpi_name: { valid_status: true, errorText: '' } }) }}
                             onChange={(e) => setKpiInfo({ ...kpiInfo, kpi_name: e.target.value })}
-                            autoFocus
                         />
+                        {validateFieldError.kpi_name.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.kpi_name.errorText}</p>}
                     </div>
-                    <div>
-                        <label className="form-label">Description</label>
-                        <input
+                    <div className="col-span-12 mt-3 px-3">
+                        <Label title="Description" htmlFor="kpi_description" />
+                        <Input
                             type="text"
-                            className="form-input"
-                            value={kpiInfo.description}
+                            id="kpi_description"
+                            value={kpiInfo.description || ""}
                             onChange={(e) => setKpiInfo({ ...kpiInfo, description: e.target.value })}
-                            autoFocus
                         />
                     </div>
-                    <div>
-                        <label className="form-label">Unit</label>
-                        <input
+                    <div className="col-span-12 mt-3 px-3">
+                        <Label title="Unit" htmlFor="kpi_unit" require />
+                        <Input
                             type="text"
-                            className="form-input"
+                            id="kpi_unit"
+                            error={!validateFieldError.unit.valid_status}
                             value={kpiInfo.unit}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, unit: { valid_status: true, errorText: '' } }) }}
                             onChange={(e) => setKpiInfo({ ...kpiInfo, unit: e.target.value })}
-                            autoFocus
                         />
+                        {validateFieldError.unit.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.unit.errorText}</p>}
                     </div>
-                    <div className="mt-4 flex justify-end gap-2">
+                    <div className="col-span-12 mt-3 px-3">
+                        <ToggleSwitch checked={kpiInfo.is_active} onChange={() => setKpiInfo({ ...kpiInfo, is_active: !kpiInfo.is_active })} checked_label="Active" unchecked_label="Unactive" />
+                    </div>
 
-                    </div>
-                </form>
-                <div className="flex items-center justify-end pt-2 mt-2 border-t border-gray-300 gap-2">
+                </div>
+                <div className="flex items-center justify-end pt-2 mt-4 border-t border-gray-300 gap-2">
                     <div>
                         <button
                             type="button"
@@ -380,13 +454,7 @@ export default function KpiPage() {
                         </button>
                     </div>
                     <div>
-
-                        <button
-                            type="submit"
-                            className="primary-button"
-                        >
-                            Save
-                        </button>
+                        <button className="primary-button" onClick={() => { submitKpiInfo() }}>Save</button>
                     </div>
                 </div>
             </Modal>

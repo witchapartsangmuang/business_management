@@ -1,21 +1,21 @@
 
 export function TableWrapper({ children, className, overflow }: { children: React.ReactNode, className?: string, overflow?: boolean }) {
     return (
-        <div className={`${className || 'w-full'} ${overflow && 'overflow-auto'}`}>
+        <div className={`${className || 'w-full'} ${(overflow && 'overflow-auto') || ""}`.trim()}>
             {children}
         </div>
     )
 }
 export function Table({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <table className={`${className || ''}`}>
+        <table className={`${className || 'w-full border-collapse'}`}>
             {children}
         </table>
     )
 }
 export function Thead({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <thead className={`${className || ''}`}>
+        <thead className={`${className || 'bg-gray-50'}`}>
             {children}
         </thead>
     )

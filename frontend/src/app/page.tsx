@@ -8,6 +8,6 @@ export default function Home() {
     const res = await AuthService.refresh()
   }
   return (
-      <button onClick={()=>{refreshToken()}}>Main</button>
+    <button onClick={() => { refreshToken() }}>Main</button>
   );
 }

@@ -4,12 +4,13 @@ import IconEyeClose from "../icons/icon-eye-close";
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     error?: boolean
 }
-export default function InputPassword({ error, className, placeholder, value, onChange, onFocus, ...props }: InputProps) {
+export default function InputPassword({ id, error, className, placeholder, value, onChange, onFocus, ...props }: InputProps) {
     const [show, setShow] = useState(false);
     return (
         <>
             <div className="relative">
                 <input
+                    id={id}
                     type={show ? "text" : "password"}
                     value={value}
                     onChange={onChange}

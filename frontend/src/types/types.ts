@@ -83,3 +83,13 @@ export type KpiMaster = {
     unit: string;
     is_active: boolean;
 }
+
+export type OrganizationLevel = {
+    id: null | number;
+    org_level_name: string;
+    level: number;
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
+}

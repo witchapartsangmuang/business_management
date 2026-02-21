@@ -12,6 +12,8 @@ import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import IconPencil from "@/components/icons/icon-pen";
 import { ValidatePolicyMasterError } from "@/types/validate-types";
+import Input from "@/components/input/Input";
+import Label from "@/components/input/Label";
 
 const defPolicy = [
     {
@@ -93,7 +95,7 @@ export default function PolicyPage() {
         }
     })
 
-    
+
 
     const submitPolicyInfo = (event: React.FormEvent) => {
         event.preventDefault();
@@ -220,28 +222,31 @@ export default function PolicyPage() {
             <Modal onClose={closePolicyInfoModal} isOpen={isPolicyInfoModalOpen} title="Policy Master Information">
                 <form onSubmit={submitPolicyInfo} className="mt-4 space-y-3">
                     <div>
-                        <label className="form-label">Code</label>
-                        <input
+                        <Label title="Code" htmlFor="policy_code" require />
+                        <Input
                             type="text"
-                            className="form-input"
-                            value={policyInfo.policy_code}
+                            id="policy_code"
+                            error={!validateFieldError.policy_code.valid_status}
+                            value={policyInfo.policy_code || ""}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, policy_code: { valid_status: true, errorText: '' } }) }}
                             onChange={(e) => setPolicyInfo({ ...policyInfo, policy_code: e.target.value })}
-                            autoFocus
                         />
+                        {validateFieldError.policy_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.policy_code.errorText}</p>}
                     </div>
                     <div>
-                        <label className="form-label">Name</label>
-                        <input
+                        <Label title="Name" htmlFor="policy_name" require />
+                        <Input
                             type="text"
-                            className="form-input"
+                            id="policy_name"
+                            error={!validateFieldError.policy_name.valid_status}
                             value={policyInfo.policy_name}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, policy_name: { valid_status: true, errorText: '' } }) }}
                             onChange={(e) => setPolicyInfo({ ...policyInfo, policy_name: e.target.value })}
-                            autoFocus
                         />
                     </div>
                     <div>
-                        <label className="form-label">Description</label>
-                        <textarea className="form-input" rows={2} value={policyInfo.description} onChange={(e) => setPolicyInfo({ ...policyInfo, description: e.target.value })} />
+                        <Label title="Description" htmlFor="description" require />
+                        <textarea className="form-input" rows={2} value={policyInfo.description || ""} onChange={(e) => setPolicyInfo({ ...policyInfo, description: e.target.value })} />
                     </div>
                     <div>
                         <ToggleSwitch checked={policyInfo.is_active} checked_label="Active" unchecked_label="Inactive" onChange={() => setPolicyInfo({ ...policyInfo, is_active: !policyInfo.is_active })} />

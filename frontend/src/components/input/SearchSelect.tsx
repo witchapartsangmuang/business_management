@@ -8,7 +8,7 @@ export type SearchSelectProps = Omit<React.InputHTMLAttributes<HTMLInputElement>
     onChange: (value: string | null) => void
 }
 
-export default function SearchSelect({ placeholder, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SearchSelectProps) {
+export default function SearchSelect({ id, placeholder, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SearchSelectProps) {
     const [query, setQuery] = useState("")
     const [openDropdownList, setOpenDropdownList] = useState(false)
     const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
@@ -51,6 +51,7 @@ export default function SearchSelect({ placeholder, optionList, defaultSelectedV
         <div className="relative">
             <input
                 type="text"
+                id={id}
                 value={selected ? selected.label : query}
                 onChange={(e) => {
                     setQuery(e.target.value)

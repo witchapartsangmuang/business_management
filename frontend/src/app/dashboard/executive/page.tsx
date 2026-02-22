@@ -4,14 +4,14 @@ import Barchart from "./barchart"
 import BarchartACC from "./barchart-acc"
 import Piechart from "./Piechart"
 import GaugeChart from "./test"
-import Select, { SelectOption } from "@/components/input/Select";
+import Select from "@/components/input/Select";
 import { useState } from "react"
 
 type Role = "admin" | "manager" | "staff";
 
 export default function DashboardPage() {
     const year = [2025, 2026, 2027]
-
+    const [startYear,setstartYear] = useState()
     const roleOptions: SelectOption<Role>[] = [
         { value: "admin", label: "Admin" },
         { value: "manager", label: "Manager" },
@@ -27,21 +27,8 @@ export default function DashboardPage() {
                     <Label title="Period To" htmlFor="Period To" require />
                 </div>
                 <div className="col-span-6 mt-3 px-3">
-                    <Select<Role>
-                        id="role"
-                        label="Role"
-                        placeholder="Choose a role"
-                        options={roleOptions}
-                        value={role}
-                        onChange={(v) => setRole(v)}
-                        helperText={role ? `Selected: ${role}` : "Please select a role"}
-                        error={!role}
-                    />
+                    
 
-                    <div className="mt-6 rounded-lg border bg-gray-50 p-3 text-sm">
-                        <div className="font-medium">Current value</div>
-                        <pre className="mt-2 overflow-auto">{JSON.stringify(role, null, 2)}</pre>
-                    </div>
                 </div>
             </div>
             <p className="px-3 text-4xl">Executive Insight Dashboard</p>

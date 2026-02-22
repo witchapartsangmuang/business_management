@@ -6,6 +6,7 @@ import "dotenv/config";
 import kpiRouter from "./routes/kpi.route";
 import policyRouter from "./routes/policy.route"
 import employeeRouter from "./routes/employee.route"
+import organizationRouter from "./routes/organization.route"
 
 import authRouter from "./routes/auth.route";
 import dashboardRouter from "./routes/dashboard.route";
@@ -21,7 +22,7 @@ app.use(cors({
 app.use(cookieParser())
 app.use(express.json());
 
-
+app.use("/organization", organizationRouter)
 app.use("/policy", policyRouter)
 app.use("/kpi", kpiRouter);
 app.use("/employee", employeeRouter)

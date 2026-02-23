@@ -21,6 +21,7 @@ export default function Page() {
     ])
     return (
         <>
+        {/* เพิ่ม field show on dashboard ด้วย */}
             <button>Add MD Policy</button>
             {
                 mdPolicy.map((md) => (

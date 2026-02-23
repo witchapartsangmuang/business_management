@@ -1,4 +1,4 @@
-export default function StaticCard({ label, value, unit }: { label: string, value: number, unit: string }) {
+export default function StaticCard({ label, value, unit }: { label: string, value: string, unit: string }) {
     return (
         <>
             <p className="text-lg">{label}</p>

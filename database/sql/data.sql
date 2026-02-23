@@ -30,7 +30,7 @@ VALUES
 ('Department', 4, null, null, null, null),
 ('Section', 5, null, null, null, null);
 
-INSERT INTO organization_structure_level (org_code, org_name, org_level, parent_org_id, path, created_by, created_datetime, updated_by, updated_datetime)
+INSERT INTO organization_structure (org_code, org_name, org_level, parent_org_id, path, created_by, created_datetime, updated_by, updated_datetime)
 VALUES
 ('Com-A', 'Company A', 1, '1', null, null, null),
 ('Com-B', 'Company B', 1, '2', null, null, null),

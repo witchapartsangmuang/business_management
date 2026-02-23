@@ -2,8 +2,11 @@
 import SearchSelect from "@/components/input/SearchSelect";
 import { useEffect, useState } from "react";
 
-import { Md_Policy, Kpi, Employee_Project, ProjectInfo, } from "@/types/project";
-import { Table, TableBody, TableFooter, TableHeader, TableWrapper } from "@/components/table/Table";
+import { Md_Policy, Kpi, Employee_Project, ProjectInfo, } from "@/types/types";
+import { Table, Tbody, Thead, TableWrapper } from "@/components/table/Table";
+import Label from "@/components/input/Label";
+import Input from "@/components/input/Input";
+import Select from "@/components/input/Select";
 // Start Data List For Select
 const md_policy_list: Md_Policy[] = [
     { id: 1, policy_code: 'SD&SG', policy_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026 },
@@ -70,7 +73,10 @@ export default function ProjectPage() {
         setselect_project_member_list(select_project_member_list => [...select_project_member_list, ...filter_select_project_member_list])
     }, [employee_list])
 
+    useEffect(() => {
+        console.log(select_md_policy_list, "select_md_policy_list");
 
+    }, [select_md_policy_list])
     const [tabOpen, setTabOpen] = useState(0);
 
     const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
@@ -79,8 +85,8 @@ export default function ProjectPage() {
         md_policy: 1,
         project_leader: '',
         project_org: '',
-        start_date: '',
-        end_date: '',
+        plan_start_date: '',
+        plan_end_date: '',
         step: 'Registed',
         status: null,
         // For Revise
@@ -190,7 +196,7 @@ export default function ProjectPage() {
 
 
     const [teamMember, setteamMember] = useState([
-        { sequence: 1, emp_no: "", empName: "", weight: 0, start_date: "", end_date: "", }
+        { sequence: 1, emp_no: "", empName: "", weight: 0, plan_start_date: "", end_date: "", }
     ])
 
     function onClickInsertTeamMember(row: number) {
@@ -199,7 +205,7 @@ export default function ProjectPage() {
             emp_no: "",
             empName: "",
             weight: 0,
-            start_date: "",
+            plan_start_date: "",
             end_date: ""
         }])
     }
@@ -231,28 +237,53 @@ export default function ProjectPage() {
                     {tabOpen === 0 &&
                         <>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Project No.</label>
-                                <input type="text" className="form-input" value={projectInfo.project_id} readOnly />
+                                <Label title="Project No." htmlFor="id" />
+                                <Input id="id" value={projectInfo.project_id} readOnly />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Project Name</label>
-                                <input type="text" className="form-input" value={projectInfo.project_name} onChange={(e) => setProjectInfo({ ...projectInfo, project_name: e.target.value })} />
+                                <Label title="Project Name" htmlFor="project_name" />
+                                <Input
+                                    type="text"
+                                    id="project_name"
+                                    value={projectInfo.project_name || ""}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, project_name: e.target.value })}
+                                />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">MD Policy</label>
-                                <SearchSelect optionList={select_md_policy_list} placeholder={'Select MD Policy'} defaultValue={String(projectInfo.md_policy)} onChange={(value) => setProjectInfo({ ...projectInfo, md_policy: Number(value) })} />
+                                <Label title="MD Policy" htmlFor="md_policy" />
+                                <Select
+                                    id="md_policy"
+                                    optionList={select_md_policy_list}
+                                    defaultSelectedValue={String(projectInfo.md_policy)}
+                                    onChange={(value) => setProjectInfo({ ...projectInfo, md_policy: Number(value) })}
+                                />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Project Leader</label>
-                                <SearchSelect optionList={select_project_leader_list} placeholder={'Select Project Leader'} defaultValue={projectInfo.project_leader} onChange={(value) => setProjectInfo({ ...projectInfo, project_leader: value !== null ? value : '' })} />
+                                <Label title="Project Leader" htmlFor="project_leader" />
+                                <SearchSelect id="project_leader"
+                                    optionList={select_project_leader_list}
+                                    placeholder={'Select Project Leader'}
+                                    defaultSelectedValue={projectInfo.project_leader}
+                                    onChange={(value) => setProjectInfo({ ...projectInfo, project_leader: value !== null ? value : '' })}
+                                />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Start Date</label>
-                                <input type="date" className="form-input" value={projectInfo.start_date} onChange={(e) => setProjectInfo({ ...projectInfo, start_date: e.target.value })} />
+                                <Label title="Start Date" htmlFor="plan_start_date" />
+                                <Input
+                                    id="plan_start_date"
+                                    type="date"
+                                    value={projectInfo.plan_start_date}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, plan_start_date: e.target.value })}
+                                />
                             </div>
                             <div className="col-span-6 mt-3 px-3">
-                                <label className="form-label" htmlFor="">End Date</label>
-                                <input type="date" className="form-input" value={projectInfo.end_date} onChange={(e) => setProjectInfo({ ...projectInfo, end_date: e.target.value })} />
+                                <Label title="End Date" htmlFor="plan_end_date" />
+                                <Input
+                                    id="plan_end_date"
+                                    type="date"
+                                    value={projectInfo.plan_end_date}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, plan_end_date: e.target.value })}
+                                />
                             </div>
                             <div className="col-span-12 mt-10 px-3">
                                 <p className="font-bold">KPI (Key Peroformance Indicator)</p>
@@ -260,7 +291,7 @@ export default function ProjectPage() {
                             <div className="col-span-12 mt-3 px-3">
                                 <TableWrapper>
                                     <Table>
-                                        <TableHeader>
+                                        <Thead>
                                             <tr>
                                                 <th>#</th>
                                                 <th>KPI</th>
@@ -268,8 +299,8 @@ export default function ProjectPage() {
                                                 <th>Unit</th>
                                                 <th>Action</th>
                                             </tr>
-                                        </TableHeader>
-                                        <TableBody>
+                                        </Thead>
+                                        <Tbody>
                                             {project_kpi_list.map((projectKpi, index) => (
                                                 <tr key={`project_kpi_list-${index}`}>
                                                     <td>{projectKpi.sequence}</td>
@@ -283,12 +314,10 @@ export default function ProjectPage() {
                                                     </td>
                                                 </tr>
                                             ))}
-                                        </TableBody>
-                                        <TableFooter>
-                                            <tr>
-                                                <td colSpan={5}>Total: {project_kpi_list.length} kpi(s)</td>
-                                            </tr>
-                                        </TableFooter>
+                                        </Tbody>
+                                        <tr>
+                                            <td colSpan={5}>Total: {project_kpi_list.length} kpi(s)</td>
+                                        </tr>
                                     </Table>
                                     <div className="flex justify-between">
                                         <div className="px-4 py-3">
@@ -310,20 +339,41 @@ export default function ProjectPage() {
                     {tabOpen === 1 &&
                         <>
                             <div className="col-span-3 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Est. Investment</label>
-                                <input type="number" className="form-input" value={projectInfo.est_investment} onChange={(e) => setProjectInfo({ ...projectInfo, est_investment: Number(e.target.value) })} />
+                                <Label title="Est. Investment" htmlFor="est_investment" />
+                                <Input
+                                    id="est_investment"
+                                    type="number"
+                                    value={projectInfo.est_investment}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, est_investment: Number(e.target.value) })}
+                                />
                             </div>
                             <div className="col-span-3 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Est. Gross Earnings</label>
-                                <input type="number" className="form-input" value={projectInfo.est_gross_earnings} onChange={(e) => setProjectInfo({ ...projectInfo, est_gross_earnings: Number(e.target.value) })} />
+                                <Label title="Est. Gross Earnings" htmlFor="est_gross_earnings" />
+                                <Input
+                                    id="est_gross_earnings"
+                                    type="number"
+                                    value={projectInfo.est_gross_earnings}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, est_gross_earnings: Number(e.target.value) })}
+                                />
                             </div>
                             <div className="col-span-3 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Payback Period (Year)</label>
-                                <input type="number" className="form-input" readOnly value={projectInfo.payback_period_year} onChange={(e) => setProjectInfo({ ...projectInfo, payback_period_year: Number(e.target.value) })} />
+                                <Label title="Payback Period (Year)" htmlFor="payback_period_year" />
+                                <Input
+                                    id="payback_period_year"
+                                    type="number"
+                                    readOnly
+                                    value={projectInfo.payback_period_year}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, payback_period_year: Number(e.target.value) })}
+                                />
                             </div>
                             <div className="col-span-3 mt-3 px-3">
-                                <label className="form-label" htmlFor="">Return on Investment - ROI (%)</label>
-                                <input type="number" className="form-input" readOnly value={projectInfo.return_on_investment} onChange={(e) => setProjectInfo({ ...projectInfo, return_on_investment: Number(e.target.value) })} />
+                                <Label title="Return on Investment - ROI (%)" htmlFor="return_on_investment" />
+                                <Input id="return_on_investment"
+                                    type="number"
+                                    readOnly
+                                    value={projectInfo.return_on_investment}
+                                    onChange={(e) => setProjectInfo({ ...projectInfo, return_on_investment: Number(e.target.value) })}
+                                />
                             </div>
                             <div className="col-span-12 mt-10 px-3">
                                 <p className="font-bold">Other Benefit</p>
@@ -417,9 +467,9 @@ export default function ProjectPage() {
                                                             setteamMember(newTeamMember);
                                                         }} /></td>
                                                         <td>
-                                                            <input type="date" className="form-input" value={member.start_date} onChange={(e) => {
+                                                            <input type="date" className="form-input" value={member.plan_start_date} onChange={(e) => {
                                                                 const newTeamMember = [...teamMember];
-                                                                newTeamMember[index].start_date = e.target.value;
+                                                                newTeamMember[index].plan_start_date = e.target.value;
                                                                 setteamMember(newTeamMember);
                                                             }} /></td>
                                                         <td>

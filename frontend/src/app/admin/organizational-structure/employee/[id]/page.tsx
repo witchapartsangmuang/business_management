@@ -190,10 +190,27 @@ export default function EmployeeDetailPage() {
     async function submitEmployeeInfo() {
         // Extact for correct type
         const { id: employeeId, password, ...employeeObj } = employeeInfo
-        const { id: permissionId, ...permissionObj } = permission
         if (employeeInfo.id !== null) {
-
-
+            if (validateData()) {
+                try {
+                    await EmployeeService.update(Number(employeeId), { employee: { ...employeeObj }, permission })
+                } catch (err) {
+                    if (isApiError(err)) {
+                        const errorList: ValidateEmployeeError = { ...validateFieldError };
+                        const backendErr = err.data as BackendDuplicateError;
+                        backendErr.fields.forEach((field) => {
+                            errorList[field] = {
+                                valid_status: false,
+                                errorText: backendErr.message
+                            };
+                        });
+                        setvalidateFieldError(errorList);
+                        setvalidateErrorModalOpen(true)
+                    }
+                }
+            } else {
+                setvalidateErrorModalOpen(true)
+            }
         } else {
             if (validateData()) {
                 try {
@@ -221,12 +238,6 @@ export default function EmployeeDetailPage() {
             }
         }
     }
-
-    useEffect(() => {
-        console.log("employeeInfo: ", employeeInfo);
-
-    }, [employeeInfo])
-
     async function fetchData() {
         try {
             const res = await EmployeeService.readDetail(Number(params.id))
@@ -242,10 +253,7 @@ export default function EmployeeDetailPage() {
         }
     }
     useEffect(() => {
-        // console.log("Employee ID:", params.id);
-        if (params.id === 'new') {
-
-        } else {
+        if (params.id !== 'new') {
             fetchData()
         }
     }, [params.id]);
@@ -346,26 +354,31 @@ export default function EmployeeDetailPage() {
                                     onChange={(e) => { setEmployeeInfo({ ...employeeInfo, email: e.target.value }) }} />
                                 {validateFieldError.email.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.email.errorText}</p>}
                             </div>
-                            <div className="col-span-6 mt-3 px-3">
-                                <Label title="Password" htmlFor="password" require />
-                                <InputPassword
-                                    id="password"
-                                    value={employeeInfo.password || ""}
-                                    error={!validateFieldError.password.valid_status}
-                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } }) }}
-                                    onChange={(e) => { setEmployeeInfo({ ...employeeInfo, password: e.target.value }) }} />
-                                {validateFieldError.password.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.password.errorText}</p>}
-                            </div>
-                            <div className="col-span-6 mt-3 px-3">
-                                <Label title="Confirm Password" htmlFor="confirmPassword" require />
-                                <InputPassword
-                                    id="confirmPassword"
-                                    value={confirmPassword || ""}
-                                    error={!validateFieldError.confirmPassword.valid_status}
-                                    onFocus={() => { setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } }) }}
-                                    onChange={(e) => { setconfirmPassword(e.target.value) }} />
-                                {validateFieldError.confirmPassword.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.confirmPassword.errorText}</p>}
-                            </div>
+
+                            {employeeInfo.id === null &&
+                                <>
+                                    <div className="col-span-6 mt-3 px-3">
+                                        <Label title="Password" htmlFor="password" require />
+                                        <InputPassword
+                                            id="password"
+                                            value={employeeInfo.password || ""}
+                                            error={!validateFieldError.password.valid_status}
+                                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, password: { valid_status: true, errorText: '' } }) }}
+                                            onChange={(e) => { setEmployeeInfo({ ...employeeInfo, password: e.target.value }) }} />
+                                        {validateFieldError.password.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.password.errorText}</p>}
+                                    </div>
+                                    <div className="col-span-6 mt-3 px-3">
+                                        <Label title="Confirm Password" htmlFor="confirmPassword" require />
+                                        <InputPassword
+                                            id="confirmPassword"
+                                            value={confirmPassword || ""}
+                                            error={!validateFieldError.confirmPassword.valid_status}
+                                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, confirmPassword: { valid_status: true, errorText: '' } }) }}
+                                            onChange={(e) => { setconfirmPassword(e.target.value) }} />
+                                        {validateFieldError.confirmPassword.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.confirmPassword.errorText}</p>}
+                                    </div>
+                                </>
+                            }
                             <div className="col-span-6 mt-3 px-3">
                                 <Label title="Phone" htmlFor="phone" />
                                 <Input

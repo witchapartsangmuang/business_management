@@ -46,7 +46,6 @@ export class EmployeeController {
             }
             if (error instanceof Error) {
                 console.log("BAD_REQUEST");
-
                 return res.status(400).json({
                     code: "BAD_REQUEST",
                     message: error.message,
@@ -60,10 +59,32 @@ export class EmployeeController {
     }
     static async update(req: Request, res: Response) {
         try {
-            const kpi = await EmployeeService.updateEmployee(req.body);
+            const employee = await EmployeeService.updateEmployee(req.params.id, req.body);
+            return res.status(200).json({
+                message: "Employee updated successfully",
+                employee,
+            });
         } catch (error: any) {
-            console.error("Register error:", error);
-            return res.status(400).json({ message: error.message || "Bad request" });
+            console.error("Update error:", error);
+            if (error?.status && error?.code) {
+                return res.status(error.status).json({
+                    code: error.code,
+                    message: error.message,
+                    fields: error.fields,
+                    errors: error.errors,
+                });
+            }
+            if (error instanceof Error) {
+                console.log("BAD_REQUEST");
+                return res.status(400).json({
+                    code: "BAD_REQUEST",
+                    message: error.message,
+                });
+            }
+            return res.status(500).json({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Internal server error.",
+            })
         }
     }
 }

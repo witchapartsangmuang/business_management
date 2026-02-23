@@ -45,7 +45,7 @@ export const EmployeeService = {
             };
         }
     },
-    async update(id: number, payload: { employee: Omit<Employee, "password">, permission: Permission }): Promise<{ employee: Omit<Employee, "password">, permission: Permission }> {
+    async update(id: number, payload: { employee: Omit<Employee, "id" | "password">, permission: Permission }): Promise<{ employee: Omit<Employee, "password">, permission: Permission }> {
         try {
             const res = await api.put<{ employee: Omit<Employee, "password">, permission: Permission }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;

@@ -3,7 +3,7 @@ import SearchSelect from "@/components/input/SearchSelect";
 import { useMemo, useState, useEffect } from "react";
 
 import { Md_Policy, Kpi, Employee_Project, ProjectInfo } from "@/types/types";
-import { Table, Tbody, Thead, TableWrapper } from "@/components/table/Table";
+import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
 import Label from "@/components/input/Label";
 import Input from "@/components/input/Input";
 import Select from "@/components/input/Select";
@@ -299,23 +299,23 @@ export default function ProjectPage() {
 							</div>
 
 							<div className="col-span-12 mt-3 px-3">
-								<TableWrapper>
+								<TableWrapper overflow>
 									<Table>
 										<Thead>
-											<tr>
-												<th>#</th>
-												<th>KPI</th>
-												<th>Target</th>
-												<th>Unit</th>
-												<th>Action</th>
-											</tr>
+											<TrHead>
+												<Th>#</Th>
+												<Th>KPI</Th>
+												<Th>Target</Th>
+												<Th>Unit</Th>
+												<Th>Action</Th>
+											</TrHead>
 										</Thead>
 
 										<Tbody>
 											{project_kpi_list.map((projectKpi, index) => (
-												<tr key={`project_kpi_list-${index}`}>
-													<td>{projectKpi.sequence}</td>
-													<td>
+												<TrBody key={`project_kpi_list-${index}`}>
+													<Td>{projectKpi.sequence}</Td>
+													<Td>
 														<SearchSelect
 															optionList={kpi_select_list}
 															placeholder={'Select KPI'}
@@ -325,8 +325,8 @@ export default function ProjectPage() {
 																onChangeProjectKpi(index, selected);
 															}}
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<input
 															type="number"
 															className="form-input"
@@ -336,24 +336,24 @@ export default function ProjectPage() {
 																onChangeProjectKpi(index, projectKpi.kpi_id, next ?? undefined);
 															}}
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<input
 															type="text"
 															className="form-input"
 															value={projectKpi.kpi_id ? (kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit || "") : ""}
 															readOnly
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<button
 															className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
 															onClick={() => { onClickRemoveProjectKpi(projectKpi.sequence) }}
 														>
 															Delete
 														</button>
-													</td>
-												</tr>
+													</Td>
+												</TrBody>
 											))}
 										</Tbody>
 
@@ -430,75 +430,71 @@ export default function ProjectPage() {
 							</div>
 
 							<div className="col-span-12 mt-3 px-3">
-								<div className="table-wrapper">
-									<div className="table-scroll-x">
-										<div className="table-inner">
-											<table className="tbl tbl-zebra tbl-sortable">
-												<thead>
-													<tr>
-														<th>#</th>
-														<th>Other Benefit</th>
-														<th>Target</th>
-														<th>Unit</th>
-														<th>Action</th>
-													</tr>
-												</thead>
+								<TableWrapper>
+									<Table>
+										<Thead>
+											<TrHead>
+												<Th>#</Th>
+												<Th>Other Benefit</Th>
+												<Th>Target</Th>
+												<Th>Unit</Th>
+												<Th>Action</Th>
+											</TrHead>
+										</Thead>
 
-												<tbody>
-													{project_other_benefit_list.map((projectKpi, index) => (
-														<tr key={`project_other_benefit_list-${index}`}>
-															<td>{projectKpi.sequence}</td>
-															<td>
-																<SearchSelect
-																	optionList={other_benefit_select_list}
-																	placeholder={'Select Other Benefit'}
-																	defaultSelectedValue={projectKpi.kpi_id ? String(projectKpi.kpi_id) : ""}
-																	onChange={(value) => {
-																		const selected = value ? Number(value) : null; // ✅ กัน null กลายเป็น 0
-																		onChangeProjectOtherBenefit(index, selected);
-																	}}
-																/>
-															</td>
-															<td>
-																<input
-																	type="number"
-																	className="form-input"
-																	value={projectKpi.target !== null ? projectKpi.target : ''}
-																	onChange={(e) => {
-																		const next = e.target.value === "" ? null : Number(e.target.value);
-																		onChangeProjectOtherBenefit(index, projectKpi.kpi_id, next ?? undefined);
-																	}}
-																/>
-															</td>
-															<td>
-																<input
-																	type="text"
-																	className="form-input"
-																	value={projectKpi.kpi_id ? (kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit || "") : ""}
-																	readOnly
-																/>
-															</td>
-															<td>
-																<button
-																	className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-																	onClick={() => { onClickRemoveProjectOtherBenefit(projectKpi.sequence) }}
-																>
-																	Delete
-																</button>
-															</td>
-														</tr>
-													))}
-												</tbody>
+										<Tbody>
+											{project_other_benefit_list.map((projectKpi, index) => (
+												<TrBody key={`project_other_benefit_list-${index}`}>
+													<Td>{projectKpi.sequence}</Td>
+													<Td>
+														<SearchSelect
+															optionList={other_benefit_select_list}
+															placeholder={'Select Other Benefit'}
+															defaultSelectedValue={projectKpi.kpi_id ? String(projectKpi.kpi_id) : ""}
+															onChange={(value) => {
+																const selected = value ? Number(value) : null; // ✅ กัน null กลายเป็น 0
+																onChangeProjectOtherBenefit(index, selected);
+															}}
+														/>
+													</Td>
+													<Td>
+														<input
+															type="number"
+															className="form-input"
+															value={projectKpi.target !== null ? projectKpi.target : ''}
+															onChange={(e) => {
+																const next = e.target.value === "" ? null : Number(e.target.value);
+																onChangeProjectOtherBenefit(index, projectKpi.kpi_id, next ?? undefined);
+															}}
+														/>
+													</Td>
+													<Td>
+														<input
+															type="text"
+															className="form-input"
+															value={projectKpi.kpi_id ? (kpi_list.find(k => k.id === projectKpi.kpi_id)?.unit || "") : ""}
+															readOnly
+														/>
+													</Td>
+													<Td>
+														<button
+															className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+															onClick={() => { onClickRemoveProjectOtherBenefit(projectKpi.sequence) }}
+														>
+															Delete
+														</button>
+													</Td>
+												</TrBody>
+											))}
+										</Tbody>
 
-												<tfoot>
-													<tr>
-														<td colSpan={5}>Total: {project_other_benefit_list.length} Other Benefit(s)</td>
-													</tr>
-												</tfoot>
-											</table>
-										</div>
-									</div>
-								</div>
+										<tfoot>
+											<tr>
+												<td colSpan={5}>Total: {project_other_benefit_list.length} Other Benefit(s)</td>
+											</tr>
+										</tfoot>
+									</Table>
+								</TableWrapper>
 
 								<div className="flex justify-between">
 									<div className="px-4 py-3">
@@ -530,24 +526,24 @@ export default function ProjectPage() {
 							</div>
 
 							<div className="col-span-12 mt-3 px-3">
-								<div className="table-wrapper">
-									<table className="tbl tbl-zebra tbl-sortable">
-										<thead>
-											<tr>
+								<TableWrapper overflow>
+									<Table>
+										<Thead>
+											<TrHead>
 												<th>No.</th>
 												<th>Name</th>
 												<th>% Weight</th>
 												<th>Start Date</th>
 												<th>End Date</th>
 												<th></th>
-											</tr>
-										</thead>
+											</TrHead>
+										</Thead>
 
-										<tbody>
+										<Tbody>
 											{teamMember.map((member, index) => (
-												<tr key={index}>
-													<td>{index + 1}</td>
-													<td>
+												<TrBody key={index}>
+													<Td>{index + 1}</Td>
+													<Td>
 														<SearchSelect
 															optionList={select_project_member_list}
 															placeholder={'Select Team Member'}
@@ -558,8 +554,8 @@ export default function ProjectPage() {
 																setteamMember(newTeamMember);
 															}}
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<input
 															type="number"
 															className="form-input"
@@ -570,8 +566,8 @@ export default function ProjectPage() {
 																setteamMember(newTeamMember);
 															}}
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<input
 															type="date"
 															className="form-input"
@@ -582,8 +578,8 @@ export default function ProjectPage() {
 																setteamMember(newTeamMember);
 															}}
 														/>
-													</td>
-													<td>
+													</Td>
+													<Td>
 														<input
 															type="date"
 															className="form-input"
@@ -594,18 +590,18 @@ export default function ProjectPage() {
 																setteamMember(newTeamMember);
 															}}
 														/>
-													</td>
+													</Td>
 													<td></td>
-												</tr>
+												</TrBody>
 											))}
-										</tbody>
+										</Tbody>
 
 										<tfoot>
 											<tr>
 												<td colSpan={6}>Total: {teamMember.length} member(s)</td>
 											</tr>
 										</tfoot>
-									</table>
+									</Table>
 
 									<div className="flex justify-between">
 										<div className="px-4 py-3">
@@ -620,7 +616,7 @@ export default function ProjectPage() {
 											<button className="tbl-page-btn">Next</button>
 										</div>
 									</div>
-								</div>
+								</TableWrapper>
 							</div>
 						</>
 					}
@@ -726,101 +722,99 @@ export default function ProjectPage() {
 
 							{/* ตารางล่างคงเดิม */}
 							<div className="col-span-12 mt-3 px-3">
-								<div className="table-wrapper">
-									<div className="">
-										<table className="tbl tbl-zebra tbl-sortable">
-											<thead>
-												<tr>
-													<th className="min-w-[3rem]"></th>
-													<th className="min-w-[3rem]">No.</th>
-													<th className="min-w-[32rem]">Activity</th>
-													<th className="min-w-[12rem]">PIC</th>
-													<th className="min-w-[12rem]">Start Date</th>
-													<th className="min-w-[12rem]">End Date</th>
-													<th className="min-w-[8rem]">% Weight</th>
-													<th className="min-w-[3rem]"></th>
-													<th>
-														<div className="flex">
-															<div className="w-[5rem] text-center p-1">Jan 25</div>
-															<div className="w-[5rem] text-center p-1">Jan 25</div>
-															<div className="w-[5rem] text-center p-1">Jan 25</div>
-														</div>
-													</th>
-													<th></th>
-												</tr>
-											</thead>
-											<tbody>
-												{/* ... เดิมทั้งหมด ... */}
-												<tr>
-													<td>-</td>
-													<td>1</td>
-													<td><textarea className="form-input"></textarea></td>
-													<td>
-														<select className="form-select truncate">
-															<option value="test1">Witchapart Sangmuang 1</option>
-															<option value="test2">Witchapart Sangmuang 2</option>
-														</select>
-													</td>
-													<td><input type="date" className="form-input" /></td>
-													<td><input type="date" className="form-input" /></td>
-													<td><input type="number" className="form-input" /></td>
-													<td>
-														<div className="flex h-[3rem] items-center">P</div>
-														<div className="flex h-[3rem] items-center">A</div>
-													</td>
-													<td>
-														<div className="flex h-[3rem]">
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-														</div>
-														<div className="flex h-[3rem]">
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-														</div>
-													</td>
-													<td><button>DEL</button></td>
-												</tr>
-												<tr>
-													<td>-</td>
-													<td>1</td>
-													<td><textarea className="form-input"></textarea></td>
-													<td>
-														<select className="form-select">
-															<option value="test1">test1</option>
-															<option value="test2">test2</option>
-														</select>
-													</td>
-													<td><input type="date" className="form-input" /></td>
-													<td><input type="date" className="form-input" /></td>
-													<td><input type="number" className="form-input" /></td>
-													<td>
-														<div className="flex h-[3rem] items-center">P</div>
-														<div className="flex h-[3rem] items-center">A</div>
-													</td>
-													<td>
-														<div className="flex h-[3rem]">
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-														</div>
-														<div className="flex h-[3rem]">
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-															<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
-														</div>
-													</td>
-													<td><button>DEL</button></td>
-												</tr>
+								<TableWrapper overflow>
+									<Table className="tbl tbl-zebra tbl-sortable">
+										<Thead>
+											<TrHead>
+												<Th className="min-w-[3rem]">-</Th>
+												<Th className="min-w-[3rem]">No.</Th>
+												<Th className="min-w-[32rem]">Activity</Th>
+												<Th className="min-w-[12rem]">PIC</Th>
+												<Th className="min-w-[12rem]">Start Date</Th>
+												<Th className="min-w-[12rem]">End Date</Th>
+												<Th className="min-w-[8rem]">% Weight</Th>
+												<Th className="min-w-[3rem]">-</Th>
+												<Th>
+													<div className="flex">
+														<div className="w-[5rem] text-center p-1">Jan 25</div>
+														<div className="w-[5rem] text-center p-1">Jan 25</div>
+														<div className="w-[5rem] text-center p-1">Jan 25</div>
+													</div>
+												</Th>
+												<th></th>
+											</TrHead>
+										</Thead>
+										<Tbody>
+											{/* ... เดิมทั้งหมด ... */}
+											<TrBody>
+												<Td>-</Td>
+												<Td>1</Td>
+												<Td><textarea className="form-input"></textarea></Td>
+												<Td>
+													<select className="form-select truncate">
+														<option value="test1">Witchapart Sangmuang 1</option>
+														<option value="test2">Witchapart Sangmuang 2</option>
+													</select>
+												</Td>
+												<Td><input type="date" className="form-input" /></Td>
+												<Td><input type="date" className="form-input" /></Td>
+												<Td><input type="number" className="form-input" /></Td>
+												<Td>
+													<div className="flex h-[3rem] items-center">P</div>
+													<div className="flex h-[3rem] items-center">A</div>
+												</Td>
+												<Td>
+													<div className="flex h-[3rem]">
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+													</div>
+													<div className="flex h-[3rem]">
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+													</div>
+												</Td>
+												<Td><button>DEL</button></Td>
+											</TrBody>
+											<TrBody>
+												<Td>-</Td>
+												<Td>1</Td>
+												<Td><textarea className="form-input"></textarea></Td>
+												<Td>
+													<select className="form-select">
+														<option value="test1">test1</option>
+														<option value="test2">test2</option>
+													</select>
+												</Td>
+												<Td><input type="date" className="form-input" /></Td>
+												<Td><input type="date" className="form-input" /></Td>
+												<Td><input type="number" className="form-input" /></Td>
+												<Td>
+													<div className="flex h-[3rem] items-center">P</div>
+													<div className="flex h-[3rem] items-center">A</div>
+												</Td>
+												<Td>
+													<div className="flex h-[3rem]">
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+													</div>
+													<div className="flex h-[3rem]">
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+														<div className="w-[5rem] p-1"><input type="number" className="form-input" /></div>
+													</div>
+												</Td>
+												<Td><button>DEL</button></Td>
+											</TrBody>
 
-												<tr><td>1</td></tr>
-												<tr><td>1</td></tr>
-												<tr><td>1</td></tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
+											<TrBody><Td>1</Td></TrBody>
+											<TrBody><Td>1</Td></TrBody>
+											<TrBody><Td>1</Td></TrBody>
+										</Tbody>
+									</Table>
+								</TableWrapper>
 								<div className="rounded bg-white my-2">
 									<button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>
 								</div>

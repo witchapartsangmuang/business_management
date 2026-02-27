@@ -16,9 +16,9 @@ export class PolicyController {
   }
   static async create(req: Request, res: Response) {
     try {
-      const kpi = await PolicyService.createKpi(req.body);
+      const kpi = await PolicyService.createPolicy(req.body);
       return res.status(201).json({
-        message: "KPI registered successfully",
+        message: "Policy registered successfully",
         kpi,
       });
     } catch (error: any) {
@@ -28,7 +28,11 @@ export class PolicyController {
   }
   static async update(req: Request, res: Response) {
     try {
-      const kpi = await PolicyService.updateKpi(req.body);
+      const kpi = await PolicyService.updatePolicy(req.body);
+      return res.status(200).json({
+        message: "Policy updated successfully",
+        kpi,
+      });
     } catch (error: any) {
       console.error("Register error:", error);
       return res.status(400).json({ message: error.message || "Bad request" });

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { adminOnly } from "../middleware/role.middleware";
+import { adminOnly } from "../middleware/permission.middleware";
 
 
 const router = Router();

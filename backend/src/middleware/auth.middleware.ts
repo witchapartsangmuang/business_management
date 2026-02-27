@@ -1,15 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { AccessTokenPayload, AuthRequest } from "../types/backend-types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "DEV_SECRET_CHANGE_ME";
 
-export interface AuthRequest extends Request {
-  user?: { userId: number; role: string };
-}
+// export interface AuthRequest extends Request {
+//   user?: AccessTokenPayload;
+// }
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    // const token = req.cookies.auth_token; 
+    // const token = req.cookies.auth_token;
     // ดึง token จาก Header
     const authHeader = req.headers.authorization;
 
@@ -20,15 +21,12 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     const token = authHeader.split(" ")[1];
 
     // ตรวจ token
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      userId: number;
-      role: string;
-    };
+    const decoded = jwt.verify(token, JWT_SECRET) as AccessTokenPayload;
 
     // attach user เข้า req
     req.user = {
-      userId: decoded.userId,
-      role: decoded.role,
+      id: decoded.id,
+      email: decoded.email,
     };
 
     next();

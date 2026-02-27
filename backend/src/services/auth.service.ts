@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { db } from "../db";
 import { Employee } from "../types/types";
+import { AccessTokenPayload } from "../types/backend-types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "BMJWTSUPERSECRETKEY";
 function unpackPassword(employee: Employee) {
@@ -65,16 +66,13 @@ export class AuthService {
 		const permission = await db.query(`SELECT * FROM permission WHERE permission_for = $1 LIMIT 1;`, [employee_info.id])
 		const permissionInfo = permission.rows[0];
 		// สร้าง JWT
-		const token = jwt.sign(
-			{
-				employee: userInfo,
-				permission: permissionInfo,
-			},
-			JWT_SECRET,
-			{ expiresIn: "1h" }
-		);
+		const payload: AccessTokenPayload = {
+			id: employee_info.id,
+			email: employee_info.email
+		};
+		const access_token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 		return {
-			token,
+			access_token,
 			employee: userInfo,
 			permission: permissionInfo,
 		};

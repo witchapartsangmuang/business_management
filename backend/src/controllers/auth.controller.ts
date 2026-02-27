@@ -19,7 +19,7 @@ export class AuthController {
 	static async login(req: Request, res: Response) {
 		try {
 			const result = await AuthService.login(req.body);
-			res.cookie("auth_token", result.token, {
+			res.cookie("access_token", result.access_token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production", // true บน https
 				sameSite: "strict",

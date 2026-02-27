@@ -1,13 +1,14 @@
 
 
 export type SelectProps = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue"> & {
+    rowKey?: string;
     optionList: { value: string, label: string }[];
     defaultSelectedValue?: string;
     error?: boolean;
     // onChange: (value: string | null) => void
 }
 
-export default function Select({ id, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SelectProps) {
+export default function Select({ rowKey, id, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SelectProps) {
 
     const hasEmptyOption = optionList.some(opt => opt.value === "");
     const shouldShowPlaceholder = !defaultSelectedValue && !hasEmptyOption;
@@ -29,9 +30,9 @@ export default function Select({ id, optionList, defaultSelectedValue, error, on
             {...props}
         >
             {shouldShowPlaceholder && <option value="">--</option>}
-            {optionList.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                    {opt.label}
+            {optionList.map((option, index) => (
+                <option key={`${rowKey}-${index}-${option.label}-${option.value}`} value={option.value}>
+                    {option.label}
                 </option>
             ))}
         </select>

@@ -31,11 +31,9 @@ export function TrHead({ className, ...prop }: TrProps) {
         <tr className={`${className || ''}`} {...prop} />
     )
 }
-export function Th({ children, className, sticky }: { children: React.ReactNode, className?: string, sticky?: 'left' | 'right' }) {
+export function Th({ children, className, sticky, ...prop }: { children: React.ReactNode, className?: string, sticky?: 'left' | 'right' } & ThProps) {
     return (
-        <th className={`${className || 'p-3 text-sm font-semibold text-gray-700 border-b bg-white border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`}>
-            {children}
-        </th>
+        <th className={`${className || 'p-3 text-sm font-semibold text-gray-700 border-b bg-white border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`} {...prop} />
     )
 }
 export function Tbody({ children, className, ...prop }: TbodyProps) {
@@ -48,9 +46,9 @@ export function TrBody({ className, ...prop }: TrProps) {
         <tr className={`${className || 'px-4 py-2 text-sm text-gray-800 border-b border-gray-100 hover:bg-gray-100'}`} {...prop} />
     )
 }
-export function Td({ children, className, sticky }: { children: React.ReactNode, className?: string, sticky?: 'left' | 'right' }) {
+export function Td({ children, className, sticky, ...prop}: { children: React.ReactNode, className?: string, sticky?: 'left' | 'right' } & TdProps) {
     return (
-        <td className={`${className || 'p-3 text-sm border-b border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`}>
+        <td className={`${className || 'p-3 text-sm border-b border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`} {...prop}>
             {children}
         </td>
     )

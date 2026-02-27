@@ -1,4 +1,36 @@
 import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
+
+type KpiAlignmentData = {
+    policy_id: number;
+    policy_code: string;
+    policy_name: string;
+    operation: string;
+    calculate_type: string;
+    kpi_target: number;
+    kpi_actual: number;
+    kpi_unit: string;
+    kpi_id: number;
+    kpi_code: string;
+    kpi_name: string;
+    project_id: number;
+    project_code: string;
+    project_name: string;
+    project_kpi_target: number;
+    project_kpi_actual: number;
+    stage: string;
+    grade: string;
+    project_leader:number;
+    first_name: string;
+    last_name: string;
+}
+const ProjectData: KpiAlignmentData[] = [
+
+];
+
+const mdPolicy = [
+    
+]
+
 export default function Page() {
     return (
         <div className="bg-white rounded min-h-[calc(100vh-5rem)]">
@@ -6,9 +38,19 @@ export default function Page() {
                 <Table>
                     <Thead>
                         <TrHead>
-                            <Th>Objective</Th>
-                            <Th>Key Result</Th>
-                            <Th>Progress</Th>
+                            <Th>MD Policy</Th>
+                            <Th>KPI</Th>
+                            <Th>Unit</Th>
+                            <Th>Plan</Th>
+                            <Th>Actual</Th>
+                            <Th>Project Leader</Th>
+                            <Th>Project Code</Th>
+                            <Th>Project Name</Th>
+                            <Th>KPI</Th>
+                            <Th>Plan</Th>
+                            <Th>Actual</Th>
+                            <Th>Status</Th>
+                            <Th>Grade</Th>
                         </TrHead>
                     </Thead>
                     <Tbody>

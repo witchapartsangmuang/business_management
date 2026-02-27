@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 
 type Option = { value: string; label: string };
 export type SearchSelectProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "defaultValue"> & {
+    rowKey?: string;
     optionList: Option[];
     defaultSelectedValue: string | null;
     error?: boolean;
     onChange: (value: string | null) => void
 }
 
-export default function SearchSelect({ id, placeholder, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SearchSelectProps) {
+export default function SearchSelect({ rowKey, id, placeholder, optionList, defaultSelectedValue, error, onChange, onFocus, ...props }: SearchSelectProps) {
     const [query, setQuery] = useState("")
     const [openDropdownList, setOpenDropdownList] = useState(false)
     const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
@@ -79,7 +80,7 @@ export default function SearchSelect({ id, placeholder, optionList, defaultSelec
                     <ul className="max-h-48 overflow-auto">
                         {filteredOptions.map((option, index) => (
                             <li
-                                key={`${index}-${option.label}-${option.value}`}
+                                key={`${rowKey}-${index}-${option.label}-${option.value}`}
                                 className="px-4 py-2 hover:bg-blue-100 cursor-pointer whitespace-normal wrap-break-word"
                                 onMouseDown={(e) => {
                                     e.preventDefault()

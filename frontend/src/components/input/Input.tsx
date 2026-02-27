@@ -13,6 +13,7 @@ export default function Input({ id, error, className, placeholder, value, onChan
             placeholder={placeholder}
             readOnly={props.readOnly}
             disabled={props.disabled}
+            {...props}
             className={`
                 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm
                 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 

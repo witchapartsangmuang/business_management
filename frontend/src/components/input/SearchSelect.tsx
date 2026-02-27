@@ -64,6 +64,7 @@ export default function SearchSelect({ id, placeholder, optionList, defaultSelec
                 onFocus={onFocus}
                 onBlur={handleBlur}
                 placeholder={placeholder}
+                {...props}
                 className={`
                     block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm
                     placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 

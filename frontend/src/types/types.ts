@@ -80,7 +80,7 @@ export type KpiMaster = {
     kpi_code: string;
     kpi_name: string;
     description: string | null;
-    unit: string;
+    kpi_unit: string;
     is_active: boolean;
 }
 
@@ -118,12 +118,27 @@ export type ProjectInfo = {
     grade_reason: string
 }
 
-export type Md_Policy = {
-    id: number,
-    policy_code: string,
-    policy_name: string,
-    year_target: number
+export type MdPolicy = {
+    id: null | number,
+    year_target: number,
+    policy_id: null | number,
+    is_active: boolean,
+    is_deleted: boolean,
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
 }
+
+export type MdPolicyKpi = {
+    id: null | number;
+    kpi_id: null | number;
+    kpi_target: null | number;
+    policy_id: null | number;
+    is_deleted: boolean;
+}
+
+
 export type Kpi = {
     id: number,
     kpi_code: string,

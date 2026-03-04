@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 type Option = { value: string; label: string };
 export type SearchSelectProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "defaultValue"> & {
-    rowKey?: string;
+    rowKey: string;
     optionList: Option[];
     defaultSelectedValue: string | null;
     error?: boolean;

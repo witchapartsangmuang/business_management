@@ -2,7 +2,7 @@
 import IconPencil from "@/components/icons/icon-pen";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import { useEffect, useState } from "react";
-import { useParams, notFound, redirect } from "next/navigation";
+import { useParams, notFound,useRouter,redirect } from "next/navigation";
 import { Employee, Permission } from "@/types/types";
 import SearchSelect from "@/components/input/SearchSelect";
 import { EmployeeService } from "@/features/services/employee";
@@ -11,7 +11,6 @@ import { BackendDuplicateError, isApiError, ValidateEmployeeError } from "@/type
 import Modal from "@/components/Modal";
 import Label from "@/components/input/Label";
 
-import { useRouter } from 'next/navigation'
 import Input from "@/components/input/Input";
 import TextArea from "@/components/input/Textarea";
 

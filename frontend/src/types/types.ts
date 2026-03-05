@@ -156,3 +156,13 @@ export type Employee_Project = {
     is_project_approver: boolean,
     is_project_member: boolean,
 }
+
+export type MonthObj = {
+    [key: string]: any;
+    id: number,
+    project_no: string,
+    month: string,
+    plan: number,
+    actual: number,
+    status: "draft" | "in_progress" | "revise"
+}

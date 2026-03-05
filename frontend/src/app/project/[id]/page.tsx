@@ -1,15 +1,27 @@
 'use client'
 import SearchSelect from "@/components/input/SearchSelect";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, act } from "react";
 
-import { Md_Policy, Kpi, Employee_Project, ProjectInfo } from "@/types/types";
+import { MdPolicy, Kpi, Employee_Project, ProjectInfo, MonthObj } from "@/types/types";
 import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
 import Label from "@/components/input/Label";
 import Input from "@/components/input/Input";
 import Select from "@/components/input/Select";
 
+const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+
+const monthObjList: MonthObj[] = [
+	{
+		id: 0,
+		project_no: "PRJ001",
+		month: "2025-02",
+		plan: 0,
+		actual: 0,
+		status: "draft"
+	}
+]
 // Start Data List For Select
-const md_policy_list: Md_Policy[] = [
+const md_policy_list: MdPolicy[] = [
 	{ id: 1, policy_code: 'SD&SG', policy_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026 },
 	{ id: 2, policy_code: 'PRM', policy_name: 'Performance & Result-Oriented Management Policy', year_target: 2026 },
 	{ id: 3, policy_code: 'PLS', policy_name: 'People, Leadership & Successor Development Policy', year_target: 2026 },
@@ -238,6 +250,9 @@ export default function ProjectPage() {
 				<div className="grid grid-cols-12">
 					{tabOpen === 0 &&
 						<>
+							<div className="col-span-12 mt-3 px-3">
+								<p className="text-2xl">Project Information</p>
+							</div>
 							<div className="col-span-6 mt-3 px-3">
 								<Label title="Project No." htmlFor="id" />
 								<Input id="id" value={projectInfo.project_id} readOnly />
@@ -385,6 +400,9 @@ export default function ProjectPage() {
 
 					{tabOpen === 1 &&
 						<>
+							<div className="col-span-12 mt-3 px-3">
+								<p className="text-2xl">Financial Impact</p>
+							</div>
 							<div className="col-span-3 mt-3 px-3">
 								<Label title="Est. Investment" htmlFor="est_investment" />
 								<Input
@@ -823,7 +841,71 @@ export default function ProjectPage() {
 					}
 				</div>
 			</div>
-
+			<div className="grid grid-cols-12">
+				<div className="col-span-12 mt-3 px-3">
+					<p className="text-2xl">Investment</p>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="Current Est. Investment" htmlFor="est_investment" />
+					<Input
+						type="text"
+						id="est_investment"
+						value={projectInfo.est_investment || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, est_investment: e.target.value })}
+					/>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="New Est. Investment" htmlFor="est_investment_rev" />
+					<Input
+						type="text"
+						id="est_investment_rev"
+						value={projectInfo.est_investment_rev || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, est_investment_rev: e.target.value })}
+					/>
+				</div>
+				<div className="col-span-12 mt-3 px-3">
+					<p className="text-2xl">Gross Earnings</p>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="Current Gross Earnings" htmlFor="gross_earnings" />
+					<Input
+						type="text"
+						id="gross_earnings"
+						value={projectInfo.gross_earnings || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, gross_earnings: e.target.value })}
+					/>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="New Gross Earnings" htmlFor="gross_earnings_rev" />
+					<Input
+						type="text"
+						id="gross_earnings_rev"
+						value={projectInfo.gross_earnings_rev || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, gross_earnings_rev: e.target.value })}
+					/>
+				</div>
+				<div className="col-span-12 mt-3 px-3">
+					<p className="text-2xl">Project End Date</p>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="Current Project End Date" htmlFor="project_end_date" />
+					<Input
+						type="date"
+						id="project_end_date"
+						value={projectInfo.project_end_date || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, est_investment: e.target.value })}
+					/>
+				</div>
+				<div className="col-span-6 mt-3 px-3">
+					<Label title="New Project End Date" htmlFor="project_end_date_rev" />
+					<Input
+						type="date"
+						id="project_end_date_rev"
+						value={projectInfo.project_end_date_rev || ""}
+						onChange={(e) => setProjectInfo({ ...projectInfo, est_investment_rev: e.target.value })}
+					/>
+				</div>
+			</div>
 			<div className="flex justify-between rounded bg-white mt-2 p-2">
 				<div>
 					<button className="secondary-button">Back</button>

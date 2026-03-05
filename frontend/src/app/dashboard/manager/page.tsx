@@ -35,126 +35,79 @@ export default function ManagerDashboardPage() {
     }, [structureLevel, organizationUnit])
     return (
         <>
-            <p className="px-3 text-4xl">Manager Dashboard</p>
-            <div className="grid grid-cols-12">
-                <div className="col-span-6 mt-3 px-3">
-                    <Label title="Period From" htmlFor="Period From" require />
-                    <Select id="Period From" optionList={year} defaultSelectedValue={startYear} onChange={(e) => { setstartYear(e.target.value) }} />
-                </div>
-                <div className="col-span-6 mt-3 px-3">
-                    <Label title="Period To" htmlFor="Period To" require />
-                    <Select id="Period To" optionList={year} defaultSelectedValue={endYear} onChange={(e) => { setendYear(e.target.value) }} />
-                </div>
-                {structureLevel.map((org) => (
-                    <div key={`${org.level}-${org}`} className="col-span-2 mt-3 px-3">
-                        <Label title={org.org_level_name} htmlFor={org.org_level_name} require />
-                        <Select id={org.org_level_name} optionList={[{ label: org.org_level_name, value: org.org_level_name }]} defaultSelectedValue={org.org_level_name} onChange={(e) => { }} />
+            <div className="bg-white py-3">
+                <p className="px-3 text-4xl">Manager Dashboard</p>
+                <div className="grid grid-cols-12">
+                    <div className="col-span-12 mt-3 px-3">
+                        <Label title="Period From" htmlFor="Period From" require />
+                        <Select id="Period From" optionList={year} defaultSelectedValue={startYear} onChange={(e) => { setstartYear(e.target.value) }} />
                     </div>
-                ))}
-            </div>
-            <div className="grid grid-cols-12">
-                <div className="col-span-3 mt-3 px-3">
-                    <ChartCard>
-                        <StaticCard label="ROI (AVG)" value={320} unit="%" />
-                    </ChartCard>
-                </div>
-                <div className="col-span-3 mt-3 px-3">
-                    <ChartCard>
-                        <StaticCard label="ROI (AVG)" value={320} unit="%" />
-                    </ChartCard>
-                </div>
-                <div className="col-span-3 mt-3 px-3">
-                    <ChartCard>
-                        <StaticCard label="ROI (AVG)" value={320} unit="%" />
-                    </ChartCard>
-                </div>
-                <div className="col-span-3 mt-3 px-3">
-                    <ChartCard>
-                        <StaticCard label="ROI (AVG)" value={320} unit="%" />
-                    </ChartCard>
+                    {/* <div className="col-span-6 mt-3 px-3">
+                        <Label title="Period To" htmlFor="Period To" require />
+                        <Select id="Period To" optionList={year} defaultSelectedValue={endYear} onChange={(e) => { setendYear(e.target.value) }} />
+                    </div> */}
+                    {structureLevel.map((org) => (
+                        <div key={`${org.level}-${org}`} className="col-span-4 mt-3 px-3">
+                            <Label title={org.org_level_name} htmlFor={org.org_level_name} require />
+                            <Select id={org.org_level_name} optionList={[{ label: org.org_level_name, value: org.org_level_name }]} defaultSelectedValue={org.org_level_name} onChange={(e) => { }} />
+                        </div>
+                    ))}
                 </div>
             </div>
-            <div className="m-3 p-3 grid grid-cols-12 bg-white border border-[#D2D2D2] rounded">
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">Year</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>2025</option>
-                            <option>2024</option>
-                        </select>
+
+            <div className="bg-white mt-2 py-3">
+                <div className="grid grid-cols-12">
+                    <div className="col-span-3 mt-3 px-3">
+                        <ChartCard>
+                            <StaticCard label="ROI (AVG)" value={320} unit="%" />
+                        </ChartCard>
+                    </div>
+                    <div className="col-span-3 mt-3 px-3">
+                        <ChartCard>
+                            <StaticCard label="ROI (AVG)" value={320} unit="%" />
+                        </ChartCard>
+                    </div>
+                    <div className="col-span-3 mt-3 px-3">
+                        <ChartCard>
+                            <StaticCard label="ROI (AVG)" value={320} unit="%" />
+                        </ChartCard>
+                    </div>
+                    <div className="col-span-3 mt-3 px-3">
+                        <ChartCard>
+                            <StaticCard label="ROI (AVG)" value={320} unit="%" />
+                        </ChartCard>
                     </div>
                 </div>
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">MD Policy</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>Sale Revenue</option>
-                            <option>Cost Reduction</option>
-                        </select>
+                <div className="grid grid-cols-12">
+                    <div className="col-span-12 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
-                </div>
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">Business Unit</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>Business Unit</option>
-                        </select>
+                    <div className="col-span-6 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
-                </div>
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">Division</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>Division</option>
-                        </select>
+                    <div className="col-span-6 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
-                </div>
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">Department</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>Department</option>
-                        </select>
+                    <div className="col-span-4 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
-                </div>
-                <div className="col-span-2 mt-3 px-3">
-                    <div className="w-full mb-3">
-                        <label className="mb-2 inline-block" htmlFor="">Section</label>
-                        <select className="block w-full rounded border border-[#D2D2D2] leading-4 py-1.5">
-                            <option>Section</option>
-                        </select>
+                    <div className="col-span-4 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div className="grid grid-cols-12">
-                <div className="col-span-12 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
-                    </div>
-                </div>
-                <div className="col-span-6 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
-                    </div>
-                </div>
-                <div className="col-span-6 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
-                    </div>
-                </div>
-                <div className="col-span-4 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
-                    </div>
-                </div>
-                <div className="col-span-4 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
-                    </div>
-                </div>
-                <div className="col-span-4 px-3 mt-3">
-                    <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
-                        Graph
+                    <div className="col-span-4 px-3 mt-3">
+                        <div className="h-[450px] border border-[#D2D2D2] rounded p-3 bg-white shadow-lg">
+                            Graph
+                        </div>
                     </div>
                 </div>
             </div>

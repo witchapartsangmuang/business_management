@@ -14,17 +14,19 @@ export default function UserDashboardPage() {
     const [endYear, setendYear] = useState(String(new Date().getFullYear()))
     return (
         <>
+        <div className="bg-white py-3">
             <p className="px-3 text-4xl">User Dashboard</p>
             <div className="grid grid-cols-12">
-                <div className="col-span-6 mt-3 px-3">
+                <div className="col-span-12 mt-3 px-3">
                     <Label title="Period From" htmlFor="Period From" require />
                     <Select id="Period From" optionList={year} defaultSelectedValue={startYear} onChange={(e) => { setstartYear(e.target.value) }} />
                 </div>
-                <div className="col-span-6 mt-3 px-3">
+                {/* <div className="col-span-6 mt-3 px-3">
                     <Label title="Period To" htmlFor="Period To" require />
                     <Select id="Period To" optionList={year} defaultSelectedValue={endYear} onChange={(e) => { setendYear(e.target.value) }} />
-                </div>
+                </div> */}
             </div>
+        </div>
             <div className="grid grid-cols-12">
                 <div className="col-span-3 mt-3 px-3">
                     <ChartCard>

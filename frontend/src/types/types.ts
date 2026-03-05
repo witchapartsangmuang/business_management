@@ -67,12 +67,28 @@ export type Permission = {
     permission_for: null | number;
 }
 
-export type PolicyMaster = {
+export type StrategicMaster = {
     id: number | null;
-    policy_code: string;
-    policy_name: string;
+    strategic_code: string;
+    strategic_name: string;
     description: string | null
     is_active: boolean;
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
+}
+
+export type Strategic = {
+    id: null | number,
+    year_target: number,
+    strategic_master_id: null | number,
+    is_active: boolean,
+    is_deleted: boolean,
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
 }
 
 export type KpiMaster = {
@@ -97,7 +113,11 @@ export type OrganizationLevel = {
 export type ProjectInfo = {
     project_id: string,
     project_name: string,
-    md_policy: number | null,
+    strategic_alignment: number | null,
+    objective: string,
+    solution: string,
+    impact: string,
+    scope: string,
     project_leader: string,
     project_org: string,
     plan_start_date: string,
@@ -118,25 +138,8 @@ export type ProjectInfo = {
     grade_reason: string
 }
 
-export type MdPolicy = {
-    id: null | number,
-    year_target: number,
-    policy_id: null | number,
-    is_active: boolean,
-    is_deleted: boolean,
-    created_by: null | number;
-    created_datetime: null | string;
-    updated_by: null | number;
-    updated_datetime: null | string;
-}
 
-export type MdPolicyKpi = {
-    id: null | number;
-    kpi_id: null | number;
-    kpi_target: null | number;
-    policy_id: null | number;
-    is_deleted: boolean;
-}
+
 
 
 export type Kpi = {

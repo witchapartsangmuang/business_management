@@ -7,14 +7,14 @@ import ToggleSwitch from "@/components/input/ToggleSwitch";
 import { Table, TableWrapper, Tbody, Td, Th, Thead, TrBody, TrHead } from "@/components/table/Table";
 import { kpiMasterService } from "@/features/services/kpi-master";
 import { mdPolicyService } from "@/features/services/md-policy";
-import { policyMasterService } from "@/features/services/policy-master";
-import { KpiMaster, MdPolicy, PolicyMaster } from "@/types/types";
+import { StrategicMasterService } from "@/features/services/policy-master";
+import { KpiMaster, MdPolicy, StrategicMaster } from "@/types/types";
 import { useParams, notFound, useRouter, redirect } from "next/navigation"
 import React, { useEffect, useMemo, useState } from "react";
 export default function Page() {
     const router = useRouter()
     const params = useParams<{ id: string }>()
-    const [policyList, setpolicyList] = useState<PolicyMaster[]>([])
+    const [policyList, setpolicyList] = useState<StrategicMaster[]>([])
     const [kpiList, setkpiList] = useState<KpiMaster[]>([])
     const selectPolicyList: { label: string, value: string }[] = useMemo(() => {
         return policyList.map((policy) => ({
@@ -52,7 +52,7 @@ export default function Page() {
 
     async function fetctMasterData() {
         await Promise.all([
-            policyMasterService.readAll(),
+            StrategicMasterService.readAll(),
             kpiMasterService.readAll()
         ]).then(([policyRes, kpiRes]) => {
             setpolicyList(policyRes.policy);

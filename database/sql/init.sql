@@ -1,28 +1,54 @@
-CREATE TABLE IF NOT EXISTS policy (
+CREATE TABLE IF NOT EXISTS strategic_master (
 	id SERIAL PRIMARY KEY,
-	policy_code VARCHAR(100),
-	policy_name VARCHAR(100),
+	strategic_code VARCHAR(100),
+	strategic_name VARCHAR(100),
 	description VARCHAR(200),
 	is_active BOOLEAN,
+    is_deleted BOOLEAN,
 	created_by INT,
     created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS kpi (
+CREATE TABLE IF NOT EXISTS strategic_by_year (
+	id SERIAL PRIMARY KEY,
+	strategic_master_id INT,
+	year_target INT,
+	is_active BOOLEAN,
+    is_deleted BOOLEAN,
+    created_by INT,
+    created_datetime TIMESTAMP,
+	updated_by INT,
+    updated_datetime TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS kpi_master (
 	id SERIAL PRIMARY KEY,
 	kpi_code VARCHAR(100),
 	kpi_name VARCHAR(100),
 	unit VARCHAR(100),
 	description VARCHAR(200),
 	is_active BOOLEAN,
+    is_deleted BOOLEAN,
 	created_by INT,
     created_datetime TIMESTAMP,
 	updated_by INT,
     updated_datetime TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS strategic_by_year_kpi (
+	id SERIAL PRIMARY KEY,
+	strategic_by_year_id INT,
+	kpi_master_id INT,
+	target INT,
+	is_active BOOLEAN,
+    is_deleted BOOLEAN,
+    created_by INT,
+    created_datetime TIMESTAMP,
+	updated_by INT,
+    updated_datetime TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS organization_structure_level (
 	id SERIAL PRIMARY KEY,

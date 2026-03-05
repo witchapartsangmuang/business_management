@@ -1,7 +1,7 @@
 
 
 export type SelectProps = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue"> & {
-    rowKey?: string;
+    rowKey: string;
     optionList: { value: string, label: string }[];
     defaultSelectedValue?: string;
     error?: boolean;

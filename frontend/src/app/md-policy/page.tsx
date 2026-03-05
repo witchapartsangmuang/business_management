@@ -4,14 +4,14 @@ import { Table, TableWrapper, Tbody, Td, Th, Thead, TrBody, TrHead } from "@/com
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { Md_Policy } from "@/types/types";
+import { StrategicMaster, Strategic } from "@/types/types";
 import { mdPolicyService } from "@/features/services/md-policy";
 
 
 export default function Page() {
-    const [mdPolicyList, setMdPolicyList] = useState<Md_Policy[]>([]);
+    const [strategicList, setstrategicList] = useState<(Strategic & Pick<StrategicMaster, "strategic_code" | "strategic_name">)[]>([]);
     async function fetchData() {
-        await mdPolicyService.readAll().then((res) => setMdPolicyList(res.md_policy)).catch(() => (setMdPolicyList([])))
+        await mdPolicyService.readAll().then((res) => setstrategicList(res.md_policy)).catch(() => (setstrategicList([])))
     }
     useEffect(() => {
         fetchData();
@@ -30,21 +30,23 @@ export default function Page() {
                         <TrHead>
                             <Th>#</Th>
                             <Th>Year</Th>
-                            <Th>Policy Code</Th>
-                            <Th>Policy Name</Th>
-                            <Th>Policy Description</Th>
+                            <Th>Strategic Code</Th>
+                            <Th>Strategic Name</Th>
+                            <Th>strategic Description</Th>
                             <Th>Actions</Th>
                         </TrHead>
                     </Thead>
                     <Tbody>
-                        <TrBody>
-                            <Td>1</Td>
-                            <Td>2024</Td>
-                            <Td>POL-001</Td>
-                            <Td>Employee Handbook</Td>
-                            <Td>Defines company policies for all employees</Td>
-                            <Td>Edit | Delete</Td>
-                        </TrBody>
+                        {strategicList.map((strategic, index) => (
+                            <TrBody key={index}>
+                                <Td>{index + 1}</Td>
+                                <Td>{strategic.year_target}</Td>
+                                <Td>{strategic.strategic_code}</Td>
+                                <Td>{strategic.strategic_name}</Td>
+                                <Td>Defines company policies for all employees</Td>
+                                <Td>Edit | Delete</Td>
+                            </TrBody>
+                        ))}
                     </Tbody>
                 </Table>
             </TableWrapper>

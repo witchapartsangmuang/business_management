@@ -2,11 +2,12 @@
 import SearchSelect from "@/components/input/SearchSelect";
 import { useMemo, useState, useEffect, act } from "react";
 
-import { MdPolicy, Kpi, Employee_Project, ProjectInfo, MonthObj } from "@/types/types";
+import { Kpi, Employee_Project, ProjectInfo, MonthObj, Strategic, StrategicMaster } from "@/types/types";
 import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
 import Label from "@/components/input/Label";
 import Input from "@/components/input/Input";
 import Select from "@/components/input/Select";
+import Textarea from "@/components/input/Textarea";
 
 const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 
@@ -20,12 +21,14 @@ const monthObjList: MonthObj[] = [
 		status: "draft"
 	}
 ]
+
+
 // Start Data List For Select
-const md_policy_list: MdPolicy[] = [
-	{ id: 1, policy_code: 'SD&SG', policy_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026 },
-	{ id: 2, policy_code: 'PRM', policy_name: 'Performance & Result-Oriented Management Policy', year_target: 2026 },
-	{ id: 3, policy_code: 'PLS', policy_name: 'People, Leadership & Successor Development Policy', year_target: 2026 },
-	{ id: 4, policy_code: 'PE&CE', policy_name: 'Process Excellence & Cost Efficiency Policy', year_target: 2026 },
+const strategic_by_year_list: (Strategic & Pick<StrategicMaster, "strategic_code" | "strategic_name">)[] = [
+	{ id: 1, strategic_code: 'SD&SG', strategic_name: 'Strategic Direction & Sustainable Growth Policy', year_target: 2026, strategic_master_id: 1, is_active: true, is_deleted: false, created_by: null, created_datetime: null, updated_by: null, updated_datetime: null },
+	{ id: 2, strategic_code: 'PRM', strategic_name: 'Performance & Result-Oriented Management Policy', year_target: 2026, strategic_master_id: 2, is_active: true, is_deleted: false, created_by: null, created_datetime: null, updated_by: null, updated_datetime: null },
+	{ id: 3, strategic_code: 'PLS', strategic_name: 'People, Leadership & Successor Development Policy', year_target: 2026, strategic_master_id: 3, is_active: true, is_deleted: false, created_by: null, created_datetime: null, updated_by: null, updated_datetime: null },
+	{ id: 4, strategic_code: 'PE&CE', strategic_name: 'Process Excellence & Cost Efficiency Policy', year_target: 2026, strategic_master_id: 4, is_active: true, is_deleted: false, created_by: null, created_datetime: null, updated_by: null, updated_datetime: null },
 ]
 
 const kpi_list: Kpi[] = [
@@ -43,9 +46,9 @@ const employee_list: Employee_Project[] = [
 
 export default function ProjectPage() {
 	// ✅ UseMemo กัน option ซ้ำ + ไม่ต้อง setState จาก useEffect
-	const select_md_policy_list = useMemo(
+	const select_strategic_by_year_list = useMemo(
 		() =>
-			md_policy_list.map((md) => ({
+			strategic_by_year_list.map((md) => ({
 				value: String(md.id),
 				label: `${md.policy_code} - ${md.policy_name} (${md.year_target})`,
 			})),
@@ -53,8 +56,8 @@ export default function ProjectPage() {
 	);
 
 	const kpi_select_list = useMemo(() => {
-		// คง logic เดิมของคุณ: filter kpi ที่ md_number มีอยู่ใน md_policy_list
-		const mdIds = new Set(md_policy_list.map((m) => m.id));
+		// คง logic เดิมของคุณ: filter kpi ที่ md_number มีอยู่ใน strategic_by_year_list
+		const mdIds = new Set(strategic_by_year_list.map((m) => m.id));
 		return kpi_list
 			.filter((kpi) => mdIds.has(kpi.md_number))
 			.map((kpi) => ({
@@ -110,7 +113,11 @@ export default function ProjectPage() {
 	const [projectInfo, setProjectInfo] = useState<ProjectInfo>({
 		project_id: '',
 		project_name: '',
-		md_policy: 1,
+		strategic_alignment: 1,
+		objective: '',
+		solution: '',
+		impact: '',
+		scope: '',
 		project_leader: '',
 		project_org: '',
 		plan_start_date: '',
@@ -218,8 +225,8 @@ export default function ProjectPage() {
 
 	// (Optional) ยังเก็บ log ของคุณไว้ แต่ list จะไม่ซ้ำแล้ว
 	useEffect(() => {
-		console.log(select_md_policy_list, "select_md_policy_list");
-	}, [select_md_policy_list]);
+		console.log(select_strategic_by_year_list, "select_strategic_by_year_list");
+	}, [select_strategic_by_year_list]);
 
 	useEffect(() => {
 		console.log(select_project_leader_list, "select_project_leader_list");
@@ -257,9 +264,8 @@ export default function ProjectPage() {
 								<Label title="Project No." htmlFor="id" />
 								<Input id="id" value={projectInfo.project_id} readOnly />
 							</div>
-
 							<div className="col-span-6 mt-3 px-3">
-								<Label title="Project Name" htmlFor="project_name" />
+								<Label title="Project Name" htmlFor="project_name" require />
 								<Input
 									type="text"
 									id="project_name"
@@ -267,20 +273,20 @@ export default function ProjectPage() {
 									onChange={(e) => setProjectInfo({ ...projectInfo, project_name: e.target.value })}
 								/>
 							</div>
-
 							<div className="col-span-6 mt-3 px-3">
-								<Label title="MD Policy" htmlFor="md_policy" />
+								<Label title="Strategic Alignment" htmlFor="strategic_alignment" require />
 								<Select
-									id="md_policy"
-									optionList={select_md_policy_list}
-									defaultSelectedValue={String(projectInfo.md_policy)}
-									onChange={(value) => setProjectInfo({ ...projectInfo, md_policy: Number(value) })}
+									rowKey="strategic_alignment"
+									id="strategic_alignment"
+									optionList={select_strategic_by_year_list}
+									defaultSelectedValue={String(projectInfo.strategic_alignment)}
+									onChange={(value) => setProjectInfo({ ...projectInfo, strategic_alignment: Number(value) })}
 								/>
 							</div>
-
 							<div className="col-span-6 mt-3 px-3">
-								<Label title="Project Leader" htmlFor="project_leader" />
+								<Label title="Project Leader" htmlFor="project_leader" require />
 								<SearchSelect
+									rowKey="project_leader"
 									id="project_leader"
 									optionList={select_project_leader_list}
 									placeholder={'Select Project Leader'}
@@ -288,9 +294,8 @@ export default function ProjectPage() {
 									onChange={(value) => setProjectInfo({ ...projectInfo, project_leader: value !== null ? value : '' })}
 								/>
 							</div>
-
 							<div className="col-span-6 mt-3 px-3">
-								<Label title="Start Date" htmlFor="plan_start_date" />
+								<Label title="Start Date" htmlFor="plan_start_date" require />
 								<Input
 									id="plan_start_date"
 									type="date"
@@ -298,9 +303,8 @@ export default function ProjectPage() {
 									onChange={(e) => setProjectInfo({ ...projectInfo, plan_start_date: e.target.value })}
 								/>
 							</div>
-
 							<div className="col-span-6 mt-3 px-3">
-								<Label title="End Date" htmlFor="plan_end_date" />
+								<Label title="End Date" htmlFor="plan_end_date" require />
 								<Input
 									id="plan_end_date"
 									type="date"
@@ -308,7 +312,49 @@ export default function ProjectPage() {
 									onChange={(e) => setProjectInfo({ ...projectInfo, plan_end_date: e.target.value })}
 								/>
 							</div>
-
+							<div className="col-span-12 mt-3 px-3">
+								<p className="text-2xl">Initiative Definition</p>
+							</div>
+							<div className="col-span-6 mt-3 px-3">
+								<Label title="Problem / Opportunity" htmlFor="opportunity_statement" require />
+								<Textarea
+									id="opportunity_statement"
+									value={projectInfo.opportunity_statement}
+									onChange={(e) => setProjectInfo({ ...projectInfo, opportunity_statement: e.target.value })}
+								/>
+							</div>
+							<div className="col-span-6 mt-3 px-3">
+								<Label title="Objective" htmlFor="objective" require />
+								<Textarea
+									id="objective"
+									value={projectInfo.objective}
+									onChange={(e) => setProjectInfo({ ...projectInfo, objective: e.target.value })}
+								/>
+							</div>
+							<div className="col-span-6 mt-3 px-3">
+								<Label title="Solution" htmlFor="solution" require />
+								<Textarea
+									id="solution"
+									value={projectInfo.solution}
+									onChange={(e) => setProjectInfo({ ...projectInfo, solution: e.target.value })}
+								/>
+							</div>
+							<div className="col-span-6 mt-3 px-3">
+								<Label title="Impact" htmlFor="impact" require />
+								<Textarea
+									id="impact"
+									value={projectInfo.impact}
+									onChange={(e) => setProjectInfo({ ...projectInfo, impact: e.target.value })}
+								/>
+							</div>
+							<div className="col-span-6 mt-3 px-3">
+								<Label title="Scope" htmlFor="scope" require />
+								<Textarea
+									id="scope"
+									value={projectInfo.scope}
+									onChange={(e) => setProjectInfo({ ...projectInfo, scope: e.target.value })}
+								/>
+							</div>
 							<div className="col-span-12 mt-10 px-3">
 								<p className="font-bold">KPI (Key Peroformance Indicator)</p>
 							</div>
@@ -332,6 +378,7 @@ export default function ProjectPage() {
 													<Td>{projectKpi.sequence}</Td>
 													<Td>
 														<SearchSelect
+															rowKey="kpi_select_list"
 															optionList={kpi_select_list}
 															placeholder={'Select KPI'}
 															defaultSelectedValue={projectKpi.kpi_id ? String(projectKpi.kpi_id) : ""}
@@ -536,6 +583,7 @@ export default function ProjectPage() {
 							<div className="col-span-3 mt-3 px-3">
 								<label className="form-label" htmlFor="">Approver</label>
 								<SearchSelect
+									rowKey="select_project_approver_list"
 									optionList={select_project_approver_list}
 									placeholder={'Select Project Approver'}
 									defaultSelectedValue={projectInfo.project_approver}

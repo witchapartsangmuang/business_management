@@ -48,5 +48,20 @@ export const mdPolicyService = {
         } catch (err) {
             throwAxiosError(err);
         }
+    },
+    async update(id: number, data: Omit<MdPolicy, "id">): Promise<{ md_policy: MdPolicy }> {
+        try {
+            const res = await api.put<{ md_policy: MdPolicy }>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, data);
+            return res.data;
+        } catch (err) {
+            throwAxiosError(err);
+        }
+    },
+    async delete(id: number): Promise<void> {
+        try {
+            await api.delete(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`);
+        } catch (err) {
+            throwAxiosError(err);
+        }
     }
 }

@@ -32,5 +32,5 @@ export type ValidateEmployeeError = { [key: number | string]: FieldError } & Rec
 // Validate for Kpi Master
 export type ValidateKpiMasterError = { [key: number | string]: FieldError, kpi_code: FieldError, kpi_name: FieldError, unit: FieldError }
 // Validate for Policy Master
-export type ValidatePolicyMasterError = { [key: number | string]: FieldError, policy_code: FieldError, policy_name: FieldError }
+export type ValidateStrategicMasterError = { [key: number | string]: FieldError, strategic_code: FieldError, strategic_name: FieldError }
 // Validate for MD Policy

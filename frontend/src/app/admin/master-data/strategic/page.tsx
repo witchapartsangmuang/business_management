@@ -5,139 +5,182 @@ import IconList from "@/components/icons/icon-list";
 import IconPlus from "@/components/icons/icon-plus";
 import IconSearch from "@/components/icons/icon-search";
 import IconShare from "@/components/icons/icon-share";
-import { PolicyMaster } from "@/types/types";
-import { policyMasterService } from "@/features/services/policy-master";
+import { StrategicMaster } from "@/types/types";
+import { StrategicMasterService } from "@/features/services/policy-master";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ToggleSwitch from "@/components/input/ToggleSwitch";
 import IconPencil from "@/components/icons/icon-pen";
-import { ValidatePolicyMasterError } from "@/types/validate-types";
+import { ValidateStrategicMasterError } from "@/types/validate-types";
 import Input from "@/components/input/Input";
 import Label from "@/components/input/Label";
 
-const defPolicy = [
+const defPolicy: StrategicMaster[] = [
     {
         id: 1,
-        policy_code: "SD&SG",
-        policy_name: "Strategic Direction & Sustainable Growth Policy",
+        strategic_code: "SD&SG",
+        strategic_name: "Strategic Direction & Sustainable Growth Policy",
         description: "นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 2,
-        policy_code: "PRM",
-        policy_name: "Performance & Result-Oriented Management Policy",
+        strategic_code: "PRM",
+        strategic_name: "Performance & Result-Oriented Management Policy",
         description: "นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 3,
-        policy_code: "PLS",
-        policy_name: "People, Leadership & Successor Development Policy",
+        strategic_code: "PLS",
+        strategic_name: "People, Leadership & Successor Development Policy",
         description: "นโยบายบุคลากรและผู้นำ",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 4,
-        policy_code: "PE&CE",
-        policy_name: "Process Excellence & Cost Efficiency Policy",
+        strategic_code: "PE&CE",
+        strategic_name: "Process Excellence & Cost Efficiency Policy",
         description: "นโยบายการพัฒนากระบวนการและต้นทุน",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 5,
-        policy_code: "DT&TE",
-        policy_name: "Digital Transformation & Technology Enablement Policy",
+        strategic_code: "DT&TE",
+        strategic_name: "Digital Transformation & Technology Enablement Policy",
         description: "นโยบายดิจิทัลและเทคโนโลยี",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 6,
-        policy_code: "GRC",
-        policy_name: "Governance, Risk & Compliance Policy",
+        strategic_code: "GRC",
+        strategic_name: "Governance, Risk & Compliance Policy",
         description: "นโยบายธรรมาภิบาลและการกำกับดูแล",
         is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 7,
-        policy_code: "CSV",
-        policy_name: "Customer & Stakeholder Value Policy",
+        strategic_code: "CSV",
+        strategic_name: "Customer & Stakeholder Value Policy",
         description: "นโยบายคุณค่าลูกค้าและผู้มีส่วนได้ส่วนเสีย",
         is_active: false,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
     {
         id: 8,
-        policy_code: "EDA",
-        policy_name: "Execution Discipline & Accountability Policy",
+        strategic_code: "EDA",
+        strategic_name: "Execution Discipline & Accountability Policy",
         description: "นโยบายวินัยการปฏิบัติและความรับผิดชอบ",
         is_active: false,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     },
 ]
 export default function PolicyPage() {
     const [category, setCategory] = useState("All");
     const [isPolicyInfoModalOpen, setIsPolicyInfoModalOpen] = useState(false);
-    const [policyList, setPolicyList] = useState<PolicyMaster[]>([]);
-    const [policyInfo, setPolicyInfo] = useState<PolicyMaster>({
+    const [policyList, setPolicyList] = useState<StrategicMaster[]>([]);
+    const [policyInfo, setPolicyInfo] = useState<StrategicMaster>({
         id: null,
-        policy_code: '',
-        policy_name: '',
-        description: '',
-        is_active: true
+        strategic_code: 'string',
+        strategic_name: 'string',
+        description: null,
+        is_active: true,
+        created_by: null,
+        created_datetime: null,
+        updated_by: null,
+        updated_datetime: null
     });
-    const [validateFieldError, setvalidateFieldError] = useState<ValidatePolicyMasterError>({
-        policy_code: {
+    const [validateFieldError, setvalidateFieldError] = useState<ValidateStrategicMasterError>({
+        strategic_code: {
             valid_status: true,
             errorText: ''
         },
-        policy_name: {
+        strategic_name: {
             valid_status: true,
             errorText: ''
         }
     })
-
-
-
-    const submitPolicyInfo = (event: React.FormEvent) => {
+    function submitPolicyInfo(event: React.FormEvent) {
         event.preventDefault();
         console.log("Submitted Policy Info:", policyInfo)
         setPolicyInfo({
             id: null,
-            policy_code: '',
-            policy_name: '',
-            description: '',
-            is_active: true
+            strategic_code: 'string',
+            strategic_name: 'string',
+            description: null,
+            is_active: true,
+            created_by: null,
+            created_datetime: null,
+            updated_by: null,
+            updated_datetime: null
         })
         setIsPolicyInfoModalOpen(false);
     }
 
-    const openPolicyInfoModal = (policyInfo: PolicyMaster | null) => {
+    function openPolicyInfoModal(policyInfo: StrategicMaster | null) {
         if (policyInfo) {
             setPolicyInfo(policyInfo);
         } else {
             setPolicyInfo({
                 id: null,
-                policy_code: '',
-                policy_name: '',
+                strategic_code: '',
+                strategic_name: '',
                 description: '',
-                is_active: true
+                is_active: true,
+                created_by: null,
+                created_datetime: null,
+                updated_by: null,
+                updated_datetime: null
             })
         }
         setIsPolicyInfoModalOpen(true);
     };
-
-    const closePolicyInfoModal = () => {
+    function closePolicyInfoModal() {
         setIsPolicyInfoModalOpen(false);
         setPolicyInfo({
             id: null,
-            policy_code: '',
-            policy_name: '',
+            strategic_code: '',
+            strategic_name: '',
             description: '',
-            is_active: true
+            is_active: true,
+            created_by: null,
+            created_datetime: null,
+            updated_by: null,
+            updated_datetime: null
         })
     };
-
     async function GetAllPolicyList() {
-        await policyMasterService.readAll().then((res) => setPolicyList(res.policy)).catch(() => (setPolicyList([])))
+        await StrategicMasterService.readAll().then((res) => setPolicyList(res.policy)).catch(() => (setPolicyList([])))
     }
     useEffect(() => {
         GetAllPolicyList()
@@ -205,8 +248,8 @@ export default function PolicyPage() {
                             policyList.map((policy, index) => (
                                 <tr key={policy.id}>
                                     <td>{index + 1}.</td>
-                                    <td>{policy.policy_code}</td>
-                                    <td>{policy.policy_name}</td>
+                                    <td>{policy.strategic_code}</td>
+                                    <td>{policy.strategic_name}</td>
                                     <td>{policy.description}</td>
                                     <td>
                                         <div className="gap-1 flex">
@@ -215,33 +258,33 @@ export default function PolicyPage() {
                                     </td>
                                 </tr>
                             ))}
-                        {/* <tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr> */}
+                        {/* <tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr><tr><td>asd</td></tr> */}
                     </tbody>
                 </table>
             </div>
             <Modal onClose={closePolicyInfoModal} isOpen={isPolicyInfoModalOpen} title="Policy Master Information">
                 <form onSubmit={submitPolicyInfo} className="mt-4 space-y-3">
                     <div>
-                        <Label title="Code" htmlFor="policy_code" require />
+                        <Label title="Code" htmlFor="strategic_code" require />
                         <Input
                             type="text"
-                            id="policy_code"
-                            error={!validateFieldError.policy_code.valid_status}
-                            value={policyInfo.policy_code || ""}
-                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, policy_code: { valid_status: true, errorText: '' } }) }}
-                            onChange={(e) => setPolicyInfo({ ...policyInfo, policy_code: e.target.value })}
+                            id="strategic_code"
+                            error={!validateFieldError.strategic_code.valid_status}
+                            value={policyInfo.strategic_code || ""}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, strategic_code: { valid_status: true, errorText: '' } }) }}
+                            onChange={(e) => setPolicyInfo({ ...policyInfo, strategic_code: e.target.value })}
                         />
-                        {validateFieldError.policy_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.policy_code.errorText}</p>}
+                        {validateFieldError.strategic_code.errorText !== '' && <p className="pt-1 pl-1 whitespace-nowrap text-red-500">{validateFieldError.strategic_code.errorText}</p>}
                     </div>
                     <div>
-                        <Label title="Name" htmlFor="policy_name" require />
+                        <Label title="Name" htmlFor="strategic_name" require />
                         <Input
                             type="text"
-                            id="policy_name"
-                            error={!validateFieldError.policy_name.valid_status}
-                            value={policyInfo.policy_name}
-                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, policy_name: { valid_status: true, errorText: '' } }) }}
-                            onChange={(e) => setPolicyInfo({ ...policyInfo, policy_name: e.target.value })}
+                            id="strategic_name"
+                            error={!validateFieldError.strategic_name.valid_status}
+                            value={policyInfo.strategic_name}
+                            onFocus={() => { setvalidateFieldError({ ...validateFieldError, strategic_name: { valid_status: true, errorText: '' } }) }}
+                            onChange={(e) => setPolicyInfo({ ...policyInfo, strategic_name: e.target.value })}
                         />
                     </div>
                     <div>

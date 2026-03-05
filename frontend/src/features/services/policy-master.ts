@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { PolicyMaster } from "@/types/master-data";
+import { StrategicMaster } from "@/types/master-data";
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
     timeout: 15000,
@@ -20,28 +20,28 @@ function throwAxiosError(err: unknown): never {
 }
 
 
-export const policyMasterService = {
-    async readAll(): Promise<{ policy: PolicyMaster[] }> {
+export const StrategicMasterService = {
+    async readAll(): Promise<{ policy: StrategicMaster[] }> {
         try {
             console.log("res");
             
-            const res = await api.get<{ policy: PolicyMaster[] }>(KPI_ENDPOINT);
+            const res = await api.get<{ policy: StrategicMaster[] }>(KPI_ENDPOINT);
             return res.data;
         } catch (err) {
             throwAxiosError(err);
         }
     },
-    async create(payload: PolicyMaster): Promise<PolicyMaster> {
+    async create(payload: StrategicMaster): Promise<StrategicMaster> {
         try {
-            const res = await api.post<PolicyMaster>(KPI_ENDPOINT, payload);
+            const res = await api.post<StrategicMaster>(KPI_ENDPOINT, payload);
             return res.data;
         } catch (err) {
             throwAxiosError(err);
         }
     },
-    async update(id: string, payload: Partial<Omit<PolicyMaster, "id">>): Promise<PolicyMaster> {
+    async update(id: string, payload: Partial<Omit<StrategicMaster, "id">>): Promise<StrategicMaster> {
         try {
-            const res = await api.put<PolicyMaster>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
+            const res = await api.put<StrategicMaster>(`${KPI_ENDPOINT}/${encodeURIComponent(id)}`, payload);
             return res.data;
         } catch (err) {
             throwAxiosError(err);

@@ -1,5 +1,5 @@
 
-INSERT INTO policy (policy_code, policy_name, description, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
+INSERT INTO strategic_master (strategic_code, strategic_name, description, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
 ('SD&SG', 'Strategic Direction & Sustainable Growth Policy', 'นโยบายทิศทางกลยุทธ์และการเติบโตอย่างยั่งยืน', TRUE, null, null, null, null),
 ('PRM', 'Performance & Result-Oriented Management Policy', 'นโยบายการบริหารจัดการที่มุ่งเน้นผลงาน', TRUE, null, null, null, null),
 ('PLS', 'People, Leadership & Successor Development Policy', 'นโยบายบุคลากรและผู้นำ', TRUE, null, null, null, null),
@@ -10,7 +10,7 @@ INSERT INTO policy (policy_code, policy_name, description, is_active, created_by
 ('EDA', 'Execution Discipline & Accountability Policy', 'นโยบายวินัยการปฏิบัติและความรับผิดชอบ', FALSE, null, null, null, null);
 
 
-INSERT INTO kpi (kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
+INSERT INTO kpi_master (kpi_code, kpi_name, description, unit, is_active, created_by, created_datetime, updated_by, updated_datetime) VALUES
 ('SOAR', 'Strategic Objective Achievement Rate', '%', 'สัดส่วนเป้าหมายเชิงกลยุทธ์ที่บรรลุตามแผนประจำปี', FALSE, null, null, null, null),
 ('CKAAI', 'Corporate KPI Achievement Index', '%', 'คะแนนเฉลี่ยการบรรลุ KPI ระดับองค์กร', TRUE, null, null, null, null),
 ('KPIC', 'Key Position Successor Coverage', '%', 'ตำแหน่งสำคัญที่มีผู้สืบทอดพร้อมใช้งาน', TRUE, null, null, null, null),

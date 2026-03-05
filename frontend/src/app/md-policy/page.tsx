@@ -6,13 +6,18 @@ import { useEffect, useState } from "react";
 
 import { StrategicMaster, Strategic } from "@/types/types";
 import { mdPolicyService } from "@/features/services/md-policy";
-
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
+    const router = useRouter()
     const [strategicList, setstrategicList] = useState<(Strategic & Pick<StrategicMaster, "strategic_code" | "strategic_name">)[]>([]);
     async function fetchData() {
         await mdPolicyService.readAll().then((res) => setstrategicList(res.md_policy)).catch(() => (setstrategicList([])))
     }
+    async function deleteStrategic(id: number) {
+        await mdPolicyService.delete(id).then(() => fetchData()).catch(() => (setstrategicList([])))
+    }
+
     useEffect(() => {
         fetchData();
     }, [])
@@ -32,7 +37,6 @@ export default function Page() {
                             <Th>Year</Th>
                             <Th>Strategic Code</Th>
                             <Th>Strategic Name</Th>
-                            <Th>strategic Description</Th>
                             <Th>Actions</Th>
                         </TrHead>
                     </Thead>
@@ -43,8 +47,14 @@ export default function Page() {
                                 <Td>{strategic.year_target}</Td>
                                 <Td>{strategic.strategic_code}</Td>
                                 <Td>{strategic.strategic_name}</Td>
-                                <Td>Defines company policies for all employees</Td>
-                                <Td>Edit | Delete</Td>
+                                <Td>
+                                    <button className="text-blue-600 hover:text-blue-800" onClick={() => router.push(`/md-policy/${strategic.id}`)}>
+                                        Edit
+                                    </button>
+                                    <button onClick={() => deleteStrategic(strategic.id!)} className="ml-2 text-red-600 hover:text-red-800">
+                                        Delete
+                                    </button>
+                                </Td>
                             </TrBody>
                         ))}
                     </Tbody>

@@ -2,7 +2,7 @@
 import SearchSelect from "@/components/input/SearchSelect";
 import { useMemo, useState, useEffect, act } from "react";
 
-import { Kpi, Employee_Project, ProjectInfo, MonthObj, Strategic, StrategicMaster } from "@/types/types";
+import { Kpi, Employee_Project, ProjectInfo, MonthObj, Strategic, StrategicMaster, ProjectActivity } from "@/types/types";
 import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
 import Label from "@/components/input/Label";
 import Input from "@/components/input/Input";
@@ -18,7 +18,12 @@ const monthObjList: MonthObj[] = [
 		month: "2025-02",
 		plan: 0,
 		actual: 0,
-		status: "draft"
+		status: "draft",
+		is_deleted: false,
+		created_by: null,
+		created_datetime: null,
+		updated_by: null,
+		updated_datetime: null
 	}
 ]
 
@@ -44,6 +49,46 @@ const employee_list: Employee_Project[] = [
 	{ id: 3, emp_code: 'EMP003', first_name: 'Sangya', last_name: 'Kanya', is_project_leader: true, is_project_approver: false, is_project_member: true },
 ]
 
+function parseUSDateToYearMonth(mmddyyyy) {
+	const [yyyy, mm, dd] = mmddyyyy.split("-").map(Number);
+	if (!mm || !dd || !yyyy) throw new Error("Invalid date format. Use MM/DD/YYYY");
+	return { y: yyyy, m: mm - 1 };
+}
+
+
+// Key for sorting: "YYYY-MM"
+function formatKey(y, m) {
+	const mm = String(m + 1).padStart(2, "0");
+	return `${y}-${mm}`;
+}
+function buildMonthRange(startDate, endDate) {
+	const s = parseUSDateToYearMonth(startDate);
+	const e = parseUSDateToYearMonth(endDate);
+
+	// Use first day of month UTC
+	const cur = new Date(Date.UTC(s.y, s.m, 1));
+	const end = new Date(Date.UTC(e.y, e.m, 1));
+
+	// if (cur > end) throw new Error("start_date must be <= end_date");
+
+	const result = [];
+
+	while (cur <= end) {
+		const y = cur.getUTCFullYear();
+		const m = cur.getUTCMonth();
+
+		result.push({
+			month: formatKey(y, m),   // "2025-02"
+			type: "Plan",                    // "Plan" (or "Actual")
+			project_no: null
+		});
+
+		// Move to next month
+		cur.setUTCMonth(cur.getUTCMonth() + 1);
+	}
+
+	return { result };
+}
 export default function ProjectPage() {
 	// ✅ UseMemo กัน option ซ้ำ + ไม่ต้อง setState จาก useEffect
 	const select_strategic_by_year_list = useMemo(
@@ -137,6 +182,32 @@ export default function ProjectPage() {
 		grade_quality: '',
 		grade_reason: ''
 	});
+
+	const [activityList, setactivityList] = useState<ProjectActivity[]>([
+		{
+			id: crypto.randomUUID(),
+			sequence: 1,
+			activity_name: '',
+			start_date: '',
+			end_date: '',
+			wegiht: 0,
+			project_id: '',
+			status: 'Not Started',
+			responsible_person: null,
+			activity_plan_month: []
+		}
+	])
+
+	function onClickInsertActivity(sequence: number) {
+		
+	}
+	useEffect(() => {
+		if (projectInfo.plan_start_date && projectInfo.plan_end_date) {
+			const { result } = buildMonthRange(projectInfo.plan_start_date, projectInfo.plan_end_date)
+			console.log(result);
+		}
+	}, [projectInfo.plan_start_date, projectInfo.plan_end_date]);
+
 
 	const [project_kpi_list, setproject_kpi_list] = useState<
 		{ id: number | null, sequence: number, kpi_id: number | null, target: number | null, plan: any[], actual: any[] }[]

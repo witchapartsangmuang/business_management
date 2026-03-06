@@ -80,11 +80,11 @@ export type StrategicMaster = {
 }
 
 export type Strategic = {
-    id: null | number,
-    year_target: number,
-    strategic_master_id: null | number,
-    is_active: boolean,
-    is_deleted: boolean,
+    id: null | number;
+    year_target: number;
+    strategic_master_id: null | number;
+    is_active: boolean;
+    is_deleted: boolean;
     created_by: null | number;
     created_datetime: null | string;
     updated_by: null | number;
@@ -111,30 +111,30 @@ export type OrganizationLevel = {
 }
 
 export type ProjectInfo = {
-    project_id: string,
-    project_name: string,
-    strategic_alignment: number | null,
-    objective: string,
-    solution: string,
-    impact: string,
-    scope: string,
-    project_leader: string,
-    project_org: string,
-    plan_start_date: string,
-    plan_end_date: string,
-    step: 'Registed' | 'Submitted' | 'On Going' | 'Revision' | 'Closure' | 'Completed' | 'Cancelled',
-    status: null | 'On Plan' | 'Potential Delay' | 'Delayed',
+    project_id: string;
+    project_name: string;
+    strategic_alignment: number | null;
+    objective: string;
+    solution: string;
+    impact: string;
+    scope: string;
+    project_leader: string;
+    project_org: string;
+    plan_start_date: string;
+    plan_end_date: string;
+    step: 'Registed' | 'Submitted' | 'On Going' | 'Revision' | 'Closure' | 'Completed' | 'Cancelled';
+    status: null | 'On Plan' | 'Potential Delay' | 'Delayed';
     // For Revise
-    end_date_rev: string,
-    opportunity_statement: string,
-    est_investment: number,
+    end_date_rev: string;
+    opportunity_statement: string;
+    est_investment: number;
     // For Revise
-    est_investment_rev: number,
-    est_gross_earnings: number,
-    payback_period_year: number,
-    return_on_investment: number,
-    project_approver: string,
-    grade_quality: string,
+    est_investment_rev: number;
+    est_gross_earnings: number;
+    payback_period_year: number;
+    return_on_investment: number;
+    project_approver: string;
+    grade_quality: string;
     grade_reason: string
 }
 
@@ -143,29 +143,47 @@ export type ProjectInfo = {
 
 
 export type Kpi = {
-    id: number,
-    kpi_code: string,
-    kpi_name: string,
-    unit: string,
+    id: number;
+    kpi_code: string;
+    kpi_name: string;
+    unit: string;
     md_number: number
 }
 
 export type Employee_Project = {
-    id: number,
-    emp_code: string,
-    first_name: string,
-    last_name: string,
-    is_project_leader: boolean,
-    is_project_approver: boolean,
-    is_project_member: boolean,
+    id: number;
+    emp_code: string;
+    first_name: string;
+    last_name: string;
+    is_project_leader: boolean;
+    is_project_approver: boolean;
+    is_project_member: boolean;
 }
 
-export type MonthObj = {
+export type ProjectActivity = {
     [key: string]: any;
-    id: number,
-    project_no: string,
-    month: string,
-    plan: number,
-    actual: number,
-    status: "draft" | "in_progress" | "revise"
+    id: string | number;
+    sequence: number;
+    activity_name: string;
+    start_date: string;
+    end_date: string;
+    wegiht: number;
+    project_id: string;
+    status: 'Not Started' | 'In Progress' | 'Completed';
+    responsible_person: null | number;
+}
+export type ActivityByMonth = {
+    [key: string]: any;
+    id: number;
+    project_id: string;
+    project_activity_id: string | number;
+    month: string;
+    plan: number;
+    actual: number;
+    status: "draft" | "in_progress" | "revise";
+    is_deleted: boolean;
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
 }

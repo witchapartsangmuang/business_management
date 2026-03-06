@@ -6,23 +6,23 @@ type TrProps = React.ComponentProps<"tr">
 type ThProps = React.ComponentProps<"th">
 type TdProps = React.ComponentProps<"td">
 
-export function TableWrapper({ className, overflow, ...prop }: TableWrapperProps & { overflow?: boolean }) {
+export function TableWrapper({ className = "w-full", overflow, ...prop }: TableWrapperProps & { overflow?: boolean }) {
     return (
-        <div className={`${className || 'w-full'} ${(overflow && 'overflow-auto') || ""}`.trim()}>
+        <div className={`${className} ${(overflow && 'overflow-auto') || ""}`.trim()} {...prop}>
             {prop.children}
         </div>
     )
 }
-export function Table({ className, ...prop }: TableProps) {
+export function Table({ className = "w-full border-collapse", ...prop }: TableProps) {
     return (
-        <table className={`w-full border-collapse ${className ?? ""}`} {...prop}>
+        <table className={className} {...prop}>
             {prop.children}
         </table>
     );
 }
-export function Thead({ className, ...prop }: TheadProps) {
+export function Thead({ className = "bg-gray-50", ...prop }: TheadProps) {
     return (
-        <thead className={`${className || 'bg-gray-50'}`} {...prop}>
+        <thead className={className} {...prop}>
             {prop.children}
         </thead>
 

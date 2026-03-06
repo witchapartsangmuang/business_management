@@ -2,7 +2,7 @@
 import SearchSelect from "@/components/input/SearchSelect";
 import { useMemo, useState, useEffect, act } from "react";
 
-import { Kpi, Employee_Project, ProjectInfo, MonthObj, Strategic, StrategicMaster, ProjectActivity } from "@/types/types";
+import { Kpi, Employee_Project, ProjectInfo, Strategic, StrategicMaster, ProjectActivity } from "@/types/types";
 import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
 import Label from "@/components/input/Label";
 import Input from "@/components/input/Input";

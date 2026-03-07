@@ -135,7 +135,15 @@ export type ProjectInfo = {
     return_on_investment: number;
     project_approver: string;
     grade_quality: string;
-    grade_reason: string
+    grade_reason: string;
+
+    actual_start_date: string;
+    actual_end_date: string;
+
+    created_by: null | number;
+    created_datetime: null | string;
+    updated_by: null | number;
+    updated_datetime: null | string;
 }
 
 
@@ -162,20 +170,24 @@ export type Employee_Project = {
 
 export type ProjectActivity = {
     [key: string]: any;
-    id: string | number;
+    id: string;
     sequence: number;
     activity_name: string;
+    responsible_person: null | number;
     start_date: string;
     end_date: string;
-    wegiht: number;
-    project_id: string;
+    weight: number;
+    progress: number;
+    project_id: null | number;
     status: 'Not Started' | 'In Progress' | 'Completed';
-    responsible_person: null | number;
+    is_deleted: boolean;
+    plan: { [month: string]: number };
+    actual: { [month: string]: number };
 }
 export type ActivityByMonth = {
     [key: string]: any;
     id: number;
-    project_id: string;
+    project_id: null | number;
     project_activity_id: string | number;
     month: string;
     plan: number;

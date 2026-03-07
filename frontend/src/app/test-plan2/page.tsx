@@ -256,7 +256,7 @@ export default function Page() {
                         <div className="flex items-center gap-1">
                           <span className="text-xs text-gray-600 w-4">P</span>
                           <input
-                            type="number"
+                            type="text"
                             className={`w-full border rounded-md px-2 py-1 ${enabled ? 'bg-white' : 'bg-gray-100 text-gray-400'}`}
                             disabled={!enabled}
                             value={r.plan[key] ?? ''}
@@ -289,7 +289,7 @@ export default function Page() {
                         <div className="flex items-center gap-1">
                           <span className="text-xs text-gray-600 w-4">A</span>
                           <input
-                            type="number"
+                            type="text"
                             className={`w-full border rounded-md px-2 py-1 ${disabledStyle}`}
                             disabled={!enabled}
                             value={r.actual[key] ?? ''}

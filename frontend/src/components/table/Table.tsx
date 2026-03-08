@@ -5,6 +5,7 @@ type TbodyProps = React.ComponentProps<"tbody">
 type TrProps = React.ComponentProps<"tr">
 type ThProps = React.ComponentProps<"th">
 type TdProps = React.ComponentProps<"td">
+type TfootProps = React.ComponentProps<"tfoot">
 
 export function TableWrapper({ className = "w-full", overflow, ...prop }: TableWrapperProps & { overflow?: boolean }) {
     return (
@@ -28,16 +29,16 @@ export function Thead({ className = "bg-gray-50", ...prop }: TheadProps) {
 
     )
 }
-export function TrHead({ className, ...prop }: TrProps) {
+export function TrHead({ className = "p-1 text-sm font-semibold text-gray-700 border-b bg-white border-gray-200 whitespace-nowrap", ...prop }: TrProps) {
     return (
-        <tr className={`${className || ''}`} {...prop}>
+        <tr className={className} {...prop}>
             {prop.children}
         </tr>
     )
 }
-export function Th({ className, sticky, ...prop }: { className?: string, sticky?: 'left' | 'right' } & ThProps) {
+export function Th({ className = "p-1 text-sm font-semibold text-gray-700 border-b bg-white border-gray-200 whitespace-nowrap", ...prop }: ThProps) {
     return (
-        <th className={`${className || 'p-3 text-sm font-semibold text-gray-700 border-b bg-white border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`} {...prop}>
+        <th className={className} {...prop}>
             {prop.children}
         </th>
     )
@@ -49,17 +50,32 @@ export function Tbody({ className, ...prop }: TbodyProps) {
         </tbody>
     )
 }
-export function TrBody({ className, ...prop }: TrProps) {
+export function TrBody({ className = "py-2 text-sm text-gray-800 border-b bg-white border-gray-100 hover:bg-gray-100", ...prop }: TrProps) {
     return (
-        <tr className={`${className || 'px-4 py-2 text-sm text-gray-800 border-b border-gray-100 hover:bg-gray-100'}`} {...prop}>
+        <tr className={className} {...prop}>
             {prop.children}
         </tr>
     )
 }
-export function Td({ className, sticky, ...prop }: { className?: string, sticky?: 'left' | 'right' } & TdProps) {
+export function Td({ className = "p-1 text-sm border-b bg-white border-gray-200 whitespace-nowrap", ...prop }: TdProps) {
     return (
-        <td className={`${className || 'p-3 text-sm border-b border-gray-200 whitespace-nowrap'} ${sticky != undefined && sticky === 'left' && 'sticky left-0'} ${sticky != undefined && sticky === 'right' && 'sticky right-0'}`} {...prop}>
+        <td className={className} {...prop}>
             {prop.children}
         </td>
+    )
+}
+
+export function Tfoot({ className, ...prop }: TfootProps) {
+    return (
+        <tbody className={className} {...prop} >
+            {prop.children}
+        </tbody>
+    )
+}
+export function TrFoot({ className = "py-2 text-sm text-gray-800 border-b border-gray-100 hover:bg-gray-100", ...prop }: TrProps) {
+    return (
+        <tr className={className} {...prop}>
+            {prop.children}
+        </tr>
     )
 }

@@ -181,8 +181,8 @@ export type ProjectActivity = {
     project_id: null | number;
     status: 'Not Started' | 'In Progress' | 'Completed';
     is_deleted: boolean;
-    plan: { [month: string]: number };
-    actual: { [month: string]: number };
+    plan: { [key: string]: number };
+    actual: { [key: string]: number };
 }
 export type ActivityByMonth = {
     [key: string]: any;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td } from "@/components/table/Table";
+import { Table, Tbody, Thead, TableWrapper, TrHead, Th, TrBody, Td, Tfoot, TrFoot } from "@/components/table/Table";
 import { ProjectActivity, ProjectInfo } from '@/types/types';
 import Input from '@/components/input/Input';
 import Label from '@/components/input/Label';
@@ -76,8 +76,32 @@ export default function Page() {
     }
 
 
-    function updateWeight(id: string | number, key: string, type: string, value: any) {
+    function updateWeight(act_id: ProjectActivity['id'], type: 'plan' | 'actual', month_key: string, value: number) {
+        setactivityList(prev => prev.map(a => {
+            if (a.id !== act_id) return a;
+            const updatedActivity: ProjectActivity = {
+                ...a,
+                [type]: {
+                    ...a[type],
+                    [month_key]: value,
+                }
+            };
+            return {
+                ...updatedActivity,
+                progress: calculateActivityProgress(updatedActivity),
+            };
+        }));
+    }
+    function calculateActivityProgress(act: ProjectActivity) {
+        var totalPlan = 0
+        var totalActual = 0
+        monthList.forEach((m) => {
+            totalPlan += Number(act.plan?.[m] ?? 0);
+            totalActual += Number(act.actual?.[m] ?? 0);
 
+        })
+        if (totalPlan <= 0) return 0;
+        return Math.min(Math.round((totalActual / totalPlan) * 100), 100);
     }
 
     function parseUSDateToYearMonth(mmddyyyy: string) {
@@ -102,7 +126,6 @@ export default function Page() {
             const m = cur.getUTCMonth();
             result.push({
                 month: formatKey(y, m),   // "2025-02"
-                type: "Plan",                    // "Plan" (or "Actual")
                 project_no: null
             });
             // Move to next month
@@ -111,6 +134,30 @@ export default function Page() {
         return { result };
     }
 
+    const tableSummary = useMemo(() => {
+        const planList: number[] = []
+        const actualList: number[] = []
+        monthList.map((m) => {
+            var monthPlan = 0
+            var monthActual = 0
+            activityList.forEach((act) => {
+                monthPlan += act.plan[m] ?? 0
+                monthActual += act.actual[m] ?? 0
+            })
+            planList.push(monthPlan)
+            actualList.push(monthActual)
+        })
+        const startDates = activityList.map(act => act.start_date).filter((date) => Boolean(date));
+        const endDates = activityList.map(act => act.end_date).filter((date) => Boolean(date));
+        return {
+            minStartDate: startDates.length > 0 ? startDates.reduce((min, curr) => curr < min ? curr : min) : '',
+            maxEndDate: endDates.length > 0 ? endDates.reduce((max, curr) => curr > max ? curr : max) : '',
+            totalWeight: activityList.reduce((sum, act) => sum + Number(act.weight), 0),
+            totalProgress: activityList.reduce((sum, act) => sum + Number(Math.round((act.progress * act.weight) / 100)), 0),
+            planList,
+            actualList,
+        };
+    }, [activityList, monthList]);
 
     useEffect(() => {
         if (projectInfo.plan_start_date && projectInfo.plan_end_date) {
@@ -151,82 +198,109 @@ export default function Page() {
                         <Table>
                             <Thead>
                                 <TrHead>
-                                    <Th>#</Th>
-                                    <Th>No.</Th>
-                                    <Th>Activity Name</Th>
-                                    <Th>PIC</Th>
-                                    <Th>Start Date</Th>
-                                    <Th>End Date</Th>
-                                    <Th>% Weight</Th>
-                                    <Th>% Progress</Th>
-                                    <Th>Status</Th>
-                                    <Th></Th>
+                                    <Th style={{ width: "2rem", minWidth: "2rem" }}>#</Th>
+                                    <Th style={{ width: "3rem", minWidth: "3rem" }}>No.</Th>
+                                    <Th style={{ width: "22rem", minWidth: "22rem" }}>Activity Name</Th>
+                                    <Th style={{ width: "14rem", minWidth: "14rem" }}>PIC</Th>
+                                    <Th style={{ width: "10rem", minWidth: "10rem" }}>Start Date</Th>
+                                    <Th style={{ width: "10rem", minWidth: "10rem" }}>End Date</Th>
+                                    <Th style={{ width: "6rem", minWidth: "6rem" }}>% Weight</Th>
+                                    <Th style={{ width: "6rem", minWidth: "6rem" }}>% Progress</Th>
+                                    <Th style={{ width: "8rem", minWidth: "8rem" }}>Status</Th>
+                                    <Th style={{ width: "3rem", minWidth: "3rem" }}></Th>
                                     <Th>
                                         <div className='flex gap-2'>
                                             {
                                                 monthList.map((m, i) => (
-                                                    <div key={i} className='w-[5rem] min-w-[5rem]'>{m}</div>
+                                                    <div key={i} className='w-20 min-w-20'>{m}</div>
                                                 ))
                                             }
                                         </div>
                                     </Th>
+                                    <Th style={{ width: "5rem", minWidth: "5rem", position: "sticky", right: "0" }}>Action</Th>
                                 </TrHead>
                             </Thead>
                             <Tbody>
                                 {activityList.map((act, index) => (
-                                    <>
-                                        <TrBody key={act.id}>
-                                            <Th rowSpan={2}>-</Th>
-                                            <Td rowSpan={2}>{act.sequence}</Td>
-                                            <Td rowSpan={2}><TextArea value={act.activity_name} rows={3} onChange={(e) => updateActivity(act.id, 'activity_name', e.target.value)} /></Td>
-                                            <Td rowSpan={2}><Select optionList={[{ label: "A", value: "1" }, { label: "B", value: "2" }]} rowKey={`pic-${index}-${act.id}`} defaultSelectedValue={act.pic ?? ''} onChange={(value) => updateActivity(act.id, 'pic', value)} /></Td>
-                                            <Td rowSpan={2}><Input type='date' value={act.start_date} onChange={(e) => updateActivity(act.id, 'start_date', e.target.value)} /></Td>
-                                            <Td rowSpan={2}><Input type='date' value={act.end_date} onChange={(e) => updateActivity(act.id, 'end_date', e.target.value)} /></Td>
-                                            <Td rowSpan={2}><Input type='number' value={act.weight} onChange={(e) => updateActivity(act.id, 'weight', e.target.value)} /></Td>
-                                            <Td rowSpan={2}><Input type='number' min={0} max={100} value={act.progress} onChange={(e) => updateActivity(act.id, 'progress', e.target.value)} /></Td>
-                                            <Td rowSpan={2}><Select optionList={[{ label: "Completed", value: "1" }, { label: "Not Started", value: "Not Started" }, { label: "In Progress", value: "In Progress" }]} rowKey={`status-${index}-${act.id}`} defaultSelectedValue={act.status ?? ''} onChange={(value) => updateActivity(act.id, 'status', value)} /></Td>
-                                            <Td>
-                                                <span>P</span>
-                                            </Td>
-                                            <Td>
-                                                <div className='flex gap-2'>
-                                                    {
-                                                        monthList.map((m, i) => (
-                                                            <div className='w-[5rem] min-w-[5rem]' key={i}>
-                                                                <Input className=' h-6 bg-green-500/50'></Input>
-                                                            </div>
+                                    <TrBody key={act.id}>
+                                        <Td>-</Td>
+                                        <Td>{act.sequence}</Td>
+                                        <Td><TextArea value={act.activity_name} rows={3} onChange={(e) => updateActivity(act.id, 'activity_name', e.target.value)} /></Td>
+                                        <Td><Select optionList={[{ label: "A", value: "1" }, { label: "B", value: "2" }]} rowKey={`pic-${index}-${act.id}`} defaultSelectedValue={act.pic ?? ''} onChange={(value) => updateActivity(act.id, 'pic', value)} /></Td>
+                                        <Td><Input type='date' value={act.start_date} onChange={(e) => updateActivity(act.id, 'start_date', e.target.value)} /></Td>
+                                        <Td><Input type='date' value={act.end_date} onChange={(e) => updateActivity(act.id, 'end_date', e.target.value)} /></Td>
+                                        <Td><Input type='number' value={act.weight} onChange={(e) => updateActivity(act.id, 'weight', e.target.value)} /></Td>
+                                        <Td><span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{act.progress}</span></Td>
+                                        <Td><span className='block px-3 py-2 text-center'>{act.status}</span></Td>
+                                        <Td>
+                                            <span className='block px-3 py-2 text-center'>P</span>
+                                            <span className='block px-3 py-2 text-center mt-1'>A</span>
+                                        </Td>
+                                        <Td>
+                                            <div className='flex gap-2'>
+                                                {
+                                                    monthList.map((m, i) => (
+                                                        <div className='w-20 min-w-20' key={`${act.id}-plan-${i}`}>
+                                                            <Input type='number' value={act.plan[m] || ''} onChange={(e) => updateWeight(act.id, 'plan', m, Number(e.target.value))} />
+                                                        </div>
 
-                                                        ))
-                                                    }
-                                                </div>
-
-                                            </Td>
-                                            <Td rowSpan={2}>
-                                                <button onClick={() => deleteActivity(act.id)}>Delete</button>
-                                            </Td>
-                                        </TrBody>
-                                        <TrBody>
-                                            <Td>
-                                                <span>A</span>
-                                            </Td>
-                                            <Td>
-                                                <div className='flex gap-2'>
-                                                    {
-                                                        monthList.map((m, i) => (
-                                                            <div className='w-[5rem] min-w-[5rem]' key={i}>
-                                                                <Input className=' h-6 bg-green-500/50' />
-                                                            </div>
-                                                        ))
-                                                    }
-                                                </div>
-                                            </Td>
-                                        </TrBody>
-                                    </>
+                                                    ))
+                                                }
+                                            </div>
+                                            <div className='flex gap-2 mt-1'>
+                                                {
+                                                    monthList.map((m, i) => (
+                                                        <div className='w-20 min-w-20' key={`${act.id}-actual-${i}`}>
+                                                            <Input type='number' value={act.actual[m] || ''} onChange={(e) => updateWeight(act.id, 'actual', m, Number(e.target.value))} />
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </Td>
+                                        <Td style={{ position: "sticky", right: "0" }}>
+                                            <button onClick={() => deleteActivity(act.id)}>Delete</button>
+                                        </Td>
+                                    </TrBody>
                                 ))}
+                                <TrBody>
+                                    <Td colSpan={12}></Td>
+                                </TrBody>
                             </Tbody>
-                            <tfoot>
-
-                            </tfoot>
+                            <Tfoot>
+                                <TrFoot>
+                                    <Td colSpan={4}></Td>
+                                    <Td><span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{tableSummary.minStartDate}</span></Td>
+                                    <Td><span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{tableSummary.maxEndDate}</span></Td>
+                                    <Td><span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{tableSummary.totalWeight}</span></Td>
+                                    <Td><span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{tableSummary.totalProgress}</span></Td>
+                                    <Td></Td>
+                                    <Td>
+                                        <span className='block px-3 py-2 text-center'>P</span>
+                                        <span className='block px-3 py-2 text-center mt-1'>A</span>
+                                    </Td>
+                                    <Td>
+                                        <div className='flex gap-2'>
+                                            {
+                                                tableSummary.planList.map((m, i) => (
+                                                    <div className='w-20 min-w-20' key={`summary-plan-${i}`}>
+                                                        <span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{m > 0 ? m : ""}</span>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                        <div className='flex gap-2 mt-1'>
+                                            {
+                                                tableSummary.actualList.map((m, i) => (
+                                                    <div className='w-20 min-w-20' key={`summary-plan-${i}`}>
+                                                        <span className='block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm h-[38px] text-center'>{m > 0 ? m : ""}</span>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </Td>
+                                    <Td style={{ position: "sticky", right: "0" }}></Td>
+                                </TrFoot>
+                            </Tfoot>
                         </Table>
                     </TableWrapper>
                 </div>
